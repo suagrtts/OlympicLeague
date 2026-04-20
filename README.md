@@ -20,6 +20,7 @@ PvP: Two players battle each other
 PvE: Player vs AI opponent
 Arcade Mode: Survive through waves of opponents with increasing difficulty (Easy/Medium/Hard)
 Strategic Depth: Each character has 3 skills with different mana costs, cooldowns, and effects—damage, healing, defense buffs, true damage, or stuns
+..
 
 
 
