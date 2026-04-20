@@ -8,21 +8,21 @@ Group Members:
 4. Dollison, Selwyn Dave
 5. Oliveros, Rov P
 
-Game Characters
-1. Achiron
-2. Atalyn
-3. Biji
-4. GoatedKit
-5. Heralde
-6. Orris
-7. Orven
-8. Selwyn
-9. Vor
+CORE CONCEPTS
+Players control legendary champions—each blessed by different deities like Ares, Artemis, Poseidon, Hermes, Apollo, Zeus, and Loki—in strategic one-on-one combat. Every character has unique abilities, backstories, and "God's Gift" ultimate skills.
+
+Key Features
+9 Playable Characters: Including Achiron (warrior of Ares), Atalyn (huntress of Artemis), Orris (son of Poseidon), Orven (son of Hermes), Biji (blessed by Apollo), Heralde (favored by Zeus), Vor (master of time), Selwyn (blessed by Loki), Goated Kit,
+Combat System: Turn-based battles with mana management, skill cooldowns, status effects (stuns, shields, evasion), and damage bonuses
 
 Game Modes:
-1. PvP
-2. PvAI
-3. Arcade
+PvP: Two players battle each other
+PvE: Player vs AI opponent
+Arcade Mode: Survive through waves of opponents with increasing difficulty (Easy/Medium/Hard)
+Strategic Depth: Each character has 3 skills with different mana costs, cooldowns, and effects—damage, healing, defense buffs, true damage, or stuns
+
+
+
 
 
 
