@@ -1,4 +1,4 @@
-package ligaolympica.character;
+package olympicleague.character;
 import java.util.*;
 
 public class Biji extends GameCharacter {
@@ -16,14 +16,14 @@ public class Biji extends GameCharacter {
 
     @Override
     public void skill1(GameCharacter target) {
-        if(skill1Cooldown > 0){
+        if(getSkill1Cooldown() > 0){
             return;
         }else{
-            typewriter("\n" + name + " shreds a POWER CHORD!", 30);
+            typewriter("\n" + getName() + " shreds a POWER CHORD!", 30);
         }
-        if (this.mana >= 200) {
+        if (getMana() >= 200) {
             this.useMana(200);
-            this.skill1Cooldown = 1;
+            setSkill1Cooldown(1);
 
             int baseDamage = 380;
             int damage = randomDamage(baseDamage, 25);
@@ -38,19 +38,19 @@ public class Biji extends GameCharacter {
 
     @Override
     public void skill2(GameCharacter target) {
-        if(skill2Cooldown > 0){
+        if(getSkill2Cooldown() > 0){
             return;
         }else{
-            typewriter("\n" + name + " plays a HEALING HYMN!", 30);
+            typewriter("\n" + getName() + " plays a HEALING HYMN!", 30);
         }
-        if (this.mana >= 300) {
+        if (getMana() >= 300) {
             this.useMana(300);
-            this.skill2Cooldown = 3;
+            setSkill2Cooldown(3);
 
             int healAmount = 400;
             this.heal(healAmount);
             typewriter("Apollo's blessing flows through the melody!", 30);
-            typewriter(name + " recovered " + healAmount + " HP!", 10);
+            typewriter(getName() + " recovered " + healAmount + " HP!", 10);
         } else {
             typewriter("Not enough mana!", 30);
         }
@@ -58,14 +58,14 @@ public class Biji extends GameCharacter {
 
     @Override
     public void skill3(GameCharacter target) {
-        if(skill3Cooldown > 0){
+        if(getSkill3Cooldown() > 0){
             return;
         }else{
-            typewriter("\n" + name + " unleashes SYMPHONY OF DESTRUCTION!", 10);
+            typewriter("\n" + getName() + " unleashes SYMPHONY OF DESTRUCTION!", 10);
         }
-        if (this.mana >= 550) {
+        if (getMana() >= 550) {
             this.useMana(550);
-            this.skill3Cooldown = 5;
+            setSkill3Cooldown(5);
 
             int baseDamage = 600;
             int damage = randomDamage(baseDamage, 30);
@@ -73,7 +73,7 @@ public class Biji extends GameCharacter {
             typewriter("Divine music overwhelms the battlefield!", 30);
             typewriter("Dealt " + damage + " damage! to " + target.getName() + " and is stunned ", 10);
             target.takeDamage(damage);
-            target.isStunned = true;
+            target.setStunned(true);
         } else {
             typewriter("Not enough mana!", 30);
         }
@@ -81,25 +81,25 @@ public class Biji extends GameCharacter {
 
     @Override
     public void displayStats() {
-        if(skill1Cooldown > 0) {
-            typewriter("Power Chord is on cooldown for " + this.skill1Cooldown + " turns.", 10);
+        if(getSkill1Cooldown() > 0) {
+            typewriter("Power Chord is on cooldown for " + getSkill1Cooldown() + " turns.", 10);
         }
-        if(skill2Cooldown > 0) {
-            typewriter("Healing Hymn is on cooldown for " + this.skill2Cooldown + " turns.", 10);
+        if(getSkill2Cooldown() > 0) {
+            typewriter("Healing Hymn is on cooldown for " + getSkill2Cooldown() + " turns.", 10);
         }
-        if(skill3Cooldown > 0) {
-            typewriter("Symphony of Destruction is on cooldown for " + this.skill3Cooldown + " turns.", 10);
+        if(getSkill3Cooldown() > 0) {
+            typewriter("Symphony of Destruction is on cooldown for " + getSkill3Cooldown() + " turns.", 10);
         }
         System.out.println();
-        typewriter(name + " - Health: " + health + "|" + maxHealth + " Mana: " + mana + "/" + maxMana, 10);
+        typewriter(getName() + " - Health: " + getHealth() + "|" + getMaxHealth() + " Mana: " + getMana() + "/" + getMaxMana(), 10);
     }
 
     @Override
     public void takeTurn(GameCharacter target) {
-        typewriter("\nChoose a skill for " + name + ":", 30);
-        typewriter("1) Power Chord - 380 Base Damage - CD: " + skill1Cooldown, 30);
-        typewriter("2) Healing Hymn - Heal 400 HP - CD: " + skill2Cooldown, 30);
-        typewriter("3) Symphony of Destruction - 600 Damage and stuns them - CD: " + skill3Cooldown, 30);
+        typewriter("\nChoose a skill for " + getName() + ":", 30);
+        typewriter("1) Power Chord - 380 Base Damage - CD: " + getSkill1Cooldown(), 30);
+        typewriter("2) Healing Hymn - Heal 400 HP - CD: " + getSkill2Cooldown(), 30);
+        typewriter("3) Symphony of Destruction - 600 Damage and stuns them - CD: " + getSkill3Cooldown(), 30);
         typewriter("0) Escape Battle", 30);
 
         boolean validChoice = false;
@@ -110,32 +110,32 @@ public class Biji extends GameCharacter {
                 choice = scan.nextInt();
                 switch (choice) {
                     case 1 -> {
-                        if(skill1Cooldown > 0){
-                            typewriter("Skill is on cooldown for " + skill1Cooldown + " more turns!", 5);
+                        if(getSkill1Cooldown() > 0){
+                            typewriter("Skill is on cooldown for " + getSkill1Cooldown() + " more turns!", 5);
                         }else {
                             skill1(target);
                             validChoice = true;
                         }
                     }
                     case 2 -> {
-                        if(skill2Cooldown > 0){
-                            typewriter("Skill is on cooldown for " + skill2Cooldown + " more turns!", 5);
+                        if(getSkill2Cooldown() > 0){
+                            typewriter("Skill is on cooldown for " + getSkill2Cooldown() + " more turns!", 5);
                         }else {
                             skill2(target);
                             validChoice = true;
                         }
                     }
                     case 3 -> {
-                        if(skill3Cooldown > 0){
-                            typewriter("Skill is on cooldown for " + skill3Cooldown + " more turns!", 5);
+                        if(getSkill3Cooldown() > 0){
+                            typewriter("Skill is on cooldown for " + getSkill3Cooldown() + " more turns!", 5);
                         }else {
                             skill3(target);
                             validChoice = true;
                         }
                     }
                     case 0 -> {
-                        typewriter(name + " attempts to flee the battle!", 10);
-                        this.hasEscaped = true;
+                        typewriter(getName() + " attempts to flee the battle!", 10);
+                        setEscaped(true);
                         validChoice = true;
                         return;
                     }

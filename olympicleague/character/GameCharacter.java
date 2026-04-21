@@ -1,34 +1,34 @@
-package ligaolympica.character;
+package olympicleague.character;
 
 import java.util.Random;
 
 public class GameCharacter implements CharacterInterface {
-    protected String name;
-    protected String backstory;
-    protected int health;
-    protected int maxHealth;
-    protected int mana;
-    protected int maxMana;
-    protected boolean isAlive;
-    protected Random random;
-    protected String skill1;
-    protected String skill2;
-    protected String skill3;
+    private String name;
+    private String backstory;
+    private int health;
+    private int maxHealth;
+    private int mana;
+    private int maxMana;
+    private boolean isAlive;
+    private Random random;
+    private String skill1;
+    private String skill2;
+    private String skill3;
 
     // Status effects
-    protected double attackBonus = 1.0;
-    protected double defenseBonus = 1.0;
-    protected int statusEffectTurns = 0;
+    private double attackBonus = 1.0;
+    private double defenseBonus = 1.0;
+    private int statusEffectTurns = 0;
 
     // Generic flags used by various characters
-    protected boolean untargetable = false;
-    protected boolean isStunned = false;
-    protected boolean hasEscaped = false;
+    private boolean untargetable = false;
+    private boolean isStunned = false;
+    private boolean hasEscaped = false;
 
     // Cooldown tracking
-    protected int skill1Cooldown = 0;
-    protected int skill2Cooldown = 0;
-    protected int skill3Cooldown = 0;
+    private int skill1Cooldown = 0;
+    private int skill2Cooldown = 0;
+    private int skill3Cooldown = 0;
 
     public GameCharacter(String name, String backstory, int health, int mana, String skill1, String skill2, String skill3) {
         this.name = name;
@@ -88,6 +88,87 @@ public class GameCharacter implements CharacterInterface {
     @Override
     public void setEscaped(boolean escaped) {
         this.hasEscaped = escaped;
+    }
+
+    // Additional getters and setters for subclass access
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public void setMaxHealth(int maxHealth) {
+        this.maxHealth = maxHealth;
+    }
+
+    public void setMana(int mana) {
+        this.mana = mana;
+    }
+
+    public void setMaxMana(int maxMana) {
+        this.maxMana = maxMana;
+    }
+
+    public void setAlive(boolean alive) {
+        this.isAlive = alive;
+    }
+
+    public double getAttackBonus() {
+        return attackBonus;
+    }
+
+    public void setAttackBonus(double attackBonus) {
+        this.attackBonus = attackBonus;
+    }
+
+    public double getDefenseBonus() {
+        return defenseBonus;
+    }
+
+    public void setDefenseBonus(double defenseBonus) {
+        this.defenseBonus = defenseBonus;
+    }
+
+    public int getStatusEffectTurns() {
+        return statusEffectTurns;
+    }
+
+    public void setStatusEffectTurns(int statusEffectTurns) {
+        this.statusEffectTurns = statusEffectTurns;
+    }
+
+    public boolean isUntargetable() {
+        return untargetable;
+    }
+
+    public void setUntargetable(boolean untargetable) {
+        this.untargetable = untargetable;
+    }
+
+    public int getSkill1Cooldown() {
+        return skill1Cooldown;
+    }
+
+    public void setSkill1Cooldown(int cooldown) {
+        this.skill1Cooldown = cooldown;
+    }
+
+    public int getSkill2Cooldown() {
+        return skill2Cooldown;
+    }
+
+    public void setSkill2Cooldown(int cooldown) {
+        this.skill2Cooldown = cooldown;
+    }
+
+    public int getSkill3Cooldown() {
+        return skill3Cooldown;
+    }
+
+    public void setSkill3Cooldown(int cooldown) {
+        this.skill3Cooldown = cooldown;
+    }
+
+    public Random getRandom() {
+        return random;
     }
 
     @Override

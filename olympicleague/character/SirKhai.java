@@ -1,4 +1,4 @@
-package ligaolympica.character;
+package olympicleague.character;
 import java.util.*;
 
 public class SirKhai extends GameCharacter{
@@ -12,15 +12,15 @@ public class SirKhai extends GameCharacter{
 
     @Override
     public void skill1(GameCharacter target){
-        if(skill1Cooldown > 0){
+        if(getSkill1Cooldown() > 0){
             return;
         }else{
             typewriter("\nSir Khai decides if ur cooked or nah", 20);
         }
 
-        if(this.mana > 0){
+        if(getMana() > 0){
             this.useMana(0);
-            this.skill1Cooldown = 0;
+            setSkill1Cooldown(0);
 
             int baseDamage = 1000000;
             int damage = randomDamage(baseDamage, 20);
@@ -35,7 +35,7 @@ public class SirKhai extends GameCharacter{
 
     @Override
     public void takeTurn(GameCharacter target){
-        typewriter("Choose a skill for " + name + ": ", 20);
+        typewriter("Choose a skill for " + getName() + ": ", 20);
         typewriter("1) Tip of Ballpen: deals emotional damage", 20);
         typewriter("0) Escape Battle", 20);
 
@@ -51,8 +51,8 @@ public class SirKhai extends GameCharacter{
                         validChoice = true;
                     }
                     case 0 -> {
-                        typewriter(name + " Has more urgent matters to attend to, your mom!", 10);
-                        this.hasEscaped = true;
+                        typewriter(getName() + " Has more urgent matters to attend to, your mom!", 10);
+                        setEscaped(true);
                         validChoice = true;
                         return;
                     }

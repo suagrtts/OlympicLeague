@@ -1,6 +1,6 @@
-package ligaolympica.battle;
+package olympicleague.battle;
 
-import ligaolympica.character.GameCharacter;
+import olympicleague.character.GameCharacter;
 
 public class Battle {
     private final GameCharacter player1;

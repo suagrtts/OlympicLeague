@@ -1,4 +1,4 @@
-package ligaolympica.character;
+package olympicleague.character;
 import java.util.*;
 
 public class Atalyn extends GameCharacter {
@@ -15,14 +15,14 @@ public class Atalyn extends GameCharacter {
 
     @Override
     public void skill1(GameCharacter target) {
-        if(skill1Cooldown > 0){
+        if(getSkill1Cooldown() > 0){
             return;
         }else{
-        typewriter("\n" + name + " fires a PIERCING ARROW!", 30);
+        typewriter("\n" + getName() + " fires a PIERCING ARROW!", 30);
         }
-        if (this.mana >= 150) {
+        if (getMana() >= 150) {
             this.useMana(150);
-            this.skill1Cooldown = 1;
+            setSkill1Cooldown(1);
 
             int baseDamage = 360;
             int damage = randomDamage(baseDamage, 18); // ±18 damage variance
@@ -38,14 +38,14 @@ public class Atalyn extends GameCharacter {
 
     @Override
     public void skill2(GameCharacter target) {
-        if(skill2Cooldown > 0){
+        if(getSkill2Cooldown() > 0){
             return;
         }else{
-        typewriter("\n" + name + " activates HUNTER'S REFLEX!", 30);
+        typewriter("\n" + getName() + " activates HUNTER'S REFLEX!", 30);
         }
-        if (this.mana >= 120) {
+        if (getMana() >= 120) {
             this.useMana(120);
-            this.skill2Cooldown = 2;
+            setSkill2Cooldown(2);
 
             this.nextAttackEvaded = true;
             typewriter("Atalyn's reflexes sharpen - the next attack will be evaded!", 30);
@@ -56,17 +56,17 @@ public class Atalyn extends GameCharacter {
 
     @Override
     public void skill3(GameCharacter target) {
-        if(skill3Cooldown > 0){
+        if(getSkill3Cooldown() > 0){
             return;
         }else{
-        typewriter("\n" + name + " casts MOONLIT MARK!", 30);
+        typewriter("\n" + getName() + " casts MOONLIT MARK!", 30);
         }
-        if (this.mana >= 500) {
+        if (getMana() >= 500) {
             this.useMana(500);
-            this.skill3Cooldown = 5;
+            setSkill3Cooldown(5);
 
-            this.statusEffectTurns = 2;
-            this.attackBonus = 1.5;
+            setStatusEffectTurns(2);
+            setAttackBonus(1.5);
 
             typewriter("ARTEMIS' BLESSING! Moonlight marks the target - damage increased by 50% for 2 turns!", 30);
         } else {
@@ -75,24 +75,24 @@ public class Atalyn extends GameCharacter {
     }
     @Override
     public void displayStats() {
-            if(skill1Cooldown > 0) {
-                typewriter("Piercing Arrow is on cooldown for " + this.skill1Cooldown + " turns.", 10);
+            if(getSkill1Cooldown() > 0) {
+                typewriter("Piercing Arrow is on cooldown for " + getSkill1Cooldown() + " turns.", 10);
             }
-            if(skill2Cooldown > 0) {
-                typewriter("Hunter's Reflex is on cooldown for " + this.skill2Cooldown + " turns.", 10);
+            if(getSkill2Cooldown() > 0) {
+                typewriter("Hunter's Reflex is on cooldown for " + getSkill2Cooldown() + " turns.", 10);
             }
-            if(skill3Cooldown > 0) {
-                typewriter("Moonlit Mark is on cooldown for " + this.skill3Cooldown + " turns.", 10);
+            if(getSkill3Cooldown() > 0) {
+                typewriter("Moonlit Mark is on cooldown for " + getSkill3Cooldown() + " turns.", 10);
             }
 
             System.out.println();
-            typewriter(name + " - Health: " + health + "|" + maxHealth + ", Mana: " + mana + "/" + maxMana, 10);
+            typewriter(getName() + " - Health: " + getHealth() + "|" + getMaxHealth() + ", Mana: " + getMana() + "/" + getMaxMana(), 10);
             }
 
     @Override
     public void takeDamage(int damage) {
         if (nextAttackEvaded) {
-            typewriter(this.name + " gracefully evades the attack!", 30);
+            typewriter(getName() + " gracefully evades the attack!", 30);
             nextAttackEvaded = false;
             return;
         }
@@ -101,15 +101,15 @@ public class Atalyn extends GameCharacter {
 
     @Override
     public void restoreMana(int amount) {
-        this.mana = Math.min(this.mana + amount, this.maxMana);
+        setMana(Math.min(getMana() + amount, getMaxMana()));
     }
 
     @Override
     public void takeTurn(GameCharacter target) {
-        typewriter("\nChoose a skill for " + name + ":", 10);
-        typewriter("1) Piercing Arrow - 360 Base Damage - CD: " + skill1Cooldown, 10);
-        typewriter("2) Hunter's Reflex - Evade Next Attack - CD: " + skill2Cooldown, 10);
-        typewriter("3) Moonlit Mark - Increase Damage by 50% - CD: " + skill3Cooldown, 10);
+        typewriter("\nChoose a skill for " + getName() + ":", 10);
+        typewriter("1) Piercing Arrow - 360 Base Damage - CD: " + getSkill1Cooldown(), 10);
+        typewriter("2) Hunter's Reflex - Evade Next Attack - CD: " + getSkill2Cooldown(), 10);
+        typewriter("3) Moonlit Mark - Increase Damage by 50% - CD: " + getSkill3Cooldown(), 10);
         typewriter("0) Escape Battle", 10);
 
         boolean validChoice = false;
@@ -120,16 +120,16 @@ public class Atalyn extends GameCharacter {
                 choice = scan.nextInt();
                 switch (choice) {
                     case 1 -> {
-                        if(skill1Cooldown > 0) {
-                            typewriter("Skill is on cooldown for " + skill1Cooldown + " more turns!", 5);
+                        if(getSkill1Cooldown() > 0) {
+                            typewriter("Skill is on cooldown for " + getSkill1Cooldown() + " more turns!", 5);
                         } else {
                             skill1(target);
                             validChoice = true;
                         }
                     }
                     case 2 -> {
-                        if(skill2Cooldown > 0) {
-                            typewriter("Skill is on cooldown for " + skill2Cooldown + " more turns!", 5);
+                        if(getSkill2Cooldown() > 0) {
+                            typewriter("Skill is on cooldown for " + getSkill2Cooldown() + " more turns!", 5);
 
                         } else {
                             skill2(target);
@@ -137,16 +137,16 @@ public class Atalyn extends GameCharacter {
                         }
                     }
                     case 3 -> {
-                        if(skill3Cooldown > 0) {
-                            typewriter("Skill is on cooldown for " + skill3Cooldown + " more turns!", 5);
+                        if(getSkill3Cooldown() > 0) {
+                            typewriter("Skill is on cooldown for " + getSkill3Cooldown() + " more turns!", 5);
                         } else {
                             skill3(target);
                             validChoice = true;
                             }
                     }
                     case 0 -> {
-                        typewriter(name + " attempts to flee the battle!", 10);
-                        this.hasEscaped = true;
+                        typewriter(getName() + " attempts to flee the battle!", 10);
+                        setEscaped(true);
                         validChoice = true;
                         return;
                     }

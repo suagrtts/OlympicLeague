@@ -1,4 +1,4 @@
-package ligaolympica.character;
+package olympicleague.character;
 import java.util.*;
 
 public class Heralde extends GameCharacter {
@@ -16,14 +16,14 @@ public class Heralde extends GameCharacter {
 
     @Override
     public void skill1(GameCharacter target){
-        if(skill1Cooldown > 0){
+        if(getSkill1Cooldown() > 0){
             return;
         }else{
-            typewriter("\n" + name + " uses LION'S STRIKE!", 30);
+            typewriter("\n" + getName() + " uses LION'S STRIKE!", 30);
         }
-        if(this.mana >= 90){
+        if(getMana() >= 90){
             this.useMana(90);
-            this.skill1Cooldown = 1;
+            setSkill1Cooldown(1);
 
             int baseDamage = 220;
             int damage = randomDamage(baseDamage, 20); // ±20 damage variance
@@ -37,33 +37,33 @@ public class Heralde extends GameCharacter {
     }
     @Override
     public void skill2(GameCharacter target){
-        if(skill2Cooldown > 0){
+        if(getSkill2Cooldown() > 0){
             return;
         }else{
-            typewriter("\n" + name + " uses IRON HIDE!", 30);
+            typewriter("\n" + getName() + " uses IRON HIDE!", 30);
         }
-        if(this.mana >= 100){
+        if(getMana() >= 100){
             this.useMana(100);
-            this.skill2Cooldown = 3;
+            setSkill2Cooldown(3);
 
-            this.defenseBonus = 0.7; // Reduce incoming damage by 30%
-            this.statusEffectTurns = 2; // Lasts for 2 turns
+            setDefenseBonus(0.7); // Reduce incoming damage by 30%
+            setStatusEffectTurns(2); // Lasts for 2 turns
 
-            typewriter(name + "'s skin hardens, reducing incoming damage by 30% for 2 turns!", 10);
+            typewriter(getName() + "'s skin hardens, reducing incoming damage by 30% for 2 turns!", 10);
         }else{
             typewriter("Not enough mana!", 30);
         }
     }
     @Override
     public void skill3(GameCharacter target){
-        if(skill3Cooldown > 0){
+        if(getSkill3Cooldown() > 0){
             return;
         }else{
-            typewriter("\n" + name + " uses THUNDER WRATH!", 30);
+            typewriter("\n" + getName() + " uses THUNDER WRATH!", 30);
         }
-        if(this.mana >= 180){
+        if(getMana() >= 180){
             this.useMana(180);
-            this.skill3Cooldown = 6;
+            setSkill3Cooldown(6);
 
             int trueDamage = 400; // True damage ignores defenses
 
@@ -76,26 +76,26 @@ public class Heralde extends GameCharacter {
 
     @Override
     public void displayStats() {
-        if(skill1Cooldown > 0) {
-            typewriter("Lion's Strike is on cooldown for " + this.skill1Cooldown + " turns.", 10);
+        if(getSkill1Cooldown() > 0) {
+            typewriter("Lion's Strike is on cooldown for " + getSkill1Cooldown() + " turns.", 10);
         }
 
-        if(skill2Cooldown > 0) {
-            typewriter("Iron Hide is on cooldown for " + this.skill2Cooldown + " turns.", 10);
+        if(getSkill2Cooldown() > 0) {
+            typewriter("Iron Hide is on cooldown for " + getSkill2Cooldown() + " turns.", 10);
         }
 
-        if(skill3Cooldown > 0) {
-            typewriter("Thunder Wrath is on cooldown for " + this.skill3Cooldown + " turns.", 10);
+        if(getSkill3Cooldown() > 0) {
+            typewriter("Thunder Wrath is on cooldown for " + getSkill3Cooldown() + " turns.", 10);
         }
         System.out.println();
-        typewriter(name + " - Health: " + this.health + "/" + this.maxHealth + " | Mana: " + this.mana + "/" + this.maxMana, 10);
+        typewriter(getName() + " - Health: " + getHealth() + "/" + getMaxHealth() + " | Mana: " + getMana() + "/" + getMaxMana(), 10);
     }
     @Override
     public void takeTurn(GameCharacter target) {
-        typewriter("\nChoose a skill for " + name + ":", 10);
-        typewriter("1) Lion's Strike - 220 Base Damage - CD: " + skill1Cooldown, 10);
-        typewriter("2) Iron Hide - Reduce incoming damage by 30% for 2 turns - CD: " + skill2Cooldown, 10);
-        typewriter("3) Thunder Wrath (God-Gift Zeus) - 400 True Damage - CD: " + skill3Cooldown, 10);
+        typewriter("\nChoose a skill for " + getName() + ":", 10);
+        typewriter("1) Lion's Strike - 220 Base Damage - CD: " + getSkill1Cooldown(), 10);
+        typewriter("2) Iron Hide - Reduce incoming damage by 30% for 2 turns - CD: " + getSkill2Cooldown(), 10);
+        typewriter("3) Thunder Wrath (God-Gift Zeus) - 400 True Damage - CD: " + getSkill3Cooldown(), 10);
         typewriter("0) Escape Battle", 10);
 
         boolean validChoice = false;
@@ -106,32 +106,32 @@ public class Heralde extends GameCharacter {
                 choice = scan.nextInt();
                 switch (choice) {
                     case 1 -> {
-                        if(skill1Cooldown > 0) {
-                            typewriter("Skill is on cooldown for " + skill1Cooldown + " more turns!", 5);
+                        if(getSkill1Cooldown() > 0) {
+                            typewriter("Skill is on cooldown for " + getSkill1Cooldown() + " more turns!", 5);
                         } else {
                             skill1(target);
                             validChoice = true;
                         }
                     }
                     case 2 -> {
-                        if(skill2Cooldown > 0) {
-                            typewriter("Skill is on cooldown for " + skill2Cooldown + " more turns!", 5);
+                        if(getSkill2Cooldown() > 0) {
+                            typewriter("Skill is on cooldown for " + getSkill2Cooldown() + " more turns!", 5);
                         } else {
                             skill2(target);
                             validChoice = true;
                         }
                     }
                     case 3 -> {
-                        if(skill3Cooldown > 0) {
-                            typewriter("Skill is on cooldown for " + skill3Cooldown + " more turns!", 5);
+                        if(getSkill3Cooldown() > 0) {
+                            typewriter("Skill is on cooldown for " + getSkill3Cooldown() + " more turns!", 5);
                             } else {
                                 skill3(target);
                                 validChoice = true;
                                 }
                         }
                     case 0 -> {
-                        typewriter(name + " attempts to flee the battle!", 10);
-                        this.hasEscaped = true;
+                        typewriter(getName() + " attempts to flee the battle!", 10);
+                        setEscaped(true);
                         validChoice = true;
                         return;
                     }

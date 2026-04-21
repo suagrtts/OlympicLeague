@@ -1,18 +1,18 @@
-package ligaolympica.ui;
+package olympicleague.ui;
 
 import java.util.*;
-import ligaolympica.battle.Battle;
-import ligaolympica.character.Achiron;
-import ligaolympica.character.Atalyn;
-import ligaolympica.character.Biji;
-import ligaolympica.character.GameCharacter;
-import ligaolympica.character.GoatedKit;
-import ligaolympica.character.Heralde;
-import ligaolympica.character.Orris;
-import ligaolympica.character.Orven;
-import ligaolympica.character.Selwyn;
-import ligaolympica.character.SirKhai;
-import ligaolympica.character.Vor;
+import olympicleague.battle.Battle;
+import olympicleague.character.Achiron;
+import olympicleague.character.Atalyn;
+import olympicleague.character.Biji;
+import olympicleague.character.GameCharacter;
+import olympicleague.character.GoatedKit;
+import olympicleague.character.Heralde;
+import olympicleague.character.Orris;
+import olympicleague.character.Orven;
+import olympicleague.character.Selwyn;
+import olympicleague.character.SirKhai;
+import olympicleague.character.Vor;
 
 public class Menu {
     private final Scanner scanner;
