@@ -3,26 +3,110 @@ import javax.swing.*;
 
 public class GameWindow extends JFrame {
 
+    private JTextArea textArea;
+
     public GameWindow() {
         setTitle("Liga Olympica");
         setSize(900, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JTextArea titleArea = new JTextArea();
+        textArea = new JTextArea();
+        textArea.setFont(new Font("Consolas", Font.PLAIN, 16));
+        textArea.setEditable(false);
+        textArea.setBackground(Color.BLACK);
+        textArea.setForeground(Color.GREEN);
+        textArea.setLineWrap(false);
 
-        titleArea.setFont(new Font("Consolas", Font.PLAIN, 16));
+        add(new JScrollPane(textArea));
 
-        titleArea.setEditable(false);
-        titleArea.setBackground(Color.BLACK);
-        titleArea.setForeground(Color.GREEN);
+        SwingUtilities.invokeLater(this::startAnimation);
+    }
 
-        titleArea.setLineWrap(false);
-        titleArea.setWrapStyleWord(false);
+    private void startAnimation() {
+        textArea.setText(getTitleText() + "\n");
+        new Timer(300, new OlympicAnimation()).start();
+    }
 
-        titleArea.setText(getTitleText());
+    class OlympicAnimation implements java.awt.event.ActionListener {
+        String[] ringLines = {
+            "                         ████      ████      ████",
+            "                       ██    ██  ██    ██  ██    ██",
+            "                       ██    ████    ████    ████",
+            "                         ████  ██  ██  ██  ██  ████",
+            "                             ██████████████████    ██",
+            "                               ████      ████      ██",
+            "                                            ██████████"
+        };
 
-        add(new JScrollPane(titleArea));
+        int index = 0;
+
+        @Override
+        public void actionPerformed(java.awt.event.ActionEvent e) {
+            if (index < ringLines.length) {
+                textArea.append(ringLines[index] + "\n");
+                index++;
+            } else {
+                ((Timer) e.getSource()).stop();
+                new Timer(300, new WarriorAnimation()).start();
+            }
+        }
+    }
+
+    class WarriorAnimation implements java.awt.event.ActionListener {
+
+        String[] warriorArt = {
+            "\n                                THE ARENA AWAITS",
+            "",
+            "                                  /\\    /\\",
+            "                                 /  \\__/  \\",
+            "                                |   o  o   |",
+            "                                |     >    |",
+            "                                 \\  \\__/  /",
+            "                                  |____|",
+            "                               ___/|  |\\___",
+            "                              /   /|  |\\   \\",
+            "                             |___| |  | |___|",
+            "                                  ||  ||",
+            "                                  ||  ||",
+            "                                 _||  ||_",
+            "                                |__________|"
+        };
+
+        int index = 0;
+
+        @Override
+        public void actionPerformed(java.awt.event.ActionEvent e) {
+            if (index < warriorArt.length) {
+                textArea.append(warriorArt[index] + "\n");
+                index++;
+            } else {
+                ((Timer) e.getSource()).stop();
+            }
+        }
+    }
+
+    // TITLE TEXT
+    private String getTitleText() {
+        return """
+     ╔══════════════════════════════════════════════════════════════════════════════════╗
+     ║                                                                                  ║
+     ║                      ██╗     ██╗ ██████╗  █████╗                                 ║
+     ║                      ██║     ██║██╔════╝ ██╔══██╗                                ║
+     ║                      ██║     ██║██║  ███╗███████║                                ║
+     ║                      ██║     ██║██║   ██║██╔══██║                                ║
+     ║                      ███████╗██║╚██████╔╝██║  ██║                                ║
+     ║                      ╚══════╝╚═╝ ╚═════╝ ╚═╝  ╚═╝                                ║
+     ║                                                                                  ║
+     ║          ██████╗ ██╗     ██╗   ██╗███╗   ███╗██████╗ ██╗ ██████╗ █████╗          ║
+     ║         ██╔═══██╗██║     ╚██╗ ██╔╝████╗ ████║██╔══██╗██║██╔════╝██╔══██╗         ║
+     ║         ██║   ██║██║      ╚████╔╝ ██╔████╔██║██████╔╝██║██║     ███████║         ║
+     ║         ██║   ██║██║       ╚██╔╝  ██║╚██╔╝██║██╔═══╝ ██║██║     ██╔══██║         ║
+     ║         ╚██████╔╝███████╗   ██║   ██║ ╚═╝ ██║██║     ██║╚██████╗██║  ██║         ║
+     ║              ╚═════╝ ╚══════╝   ╚═╝   ╚═╝     ╚═╝╚═╝     ╚═╝ ╚═╝╚═╝  ╚═╝         ║
+     ║                                                                                  ║
+     ╚══════════════════════════════════════════════════════════════════════════════════╝
+    """;
     }
 
     public static void main(String[] args) {
@@ -30,33 +114,5 @@ public class GameWindow extends JFrame {
             GameWindow frame = new GameWindow();
             frame.setVisible(true);
         });
-    }
-
-    private String getTitleText() {
-        String[] titleLines = {
-            "     ╔══════════════════════════════════════════════════════════════════════════════════╗",
-            "     ║                                                                                  ║",
-            "     ║                      ██╗     ██╗ ██████╗  █████╗                                 ║",
-            "     ║                      ██║     ██║██╔════╝ ██╔══██╗                                ║",
-            "     ║                      ██║     ██║██║  ███╗███████║                                ║",
-            "     ║                      ██║     ██║██║   ██║██╔══██║                                ║",
-            "     ║                      ███████╗██║╚██████╔╝██║  ██║                                ║",
-            "     ║                      ╚══════╝╚═╝ ╚═════╝ ╚═╝  ╚═╝                                ║",
-            "     ║                                                                                  ║",
-            "     ║          ██████╗ ██╗     ██╗   ██╗███╗   ███╗██████╗ ██╗ ██████╗ █████╗          ║",
-            "     ║         ██╔═══██╗██║     ╚██╗ ██╔╝████╗ ████║██╔══██╗██║██╔════╝██╔══██╗         ║",
-            "     ║         ██║   ██║██║      ╚████╔╝ ██╔████╔██║██████╔╝██║██║     ███████║         ║",
-            "     ║         ██║   ██║██║       ╚██╔╝  ██║╚██╔╝██║██╔═══╝ ██║██║     ██╔══██║         ║",
-            "     ║         ╚██████╔╝███████╗   ██║   ██║ ╚═╝ ██║██║     ██║╚██████╗██║  ██║         ║",
-            "     ║              ╚═════╝ ╚══════╝   ╚═╝   ╚═╝     ╚═╝╚═╝     ╚═╝ ╚═╝╚═╝  ╚═╝         ║",
-            "     ║                                                                                  ║",
-            "     ╚══════════════════════════════════════════════════════════════════════════════════╝"
-        };
-
-        StringBuilder sb = new StringBuilder();
-        for (String line : titleLines) {
-            sb.append(line).append("\n");
-        }
-        return sb.toString();
     }
 }
