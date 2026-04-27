@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liga Olympica — Project Division</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & Variables ─────────────────────────────────── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --bg:      #07080f;
+  --bg2:     #0d0f1c;
+  --bg3:     #131526;
+  --card:    #161928;
+  --card2:   #1c1f32;
+  --gold:    #c9a84c;
+  --gold-l:  #f0d080;
+  --gold-d:  #7a6230;
+  --text:    #e8e4d8;
+  --dim:     #8a8070;
+  --border:  rgba(201,168,76,0.18);
+  --border2: rgba(201,168,76,0.45);
+
+  /* Member colors */
+  --m1: #e85d4a;   /* red    - rovpoli */
+  --m2: #4a9fe8;   /* blue   - kd      */
+  --m3: #6bcf8a;   /* green  - biji    */
+  --m4: #c87af0;   /* purple - selwyn  */
+  --m5: #f0a830;   /* amber  - member5 */
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+
+/* ── Scrollbar ─────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--gold-d); border-radius: 3px; }
+
+/* ── Hero ──────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  text-align: center;
+  padding: 70px 24px 56px;
+  overflow: hidden;
+}
+.hero::before {
+  content:'';
+  position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 0%, rgba(201,168,76,0.10) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 20% 60%, rgba(232,93,74,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 80% 60%, rgba(74,159,232,0.05) 0%, transparent 60%);
+  pointer-events:none;
+}
+.hero-top-line {
+  width:300px; height:1px; margin:0 auto 28px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.hero h1 {
+  font-family:'Cinzel', serif;
+  font-size: clamp(30px, 6vw, 64px);
+  font-weight:900;
+  color: var(--gold);
+  letter-spacing:5px;
+  text-shadow: 0 0 40px rgba(201,168,76,0.35), 0 2px 0 #40300a;
+  line-height:1.1;
+}
+.hero-sub {
+  font-family:'Cinzel', serif;
+  font-size: clamp(13px, 2vw, 18px);
+  color: var(--dim);
+  letter-spacing:3px;
+  margin-top:10px;
+}
+.hero-tag {
+  display:inline-block;
+  margin-top:22px;
+  padding:6px 20px;
+  border:1px solid var(--gold-d);
+  font-size:12px;
+  letter-spacing:3px;
+  color:var(--dim);
+  text-transform:uppercase;
+}
+
+/* ── Nav ───────────────────────────────────────────────── */
+.nav {
+  position:sticky; top:0; z-index:200;
+  background:rgba(7,8,15,0.95);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  display:flex; justify-content:center; flex-wrap:wrap;
+  gap:2px; padding:0 16px;
+}
+.nav a {
+  padding:13px 18px;
+  font-size:12px; font-weight:600;
+  letter-spacing:2px; text-transform:uppercase;
+  color:var(--dim); text-decoration:none;
+  border-bottom:2px solid transparent;
+  transition:.2s;
+}
+.nav a:hover { color:var(--gold-l); border-bottom-color:var(--gold); }
+
+/* ── Sections ──────────────────────────────────────────── */
+.sec { max-width:1280px; margin:0 auto; padding:64px 24px; }
+.sec-alt { background:var(--bg2); }
+.sec-alt2 { background:var(--bg3); }
+
+.sec-title {
+  font-family:'Cinzel', serif;
+  font-size:clamp(18px,3.5vw,30px);
+  color:var(--gold); letter-spacing:3px;
+  text-align:center; margin-bottom:10px;
+}
+.sec-sub { text-align:center; color:var(--dim); font-size:13px; letter-spacing:1px; margin-bottom:48px; }
+.divider { height:1px; background:linear-gradient(90deg,transparent,var(--gold-d),transparent); max-width:480px; margin:0 auto 44px; }
+
+/* ── Summary Stats ─────────────────────────────────────── */
+.stats-row {
+  display:flex; justify-content:center; flex-wrap:wrap; gap:28px;
+  margin-bottom:56px;
+}
+.stat-box {
+  background:var(--card);
+  border:1px solid var(--border);
+  padding:22px 30px; text-align:center;
+  min-width:130px; border-radius:2px;
+}
+.stat-num {
+  font-family:'Cinzel', serif;
+  font-size:34px; font-weight:700;
+  color:var(--gold-l); display:block;
+}
+.stat-lbl {
+  font-size:11px; letter-spacing:3px;
+  text-transform:uppercase; color:var(--dim);
+}
+
+/* ── Overview Table ────────────────────────────────────── */
+.overview-table { width:100%; border-collapse:collapse; margin-bottom:40px; }
+.overview-table th {
+  background:var(--card2);
+  font-family:'Cinzel', serif;
+  font-size:12px; letter-spacing:2px;
+  color:var(--gold-d); text-transform:uppercase;
+  padding:12px 16px; text-align:left;
+  border-bottom:1px solid var(--border2);
+}
+.overview-table td {
+  padding:11px 16px;
+  border-bottom:1px solid rgba(201,168,76,0.07);
+  font-size:13px; vertical-align:top;
+}
+.overview-table tr:hover td { background:rgba(201,168,76,0.03); }
+.m-dot {
+  display:inline-block;
+  width:10px; height:10px; border-radius:50%;
+  margin-right:8px; vertical-align:middle; flex-shrink:0;
+}
+.file-pill {
+  display:inline-block;
+  padding:2px 8px; margin:2px;
+  border-radius:2px; font-size:11px;
+  font-family:'Share Tech Mono', monospace;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  color:var(--text);
+}
+
+/* ── Member Cards ──────────────────────────────────────── */
+.members-grid {
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap:20px;
+}
+.member-card {
+  background:var(--card);
+  border-radius:3px;
+  overflow:hidden;
+  border:1px solid var(--border);
+  transition:border-color .25s, transform .2s;
+}
+.member-card:hover { border-color:var(--border2); transform:translateY(-3px); }
+
+.mc-header {
+  padding:22px 24px 18px;
+  display:flex; align-items:center; gap:16px;
+  border-bottom:1px solid var(--border);
+}
+.mc-avatar {
+  width:50px; height:50px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; font-weight:900;
+  font-family:'Cinzel', serif;
+  flex-shrink:0;
+  border:2px solid;
+}
+.mc-name { font-family:'Cinzel', serif; font-size:17px; font-weight:700; }
+.mc-role { font-size:12px; letter-spacing:2px; color:var(--dim); margin-top:2px; text-transform:uppercase; }
+
+.mc-section { padding:16px 24px; border-bottom:1px solid rgba(201,168,76,0.06); }
+.mc-section h4 {
+  font-size:11px; letter-spacing:2px; text-transform:uppercase;
+  color:var(--dim); margin-bottom:10px;
+}
+
+/* File list */
+.file-list { list-style:none; }
+.file-list li {
+  padding:7px 0; font-family:'Share Tech Mono', monospace;
+  font-size:12px; color:var(--text);
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  display:flex; align-items:flex-start; gap:8px;
+}
+.file-list li:last-child { border-bottom:none; }
+.file-pkg  { font-size:10px; letter-spacing:1px; padding:2px 6px; border-radius:2px; flex-shrink:0; margin-top:1px; }
+.file-lines { font-size:10px; color:var(--dim); margin-left:auto; white-space:nowrap; }
+.file-desc  { font-size:12px; color:var(--dim); font-family:'Rajdhani', sans-serif; line-height:1.4; }
+
+/* Responsibility list */
+.resp-list { list-style:none; }
+.resp-list li {
+  padding:6px 0; font-size:13px; color:var(--dim);
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  display:flex; gap:8px;
+}
+.resp-list li::before { content:'→'; flex-shrink:0; }
+.resp-list li strong { color:var(--text); }
+.resp-list li:last-child { border-bottom:none; }
+
+/* Workload bar */
+.workload-wrap { padding:16px 24px; }
+.workload-label { font-size:12px; color:var(--dim); letter-spacing:1px; margin-bottom:8px; display:flex; justify-content:space-between; }
+.workload-bar { height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden; }
+.workload-fill { height:100%; border-radius:3px; transition:width .6s ease; }
+
+/* ── Dependency Map ─────────────────────────────────────── */
+.dep-grid {
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:20px;
+}
+@media(max-width:700px) { .dep-grid { grid-template-columns:1fr; } }
+.dep-box {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:3px;
+  padding:22px 22px;
+}
+.dep-box h3 { font-family:'Cinzel', serif; font-size:14px; color:var(--gold-l); margin-bottom:14px; letter-spacing:1px; }
+.dep-list { list-style:none; }
+.dep-list li {
+  padding:6px 0; font-size:13px; color:var(--dim);
+  border-bottom:1px solid rgba(201,168,76,0.06);
+  display:flex; flex-wrap:wrap; gap:6px; align-items:center;
+}
+.dep-list li:last-child { border-bottom:none; }
+.dep-arrow { color:var(--gold-d); font-size:11px; }
+
+/* ── Timeline ───────────────────────────────────────────── */
+.timeline { display:flex; flex-direction:column; gap:0; }
+.tl-item { display:grid; grid-template-columns:120px 1fr; gap:0; }
+.tl-left { text-align:right; padding:0 24px 0 0; position:relative; }
+.tl-left::after {
+  content:''; position:absolute;
+  right:-1px; top:6px; bottom:-6px;
+  width:1px; background:var(--border);
+}
+.tl-dot {
+  position:absolute; right:-5px; top:4px;
+  width:9px; height:9px; border-radius:50%;
+  border:2px solid var(--gold); background:var(--bg);
+}
+.tl-phase { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--dim); padding-top:2px; }
+.tl-right { padding:0 0 32px 28px; }
+.tl-right h3 { font-family:'Cinzel', serif; font-size:15px; color:var(--gold-l); margin-bottom:8px; }
+.tl-right p { font-size:13px; color:var(--dim); }
+.tl-tasks { list-style:none; margin-top:8px; }
+.tl-tasks li { font-size:13px; color:var(--dim); padding:3px 0; display:flex; gap:8px; }
+.tl-tasks li::before { content:'✓'; flex-shrink:0; }
+
+/* ── Member color utilities ─────────────────────────────── */
+.c1 { color:var(--m1); }  .b1 { border-color:var(--m1); }  .bg1 { background:rgba(232,93,74,0.15); }  .fill1 { background:var(--m1); }
+.c2 { color:var(--m2); }  .b2 { border-color:var(--m2); }  .bg2c { background:rgba(74,159,232,0.15); } .fill2 { background:var(--m2); }
+.c3 { color:var(--m3); }  .b3 { border-color:var(--m3); }  .bg3c { background:rgba(107,207,138,0.15); }.fill3 { background:var(--m3); }
+.c4 { color:var(--m4); }  .b4 { border-color:var(--m4); }  .bg4 { background:rgba(200,122,240,0.15); } .fill4 { background:var(--m4); }
+.c5 { color:var(--m5); }  .b5 { border-color:var(--m5); }  .bg5 { background:rgba(240,168,48,0.15); }  .fill5 { background:var(--m5); }
+
+.pkg-orig { background:rgba(201,168,76,0.15); color:var(--gold); border:1px solid rgba(201,168,76,0.3); }
+.pkg-gui  { background:rgba(74,159,232,0.12); color:#7bc4f0;     border:1px solid rgba(74,159,232,0.25); }
+.pkg-new  { background:rgba(107,207,138,0.12); color:#7bcf9a;    border:1px solid rgba(107,207,138,0.25); }
+
+/* ── Collab Table ───────────────────────────────────────── */
+.collab-table { width:100%; border-collapse:collapse; }
+.collab-table th {
+  background:var(--card2);
+  font-size:11px; letter-spacing:2px; color:var(--dim);
+  padding:10px 14px; text-align:center;
+  border:1px solid var(--border);
+  font-family:'Cinzel', serif; text-transform:uppercase;
+}
+.collab-table td { padding:10px 14px; border:1px solid rgba(201,168,76,0.07); text-align:center; font-size:13px; }
+.collab-table td:first-child { text-align:left; font-weight:600; }
+.check { font-size:16px; }
+.collab-table tr:hover td { background:rgba(201,168,76,0.02); }
+
+/* ── Footer ─────────────────────────────────────────────── */
+footer {
+  text-align:center; padding:50px 20px;
+  border-top:1px solid var(--border);
+  color:var(--dim); font-size:11px;
+  letter-spacing:3px;
+  font-family:'Cinzel', serif;
+}
+
+@media(max-width:600px) {
+  .members-grid { grid-template-columns:1fr; }
+  .tl-item { grid-template-columns:80px 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-top-line"></div>
+  <h1>LIGA OLYMPICA</h1>
+  <p class="hero-sub">Project Division · 5 Members · Full-Stack Java Game</p>
+  <span class="hero-tag">Console + Swing GUI Edition</span>
+</header>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#summary">Summary</a>
+  <a href="#overview">File Overview</a>
+  <a href="#members">Member Roles</a>
+  <a href="#deps">Dependencies</a>
+  <a href="#timeline">Timeline</a>
+  <a href="#collab">Collaboration</a>
+</nav>
+
+<!-- SUMMARY STATS -->
+<section id="summary">
+<div class="sec">
+  <h2 class="sec-title">Project at a Glance</h2>
+  <p class="sec-sub">Total scope across original console code + new Swing GUI</p>
+  <div class="divider"></div>
+
+  <div class="stats-row">
+    <div class="stat-box">
+      <span class="stat-num">27</span>
+      <span class="stat-lbl">Java Files</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">~3,900</span>
+      <span class="stat-lbl">Lines of Code</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">5</span>
+      <span class="stat-lbl">Packages</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">10</span>
+      <span class="stat-lbl">Characters</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">5</span>
+      <span class="stat-lbl">Members</span>
+    </div>
+  </div>
+
+  <!-- High-level overview table -->
+  <table class="overview-table">
+    <thead>
+      <tr>
+        <th>Member</th>
+        <th>Role Title</th>
+        <th>Domain</th>
+        <th>Key Files</th>
+        <th>Approx Lines</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="m-dot" style="background:var(--m1)"></span><strong class="c1">Member 1 — Rovpoli</strong></td>
+        <td>Project Lead · Game Engine</td>
+        <td>Core architecture, battle logic, game loop</td>
+        <td>
+          <span class="file-pill">GameCharacter.java</span>
+          <span class="file-pill">CharacterInterface.java</span>
+          <span class="file-pill">Battle.java</span>
+          <span class="file-pill">BattlePanel.java</span>
+          <span class="file-pill">Main.java</span>
+          <span class="file-pill">Game.java</span>
+        </td>
+        <td class="c1"><strong>~900</strong></td>
+      </tr>
+      <tr>
+        <td><span class="m-dot" style="background:var(--m2)"></span><strong class="c2">Member 2 — KD</strong></td>
+        <td>Character Designer</td>
+        <td>5 character classes + pixel art sprites</td>
+        <td>
+          <span class="file-pill">Achiron.java</span>
+          <span class="file-pill">Heralde.java</span>
+          <span class="file-pill">Orris.java</span>
+          <span class="file-pill">Vor.java</span>
+          <span class="file-pill">SirKhai.java</span>
+          <span class="file-pill">PixelArt.java</span>
+        </td>
+        <td class="c2"><strong>~800</strong></td>
+      </tr>
+      <tr>
+        <td><span class="m-dot" style="background:var(--m3)"></span><strong class="c3">Member 3 — Biji</strong></td>
+        <td>Character Designer</td>
+        <td>4 character classes + animated bar component</td>
+        <td>
+          <span class="file-pill">Atalyn.java</span>
+          <span class="file-pill">Orven.java</span>
+          <span class="file-pill">Biji.java</span>
+          <span class="file-pill">GoatedKit.java</span>
+          <span class="file-pill">AnimatedBar.java</span>
+        </td>
+        <td class="c3"><strong>~680</strong></td>
+      </tr>
+      <tr>
+        <td><span class="m-dot" style="background:var(--m4)"></span><strong class="c4">Member 4 — Selwyn</strong></td>
+        <td>UI / Menu Engineer</td>
+        <td>Console menus, character select, roster</td>
+        <td>
+          <span class="file-pill">Menu.java</span>
+          <span class="file-pill">CharacterSelectPanel.java</span>
+          <span class="file-pill">RosterPanel.java</span>
+          <span class="file-pill">Selwyn.java</span>
+        </td>
+        <td class="c4"><strong>~860</strong></td>
+      </tr>
+      <tr>
+        <td><span class="m-dot" style="background:var(--m5)"></span><strong class="c5">Member 5</strong></td>
+        <td>GUI Systems Engineer</td>
+        <td>Window management, splash, theme, utilities</td>
+        <td>
+          <span class="file-pill">GameWindow.java</span>
+          <span class="file-pill">MainMenuPanel.java</span>
+          <span class="file-pill">SplashScreen.java</span>
+          <span class="file-pill">Theme.java</span>
+          <span class="file-pill">GameLauncher.java</span>
+          <span class="file-pill">BattleLogStream.java</span>
+        </td>
+        <td class="c5"><strong>~620</strong></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</section>
+
+<!-- FILE OVERVIEW -->
+<section id="overview" class="sec-alt">
+<div class="sec">
+  <h2 class="sec-title">Complete File Ownership Map</h2>
+  <p class="sec-sub">Every Java file, its package, line count, and assigned member</p>
+  <div class="divider"></div>
+
+  <table class="overview-table">
+    <thead>
+      <tr>
+        <th>File</th>
+        <th>Package</th>
+        <th>Lines</th>
+        <th>Owner</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Member 1 -->
+      <tr>
+        <td><code>Main.java</code></td>
+        <td><span class="file-pill pkg-orig">root</span></td>
+        <td>250</td>
+        <td><span class="m-dot" style="background:var(--m1)"></span><span class="c1">Rovpoli</span></td>
+        <td>Console splash screen, logo art, entry point</td>
+      </tr>
+      <tr>
+        <td><code>Game.java</code></td>
+        <td><span class="file-pill pkg-orig">root</span></td>
+        <td>22</td>
+        <td><span class="m-dot" style="background:var(--m1)"></span><span class="c1">Rovpoli</span></td>
+        <td>Wrapper that creates Menu and calls start()</td>
+      </tr>
+      <tr>
+        <td><code>CharacterInterface.java</code></td>
+        <td><span class="file-pill pkg-orig">character</span></td>
+        <td>31</td>
+        <td><span class="m-dot" style="background:var(--m1)"></span><span class="c1">Rovpoli</span></td>
+        <td>Defines the full contract all characters must implement</td>
+      </tr>
+      <tr>
+        <td><code>GameCharacter.java</code></td>
+        <td><span class="file-pill pkg-orig">character</span></td>
+        <td>264</td>
+        <td><span class="m-dot" style="background:var(--m1)"></span><span class="c1">Rovpoli</span></td>
+        <td>Abstract base class; HP/MP/cooldown/status engine; takeDamage, heal, buff, escape logic</td>
+      </tr>
+      <tr>
+        <td><code>Battle.java</code></td>
+        <td><span class="file-pill pkg-orig">battle</span></td>
+        <td>240</td>
+        <td><span class="m-dot" style="background:var(--m1)"></span><span class="c1">Rovpoli</span></td>
+        <td>Best-of-3 round loop, AI auto-turn, typewriter output, arcade mode battles</td>
+      </tr>
+      <tr>
+        <td><code>BattlePanel.java</code></td>
+        <td><span class="file-pill pkg-gui">gui</span></td>
+        <td>~380</td>
+        <td><span class="m-dot" style="background:var(--m1)"></span><span class="c1">Rovpoli</span></td>
+        <td>GUI battle screen; ArenaCanvas; all character animations (idle, attack, hurt, death, heal, stun, skill3); particle system (Projectile, Spark); skill buttons; battle thread</td>
+      </tr>
+
+      <!-- Member 2 -->
+      <tr>
+        <td><code>Achiron.java</code></td>
+        <td><span class="file-pill pkg-orig">character</span></td>
+        <td>159</td>
+        <td><span class="m-dot" style="background:var(--m2)"></span><span class="c2">KD</span></td>
+        <td>Spartan warrior (God: Ares) — Spear Thrust, Aegis Shield, Wrath of Ares</td>
+      </tr>
+      <tr>
+        <td><code>Heralde.java</code></td>
+        <td><span class="file-pill pkg-orig">character</span></td>
+        <td>148</td>
+        <td><span class="m-dot" style="background:var(--m2)"></span><span class="c2">KD</span></td>
+        <td>Hero of Zeus — Lion's Strike, Iron Hide, Thunder Wrath (true dmg)</td>
+      </tr>
+      <tr>
+        <td><code>Orris.java</code></td>
+        <td><span class="file-pill pkg-orig">character</span></td>
+        <td>159</td>
+        <td><span class="m-dot" style="background:var(--m2)"></span><span class="c2">KD</span></td>
+        <td>Son of Poseidon — Tidal Wave, Ocean's Shield, Poseidon's Wrath (true dmg)</td>
+      </tr>
+      <tr>
+        <td><code>Vor.java</code></td>
+        <td><span class="file-pill pkg-orig">character</span></td>
+        <td>150</td>
+        <td><span class="m-dot" style="background:var(--m2)"></span><span class="c2">KD</span></td>
+        <td>Time incarnation — Time Slash, Temporal Shift (untargetable), Chrono Mark</td>
+      </tr>
+      <tr>
+        <td><code>SirKhai.java</code></td>
+        <td><span class="file-pill pkg-orig">character</span></td>
+        <td>70</td>
+        <td><span class="m-dot" style="background:var(--m2)"></span><span class="c2">KD</span></td>
+        <td>Secret boss (code 10) — 99999 HP/MP, Tip of Ballpen (1M dmg)</td>
+      </tr>
+      <tr>
+        <td><code>PixelArt.java</code></td>
+        <td><span class="file-pill pkg-gui">gui</span></td>
+        <td>324</td>
+        <td><span class="m-dot" style="background:var(--m2)"></span><span class="c2">KD</span></td>
+        <td>All 10 character sprites as 16×16 int[][] grids; palette definitions; render() and flipH() helpers</td>
+      </tr>
+
+      <!-- Member 3 -->
+      <tr>
+        <td><code>Atalyn.java</code></td>
+        <td><span class="file-pill pkg-orig">character</span></td>
+        <td>165</td>
+        <td><span class="m-dot" style="background:var(--m3)"></span><span class="c3">Biji</span></td>
+        <td>Huntress of Artemis — Piercing Arrow, Hunter's Reflex (evade), Moonlit Mark</td>
+      </tr>
+      <tr>
+        <td><code>Orven.java</code></td>
+        <td><span class="file-pill pkg-orig">character</span></td>
+        <td>163</td>
+        <td><span class="m-dot" style="background:var(--m3)"></span><span class="c3">Biji</span></td>
+        <td>Son of Hermes — Swift Strike, Vanish (untargetable), Hermes' Speed (double attack)</td>
+      </tr>
+      <tr>
+        <td><code>Biji.java</code></td>
+        <td><span class="file-pill pkg-orig">character</span></td>
+        <td>152</td>
+        <td><span class="m-dot" style="background:var(--m3)"></span><span class="c3">Biji</span></td>
+        <td>Apollo's rockstar — Power Chord, Healing Hymn (only healer), Symphony of Destruction (stun)</td>
+      </tr>
+      <tr>
+        <td><code>GoatedKit.java</code></td>
+        <td><span class="file-pill pkg-orig">character</span></td>
+        <td>164</td>
+        <td><span class="m-dot" style="background:var(--m3)"></span><span class="c3">Biji</span></td>
+        <td>Talona's cat — Kit Kit, Rat Spot (dodge 2 turns), Talona's Might</td>
+      </tr>
+      <tr>
+        <td><code>AnimatedBar.java</code></td>
+        <td><span class="file-pill pkg-gui">gui</span></td>
+        <td>96</td>
+        <td><span class="m-dot" style="background:var(--m3)"></span><span class="c3">Biji</span></td>
+        <td>Smooth sliding HP/MP bar component; setTarget() animates via javax.swing.Timer; gradient + highlight paint</td>
+      </tr>
+
+      <!-- Member 4 -->
+      <tr>
+        <td><code>Selwyn.java</code></td>
+        <td><span class="file-pill pkg-orig">character</span></td>
+        <td>161</td>
+        <td><span class="m-dot" style="background:var(--m4)"></span><span class="c4">Selwyn</span></td>
+        <td>Loki's gamer — Rage Bait, Respawn Shield (–60% dmg), Loki's Hack</td>
+      </tr>
+      <tr>
+        <td><code>Menu.java</code></td>
+        <td><span class="file-pill pkg-orig">ui</span></td>
+        <td>396</td>
+        <td><span class="m-dot" style="background:var(--m4)"></span><span class="c4">Selwyn</span></td>
+        <td>Console main menu, character roster info display, PvP/PvE/Arcade mode orchestration, selectCharacter()</td>
+      </tr>
+      <tr>
+        <td><code>CharacterSelectPanel.java</code></td>
+        <td><span class="file-pill pkg-gui">gui</span></td>
+        <td>307</td>
+        <td><span class="m-dot" style="background:var(--m4)"></span><span class="c4">Selwyn</span></td>
+        <td>GUI character selection; 3×3 roster grid; detail panel with sprite, bars, skill info; confirm button; makeButton() factory</td>
+      </tr>
+      <tr>
+        <td><code>RosterPanel.java</code></td>
+        <td><span class="file-pill pkg-gui">gui</span></td>
+        <td>133</td>
+        <td><span class="m-dot" style="background:var(--m4)"></span><span class="c4">Selwyn</span></td>
+        <td>Scrollable character gallery with sprites, mini HP/MP bars, skill list for all 9 heroes</td>
+      </tr>
+
+      <!-- Member 5 -->
+      <tr>
+        <td><code>GameLauncher.java</code></td>
+        <td><span class="file-pill pkg-gui">gui</span></td>
+        <td>22</td>
+        <td><span class="m-dot" style="background:var(--m5)"></span><span class="c5">Member 5</span></td>
+        <td>GUI entry point; sets LookAndFeel; launches SplashScreen on EDT</td>
+      </tr>
+      <tr>
+        <td><code>GameWindow.java</code></td>
+        <td><span class="file-pill pkg-gui">gui</span></td>
+        <td>153</td>
+        <td><span class="m-dot" style="background:var(--m5)"></span><span class="c5">Member 5</span></td>
+        <td>Main JFrame; CardLayout navigation between all panels; showMenu/PvP/PvE/Arcade/Roster flows; post-battle dialog</td>
+      </tr>
+      <tr>
+        <td><code>MainMenuPanel.java</code></td>
+        <td><span class="file-pill pkg-gui">gui</span></td>
+        <td>194</td>
+        <td><span class="m-dot" style="background:var(--m5)"></span><span class="c5">Member 5</span></td>
+        <td>Animated home screen; painted title + Olympic rings; glow pulse Timer; 3 mode buttons</td>
+      </tr>
+      <tr>
+        <td><code>SplashScreen.java</code></td>
+        <td><span class="file-pill pkg-gui">gui</span></td>
+        <td>148</td>
+        <td><span class="m-dot" style="background:var(--m5)"></span><span class="c5">Member 5</span></td>
+        <td>Fade-in JWindow intro; pulse animation; click/keypress to advance; launches GameWindow</td>
+      </tr>
+      <tr>
+        <td><code>Theme.java</code></td>
+        <td><span class="file-pill pkg-gui">gui</span></td>
+        <td>53</td>
+        <td><span class="m-dot" style="background:var(--m5)"></span><span class="c5">Member 5</span></td>
+        <td>Shared color constants (BG_DEEP, GOLD, HP_GREEN, MP_BLUE…); font definitions; darker()/alpha() helpers</td>
+      </tr>
+      <tr>
+        <td><code>BattleLogStream.java</code></td>
+        <td><span class="file-pill pkg-gui">gui</span></td>
+        <td>51</td>
+        <td><span class="m-dot" style="background:var(--m5)"></span><span class="c5">Member 5</span></td>
+        <td>OutputStream bridge from System.out to JTextArea; preserves original console output simultaneously</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</section>
+
+<!-- MEMBER CARDS -->
+<section id="members" class="sec-alt2">
+<div class="sec">
+  <h2 class="sec-title">Member Responsibilities</h2>
+  <p class="sec-sub">Detailed breakdown of what each person builds, owns, and is responsible for</p>
+  <div class="divider"></div>
+
+  <div class="members-grid">
+
+    <!-- MEMBER 1 — ROVPOLI -->
+    <div class="member-card">
+      <div class="mc-header">
+        <div class="mc-avatar bg1 b1 c1">R</div>
+        <div>
+          <div class="mc-name c1">Rovpoli</div>
+          <div class="mc-role">Project Lead · Game Engine</div>
+        </div>
+      </div>
+
+      <div class="mc-section">
+        <h4>Files Owned</h4>
+        <ul class="file-list">
+          <li><span class="file-pkg pkg-orig">root</span><span>Main.java</span><span class="file-lines">250 lines</span></li>
+          <li><span class="file-pkg pkg-orig">root</span><span>Game.java</span><span class="file-lines">22 lines</span></li>
+          <li><span class="file-pkg pkg-orig">character</span><span>CharacterInterface.java</span><span class="file-lines">31 lines</span></li>
+          <li><span class="file-pkg pkg-orig">character</span><span>GameCharacter.java</span><span class="file-lines">264 lines</span></li>
+          <li><span class="file-pkg pkg-orig">battle</span><span>Battle.java</span><span class="file-lines">240 lines</span></li>
+          <li><span class="file-pkg pkg-gui">gui</span><span>BattlePanel.java</span><span class="file-lines">~380 lines</span></li>
+        </ul>
+      </div>
+
+      <div class="mc-section">
+        <h4>Responsibilities</h4>
+        <ul class="resp-list">
+          <li><strong>Define CharacterInterface</strong> — sets the contract all 9 heroes must implement</li>
+          <li><strong>Build GameCharacter</strong> — HP/MP, cooldowns, status effects, damage formula, buff/debuff system</li>
+          <li><strong>Write Battle.java</strong> — best-of-3 loop, stun handling, turn alternation, 40-turn cap, arcade mode, typewriter output</li>
+          <li><strong>Write BattlePanel.java</strong> — full GUI battle screen; battle thread + input queue; ArenaCanvas with 60fps animation timer; FighterState machine (idle bob, attack lunge, hurt shake, death fall, heal ring, stun stars, victory bounce); Projectile + Spark particle system; screen shake</li>
+          <li><strong>Console splash screen</strong> — ASCII art logo in Main.java</li>
+          <li><strong>Overall integration testing</strong> — ensure all characters plug into Battle and BattlePanel correctly</li>
+        </ul>
+      </div>
+
+      <div class="workload-wrap">
+        <div class="workload-label">
+          <span>Workload share</span>
+          <span class="c1">~900 lines · 23%</span>
+        </div>
+        <div class="workload-bar"><div class="workload-fill fill1" style="width:74%"></div></div>
+      </div>
+    </div>
+
+    <!-- MEMBER 2 — KD -->
+    <div class="member-card">
+      <div class="mc-header">
+        <div class="mc-avatar bg2c b2 c2">K</div>
+        <div>
+          <div class="mc-name c2">KD</div>
+          <div class="mc-role">Character Designer · Pixel Artist</div>
+        </div>
+      </div>
+
+      <div class="mc-section">
+        <h4>Files Owned</h4>
+        <ul class="file-list">
+          <li><span class="file-pkg pkg-orig">character</span><span>Achiron.java</span><span class="file-lines">159 lines</span></li>
+          <li><span class="file-pkg pkg-orig">character</span><span>Heralde.java</span><span class="file-lines">148 lines</span></li>
+          <li><span class="file-pkg pkg-orig">character</span><span>Orris.java</span><span class="file-lines">159 lines</span></li>
+          <li><span class="file-pkg pkg-orig">character</span><span>Vor.java</span><span class="file-lines">150 lines</span></li>
+          <li><span class="file-pkg pkg-orig">character</span><span>SirKhai.java</span><span class="file-lines">70 lines</span></li>
+          <li><span class="file-pkg pkg-gui">gui</span><span>PixelArt.java</span><span class="file-lines">324 lines</span></li>
+        </ul>
+      </div>
+
+      <div class="mc-section">
+        <h4>Responsibilities</h4>
+        <ul class="resp-list">
+          <li><strong>Achiron (Ares)</strong> — implement skill1/2/3; Aegis Shield defense mechanic; Wrath of Ares attack buff</li>
+          <li><strong>Heralde (Zeus)</strong> — Iron Hide defense bonus; Thunder Wrath true damage skill3</li>
+          <li><strong>Orris (Poseidon)</strong> — Ocean's Shield defense; Poseidon's Wrath true damage skill3</li>
+          <li><strong>Vor (Time)</strong> — Temporal Shift untargetable mechanic; Chrono Mark buff</li>
+          <li><strong>SirKhai (Secret)</strong> — hidden character (code 10), overpowered stats, easter egg</li>
+          <li><strong>PixelArt.java</strong> — define and maintain all 10 character sprites as 16×16 pixel grids; color palette system; render() scaler; flipH() for right-side fighter; add new sprites for any future characters</li>
+        </ul>
+      </div>
+
+      <div class="workload-wrap">
+        <div class="workload-label">
+          <span>Workload share</span>
+          <span class="c2">~800 lines · 20%</span>
+        </div>
+        <div class="workload-bar"><div class="workload-fill fill2" style="width:66%"></div></div>
+      </div>
+    </div>
+
+    <!-- MEMBER 3 — BIJI -->
+    <div class="member-card">
+      <div class="mc-header">
+        <div class="mc-avatar bg3c b3 c3">B</div>
+        <div>
+          <div class="mc-name c3">Biji</div>
+          <div class="mc-role">Character Designer · UI Component</div>
+        </div>
+      </div>
+
+      <div class="mc-section">
+        <h4>Files Owned</h4>
+        <ul class="file-list">
+          <li><span class="file-pkg pkg-orig">character</span><span>Atalyn.java</span><span class="file-lines">165 lines</span></li>
+          <li><span class="file-pkg pkg-orig">character</span><span>Orven.java</span><span class="file-lines">163 lines</span></li>
+          <li><span class="file-pkg pkg-orig">character</span><span>Biji.java</span><span class="file-lines">152 lines</span></li>
+          <li><span class="file-pkg pkg-orig">character</span><span>GoatedKit.java</span><span class="file-lines">164 lines</span></li>
+          <li><span class="file-pkg pkg-gui">gui</span><span>AnimatedBar.java</span><span class="file-lines">96 lines</span></li>
+        </ul>
+      </div>
+
+      <div class="mc-section">
+        <h4>Responsibilities</h4>
+        <ul class="resp-list">
+          <li><strong>Atalyn (Artemis)</strong> — Hunter's Reflex nextAttackEvaded flag; Moonlit Mark attack buff; implement armor-pierce mechanic</li>
+          <li><strong>Orven (Hermes)</strong> — Vanish untargetable; Hermes' Speed unique double-attack in a single turn (reset + re-execute skill1)</li>
+          <li><strong>Biji (Apollo)</strong> — Healing Hymn (only self-heal in game); Symphony of Destruction combo damage + stun application</li>
+          <li><strong>GoatedKit (Talona)</strong> — Rat Spot multi-turn dodge; Talona's Might 3-turn buff; implement rabies flavour text</li>
+          <li><strong>AnimatedBar.java</strong> — smooth HP/MP bar; javax.swing.Timer driven frame-by-frame interpolation; setTarget(cur,max) API; gradient + highlight painting; value label overlay</li>
+        </ul>
+      </div>
+
+      <div class="workload-wrap">
+        <div class="workload-label">
+          <span>Workload share</span>
+          <span class="c3">~680 lines · 17%</span>
+        </div>
+        <div class="workload-bar"><div class="workload-fill fill3" style="width:57%"></div></div>
+      </div>
+    </div>
+
+    <!-- MEMBER 4 — SELWYN -->
+    <div class="member-card">
+      <div class="mc-header">
+        <div class="mc-avatar bg4 b4 c4">S</div>
+        <div>
+          <div class="mc-name c4">Selwyn</div>
+          <div class="mc-role">UI / Menu Engineer</div>
+        </div>
+      </div>
+
+      <div class="mc-section">
+        <h4>Files Owned</h4>
+        <ul class="file-list">
+          <li><span class="file-pkg pkg-orig">character</span><span>Selwyn.java</span><span class="file-lines">161 lines</span></li>
+          <li><span class="file-pkg pkg-orig">ui</span><span>Menu.java</span><span class="file-lines">396 lines</span></li>
+          <li><span class="file-pkg pkg-gui">gui</span><span>CharacterSelectPanel.java</span><span class="file-lines">307 lines</span></li>
+          <li><span class="file-pkg pkg-gui">gui</span><span>RosterPanel.java</span><span class="file-lines">133 lines</span></li>
+        </ul>
+      </div>
+
+      <div class="mc-section">
+        <h4>Responsibilities</h4>
+        <ul class="resp-list">
+          <li><strong>Selwyn character (Loki)</strong> — Respawn Shield 60% damage reduction; Loki's Hack high crit; write Selwyn's backstory</li>
+          <li><strong>Menu.java (console)</strong> — main menu loop, mode selection (PvP/PvE/Arcade), showCharacterInfo(), selectCharacter(), arcadeBattle() with difficulty tiers, all Scanner input handling</li>
+          <li><strong>CharacterSelectPanel.java</strong> — 3×3 roster card grid (MouseListener per card); detail panel that updates on selection (sprite, name, god, HP/MP bars, 3-skill list, backstory); buildCharacter() factory that maps names to class instances; makeButton() shared factory used by BattlePanel</li>
+          <li><strong>RosterPanel.java</strong> — scrollable gallery using GridLayout; per-character card with sprite, mini stat bars, skill rows; back button to main menu</li>
+          <li><strong>Character data arrays</strong> — maintain NAMES[], GODS[], HP_VALUES[], MP_VALUES[], SKILLS[][], SKILL_DESC[][] in CharacterSelectPanel as the single source of truth for UI display</li>
+        </ul>
+      </div>
+
+      <div class="workload-wrap">
+        <div class="workload-label">
+          <span>Workload share</span>
+          <span class="c4">~860 lines · 22%</span>
+        </div>
+        <div class="workload-bar"><div class="workload-fill fill4" style="width:71%"></div></div>
+      </div>
+    </div>
+
+    <!-- MEMBER 5 -->
+    <div class="member-card" style="grid-column: 1 / -1; max-width: 760px; margin: 0 auto;">
+      <div class="mc-header">
+        <div class="mc-avatar bg5 b5 c5">5</div>
+        <div>
+          <div class="mc-name c5">Member 5</div>
+          <div class="mc-role">GUI Systems Engineer · Infrastructure</div>
+        </div>
+      </div>
+
+      <div class="mc-section">
+        <h4>Files Owned</h4>
+        <ul class="file-list">
+          <li><span class="file-pkg pkg-gui">gui</span><span>GameLauncher.java</span><span class="file-lines">22 lines</span></li>
+          <li><span class="file-pkg pkg-gui">gui</span><span>GameWindow.java</span><span class="file-lines">153 lines</span></li>
+          <li><span class="file-pkg pkg-gui">gui</span><span>MainMenuPanel.java</span><span class="file-lines">194 lines</span></li>
+          <li><span class="file-pkg pkg-gui">gui</span><span>SplashScreen.java</span><span class="file-lines">148 lines</span></li>
+          <li><span class="file-pkg pkg-gui">gui</span><span>Theme.java</span><span class="file-lines">53 lines</span></li>
+          <li><span class="file-pkg pkg-gui">gui</span><span>BattleLogStream.java</span><span class="file-lines">51 lines</span></li>
+        </ul>
+      </div>
+
+      <div class="mc-section">
+        <h4>Responsibilities</h4>
+        <ul class="resp-list">
+          <li><strong>Theme.java</strong> — Define and own all color constants (BG_DEEP, GOLD, HP_GREEN…), all font definitions (FONT_TITLE, FONT_HEADER, FONT_MONO…), and the darker()/alpha() utility helpers. Every other GUI file imports from here</li>
+          <li><strong>GameLauncher.java</strong> — Set system look and feel; call SwingUtilities.invokeLater; instantiate and show SplashScreen. This is the GUI's main() entry point</li>
+          <li><strong>SplashScreen.java</strong> — Transparent JWindow with fade-in alpha animation; pulsing gold border; "Press any key" prompt with sine-wave opacity; click/key handler that opens GameWindow</li>
+          <li><strong>MainMenuPanel.java</strong> — Custom-painted title canvas (LIGA OLYMPICA text with gradient + glow); animated Olympic rings; three large custom-painted mode buttons (PvP, PvE, Roster); 50ms glow-pulse Timer; creator credits</li>
+          <li><strong>GameWindow.java</strong> — The single JFrame; CardLayout swap between MENU / SELECT1 / SELECT2 / BATTLE / ROSTER panels; full navigation flow (showMenu, startPvP, startPvE, showRoster, showPostBattleDialog); AI random character picker; replaceCard() to prevent memory leaks from stale panels</li>
+          <li><strong>BattleLogStream.java</strong> — OutputStream subclass that forwards write() calls to JTextArea on the EDT while simultaneously mirroring to the original console PrintStream. Allows all existing typewriter() calls in Battle.java to appear in the GUI log with zero changes</li>
+        </ul>
+      </div>
+
+      <div class="workload-wrap">
+        <div class="workload-label">
+          <span>Workload share</span>
+          <span class="c5">~620 lines · 16%</span>
+        </div>
+        <div class="workload-bar"><div class="workload-fill fill5" style="width:52%"></div></div>
+      </div>
+    </div>
+
+  </div><!-- /members-grid -->
+</div>
+</section>
+
+<!-- DEPENDENCY MAP -->
+<section id="deps">
+<div class="sec">
+  <h2 class="sec-title">Cross-Member Dependencies</h2>
+  <p class="sec-sub">Who depends on whom — coordinate these interfaces carefully</p>
+  <div class="divider"></div>
+
+  <div class="dep-grid">
+    <div class="dep-box">
+      <h3>Rovpoli's code is used by</h3>
+      <ul class="dep-list">
+        <li><span class="m-dot" style="background:var(--m2)"></span><span class="c2">KD</span><span class="dep-arrow">→</span> All character classes extend <strong>GameCharacter</strong></li>
+        <li><span class="m-dot" style="background:var(--m3)"></span><span class="c3">Biji</span><span class="dep-arrow">→</span> All character classes extend <strong>GameCharacter</strong></li>
+        <li><span class="m-dot" style="background:var(--m4)"></span><span class="c4">Selwyn</span><span class="dep-arrow">→</span> Menu.java creates <strong>Battle</strong> objects</li>
+        <li><span class="m-dot" style="background:var(--m5)"></span><span class="c5">M5</span><span class="dep-arrow">→</span> GameWindow creates <strong>BattlePanel</strong> which runs the battle</li>
+      </ul>
+    </div>
+    <div class="dep-box">
+      <h3>Theme.java (M5) is used by</h3>
+      <ul class="dep-list">
+        <li><span class="m-dot" style="background:var(--m1)"></span><span class="c1">Rovpoli</span><span class="dep-arrow">→</span> BattlePanel.java imports Theme.*</li>
+        <li><span class="m-dot" style="background:var(--m2)"></span><span class="c2">KD</span><span class="dep-arrow">→</span> PixelArt.java references Theme colors</li>
+        <li><span class="m-dot" style="background:var(--m3)"></span><span class="c3">Biji</span><span class="dep-arrow">→</span> AnimatedBar.java uses Theme.darker()</li>
+        <li><span class="m-dot" style="background:var(--m4)"></span><span class="c4">Selwyn</span><span class="dep-arrow">→</span> CharacterSelectPanel, RosterPanel import Theme.*</li>
+      </ul>
+    </div>
+    <div class="dep-box">
+      <h3>PixelArt.java (KD) is used by</h3>
+      <ul class="dep-list">
+        <li><span class="m-dot" style="background:var(--m1)"></span><span class="c1">Rovpoli</span><span class="dep-arrow">→</span> BattlePanel.ArenaCanvas calls getSprite()</li>
+        <li><span class="m-dot" style="background:var(--m3)"></span><span class="c3">Biji</span><span class="dep-arrow">→</span> PixelArt must have sprites for Biji's characters</li>
+        <li><span class="m-dot" style="background:var(--m4)"></span><span class="c4">Selwyn</span><span class="dep-arrow">→</span> CharacterSelectPanel and RosterPanel call getSprite()</li>
+      </ul>
+    </div>
+    <div class="dep-box">
+      <h3>CharacterSelectPanel (Selwyn) used by</h3>
+      <ul class="dep-list">
+        <li><span class="m-dot" style="background:var(--m1)"></span><span class="c1">Rovpoli</span><span class="dep-arrow">→</span> BattlePanel calls makeButton() factory from CharacterSelectPanel</li>
+        <li><span class="m-dot" style="background:var(--m5)"></span><span class="c5">M5</span><span class="dep-arrow">→</span> GameWindow instantiates CharacterSelectPanel for both P1 and P2 flows</li>
+      </ul>
+    </div>
+    <div class="dep-box">
+      <h3>AnimatedBar (Biji) used by</h3>
+      <ul class="dep-list">
+        <li><span class="m-dot" style="background:var(--m1)"></span><span class="c1">Rovpoli</span><span class="dep-arrow">→</span> BattlePanel.ArenaCanvas creates and reads AnimatedBar via reflection</li>
+        <li><span class="m-dot" style="background:var(--m4)"></span><span class="c4">Selwyn</span><span class="dep-arrow">→</span> CharacterSelectPanel and RosterPanel instantiate AnimatedBar for stat display</li>
+      </ul>
+    </div>
+    <div class="dep-box">
+      <h3>Critical shared interfaces</h3>
+      <ul class="dep-list">
+        <li><strong>setStunned(boolean)</strong> — BattlePanel calls this; all character classes must expose it via GameCharacter</li>
+        <li><strong>resetForNewRound()</strong> — Called by both Battle.java and BattlePanel.java</li>
+        <li><strong>autoTakeTurn(target)</strong> — Called by BattlePanel for AI mode; each character inherits from GameCharacter</li>
+        <li><strong>skill1/2/3Cooldown fields</strong> — BattlePanel reads via reflection; must remain named exactly as-is in GameCharacter</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- TIMELINE -->
+<section id="timeline" class="sec-alt">
+<div class="sec">
+  <h2 class="sec-title">Suggested Development Timeline</h2>
+  <p class="sec-sub">Recommended order to minimize blocking between members</p>
+  <div class="divider"></div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot"></div>
+        <div class="tl-phase">Phase 1<br>Week 1</div>
+      </div>
+      <div class="tl-right">
+        <h3>Foundation — Rovpoli + M5 in parallel</h3>
+        <p>Everything else depends on these; must be done first.</p>
+        <ul class="tl-tasks">
+          <li><span class="c1">Rovpoli</span> — Finalize CharacterInterface, complete GameCharacter base class</li>
+          <li><span class="c5">M5</span> — Complete Theme.java (all colors + fonts) so KD, Biji, Selwyn can import it</li>
+          <li><span class="c5">M5</span> — Complete GameWindow skeleton (CardLayout wired up, even if panels are stubs)</li>
+          <li><span class="c5">M5</span> — Complete BattleLogStream so System.out redirect works from day 1</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot"></div>
+        <div class="tl-phase">Phase 2<br>Week 1–2</div>
+      </div>
+      <div class="tl-right">
+        <h3>Characters + PixelArt — KD + Biji in parallel</h3>
+        <p>Both work independently; only depend on GameCharacter being stable.</p>
+        <ul class="tl-tasks">
+          <li><span class="c2">KD</span> — Implement Achiron, Heralde, Orris, Vor, SirKhai</li>
+          <li><span class="c2">KD</span> — Build PixelArt.java with all 10 sprites</li>
+          <li><span class="c3">Biji</span> — Implement Atalyn, Orven, Biji, GoatedKit</li>
+          <li><span class="c3">Biji</span> — Build AnimatedBar.java (no character dependencies)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot"></div>
+        <div class="tl-phase">Phase 3<br>Week 2</div>
+      </div>
+      <div class="tl-right">
+        <h3>Menus + Battle Logic — Selwyn + Rovpoli</h3>
+        <p>Characters must be complete. Menu wires them all together.</p>
+        <ul class="tl-tasks">
+          <li><span class="c4">Selwyn</span> — Complete Menu.java (PvP/PvE/Arcade flows)</li>
+          <li><span class="c4">Selwyn</span> — Build CharacterSelectPanel (depends on PixelArt + AnimatedBar)</li>
+          <li><span class="c4">Selwyn</span> — Build RosterPanel</li>
+          <li><span class="c1">Rovpoli</span> — Complete Battle.java (depends on all characters being available)</li>
+          <li><span class="c5">M5</span> — Complete SplashScreen and MainMenuPanel</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot"></div>
+        <div class="tl-phase">Phase 4<br>Week 3</div>
+      </div>
+      <div class="tl-right">
+        <h3>GUI Battle Screen + Full Integration — Rovpoli</h3>
+        <p>BattlePanel depends on everything above being stable.</p>
+        <ul class="tl-tasks">
+          <li><span class="c1">Rovpoli</span> — Complete BattlePanel with ArenaCanvas, FighterState, particle system</li>
+          <li><span class="c5">M5</span> — Wire all panels into GameWindow; test navigation flow</li>
+          <li>All members — Integration testing: start PvP, PvE, Arcade; check all 9 characters render and fight correctly</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot"></div>
+        <div class="tl-phase">Phase 5<br>Week 3–4</div>
+      </div>
+      <div class="tl-right">
+        <h3>Polish + Bug Fixes — All Members</h3>
+        <ul class="tl-tasks">
+          <li>Balance character damage values (all)</li>
+          <li>Fix any sprite pixel array errors (KD)</li>
+          <li>Add missing cooldown feedback in UI (Selwyn)</li>
+          <li>Tune animation timings and particle counts (Rovpoli)</li>
+          <li>Final presentation preparation</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- COLLABORATION MATRIX -->
+<section id="collab" class="sec-alt2">
+<div class="sec">
+  <h2 class="sec-title">Collaboration Matrix</h2>
+  <p class="sec-sub">Who needs to coordinate with whom when making changes</p>
+  <div class="divider"></div>
+
+  <table class="collab-table">
+    <thead>
+      <tr>
+        <th>When you change…</th>
+        <th style="color:var(--m1)">Rovpoli</th>
+        <th style="color:var(--m2)">KD</th>
+        <th style="color:var(--m3)">Biji</th>
+        <th style="color:var(--m4)">Selwyn</th>
+        <th style="color:var(--m5)">M5</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>GameCharacter.java fields/methods</td>
+        <td class="check">👑 owner</td>
+        <td class="check">⚠️ all chars affected</td>
+        <td class="check">⚠️ all chars affected</td>
+        <td class="check">⚠️ Menu may break</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Battle.java round logic</td>
+        <td class="check">👑 owner</td>
+        <td>—</td>
+        <td>—</td>
+        <td class="check">⚠️ Menu calls Battle</td>
+        <td class="check">⚠️ BattlePanel mirrors logic</td>
+      </tr>
+      <tr>
+        <td>Theme.java colors/fonts</td>
+        <td class="check">⚠️ BattlePanel uses Theme</td>
+        <td class="check">⚠️ PixelArt uses Theme</td>
+        <td class="check">⚠️ AnimatedBar uses Theme</td>
+        <td class="check">⚠️ Select/Roster use Theme</td>
+        <td class="check">👑 owner</td>
+      </tr>
+      <tr>
+        <td>PixelArt.java sprite data</td>
+        <td class="check">⚠️ ArenaCanvas uses sprites</td>
+        <td class="check">👑 owner</td>
+        <td class="check">⚠️ sprites needed for Biji's chars</td>
+        <td class="check">⚠️ Select/Roster display sprites</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>CharacterSelectPanel data arrays</td>
+        <td>—</td>
+        <td class="check">⚠️ sprite name must match</td>
+        <td class="check">⚠️ character data must match</td>
+        <td class="check">👑 owner</td>
+        <td class="check">⚠️ GameWindow instantiates it</td>
+      </tr>
+      <tr>
+        <td>AnimatedBar.java fields (displayed, max)</td>
+        <td class="check">⚠️ BattlePanel reads via reflection</td>
+        <td>—</td>
+        <td class="check">👑 owner</td>
+        <td class="check">⚠️ Select/Roster uses bars</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Add a new character class</td>
+        <td class="check">⚠️ add to Battle roster array</td>
+        <td class="check">⚠️ add sprite to PixelArt</td>
+        <td class="check">may own the new class</td>
+        <td class="check">⚠️ add to Menu + CharacterSelect arrays</td>
+        <td class="check">⚠️ add to GameWindow random picker</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <br>
+  <div class="dep-grid">
+    <div class="dep-box">
+      <h3>Git Workflow Recommendation</h3>
+      <ul class="resp-list">
+        <li><strong>One branch per member</strong> — e.g. <code>feat/rovpoli-battle</code>, <code>feat/kd-sprites</code></li>
+        <li><strong>Merge to main after Phase 1</strong> — GameCharacter and Theme must land first</li>
+        <li><strong>Pull before starting work each day</strong> — GameCharacter changes affect everyone</li>
+        <li><strong>Never rename GameCharacter fields</strong> — BattlePanel uses reflection on cooldown field names</li>
+        <li><strong>Run a full compile</strong> after every merge — catch interface mismatches early</li>
+      </ul>
+    </div>
+    <div class="dep-box">
+      <h3>Compile Order</h3>
+      <ul class="resp-list">
+        <li><strong>1st</strong> — <code>ligaolympica.character</code> (interface + base class)</li>
+        <li><strong>2nd</strong> — <code>ligaolympica.character.*</code> (concrete classes)</li>
+        <li><strong>3rd</strong> — <code>ligaolympica.battle</code> (depends on characters)</li>
+        <li><strong>4th</strong> — <code>ligaolympica.ui</code> (depends on battle + characters)</li>
+        <li><strong>5th</strong> — <code>ligaolympica.gui</code> (Theme first, then all others)</li>
+        <li><strong>6th</strong> — <code>ligaolympica</code> root (Main, Game)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<footer>
+  ⚔ LIGA OLYMPICA ⚔<br>
+  Project Division · 5 Members · Java SE · Swing GUI<br>
+  <span style="font-size:10px;margin-top:6px;display:block">Rovpoli · KD · Biji · Selwyn · Member 5</span>
+</footer>
+
+</body>
+</html>
