@@ -1,50 +1,56 @@
+package olympicleague.Main;
+
 import java.io.IOException;
 
 public class Main {
-
     public static void main(String[] args) {
         System.out.println("\n\n");
-
-        printColorfulTitle();
-        printOlympicRings();
-
-        System.out.println("\n");
-        printWarriorArt();
+        printColorfulTitle();//52
+        printOlympicRings();//79
 
         System.out.println("\n");
+        printWarriorArt();//96
 
-        printAnimatedBorder("═");
+        System.out.println("\n");
+
+        printAnimatedBorder("═");//196
         centerPrint("IN THE MYSTICAL REALM OF OLYMPICA", 25);
-        printAnimatedBorder("═");
+        printAnimatedBorder("═");//196
 
         System.out.println();
-
-        typewriter("           Legendary warriors gather from across the realm...", 20);
-        typewriter("           Each bearing ancient powers and unmatched skill...", 20);
-        typewriter("           Only ONE shall claim the throne of champions!", 20);
-
-        System.out.println("\n");
-
-        printTournamentBanner();
+        typewriterGlow("           Legendary warriors gather from across the realm...", 20);//221
+        typewriterGlow("           Each bearing ancient powers and unmatched skill...", 20);
+        typewriterGlow("           Only ONE shall claim the throne of champions!", 20);
 
         System.out.println("\n");
 
+        // Epic tournament announcement
+        printTournamentBanner();//120
+
+        System.out.println("\n");
+
+        // Creators section with style
         printCreatorsSection();
 
         System.out.println("\n");
 
-        centerPrint("Press ENTER to start....", 10);
+        centerPrint("Press ENTER to start....", 10);//233
+
+        // Epic call to action
 
         try {
             System.in.read();
-        } catch (IOException ignored) {}
+        } catch (IOException e) {
+        }
+
+        // Transition effect
 
         Game game = new Game();
         game.start();
     }
 
     static void printColorfulTitle() {
-        String[] titleLines = {
+        String[] title = {
             "     ╔══════════════════════════════════════════════════════════════════════════════════╗",
             "     ║                                                                                  ║",
             "     ║                      ██╗     ██╗ ██████╗  █████╗                                 ║",
@@ -64,14 +70,14 @@ public class Main {
             "     ╚══════════════════════════════════════════════════════════════════════════════════╝"
         };
 
-        for (String line : titleLines) {
+        for (String line : title) {
             System.out.println(line);
-            sleep(5);
+            try { Thread.sleep(5); } catch (InterruptedException e) {}
         }
     }
 
     static void printOlympicRings() {
-        String[] ringLines = {
+        String[] rings = {
             "                         ████      ████      ████",
             "                       ██    ██  ██    ██  ██    ██",
             "                       ██    ████    ████    ████",
@@ -81,14 +87,14 @@ public class Main {
             "                                            ██████████"
         };
 
-        for (String line : ringLines) {
+        for (String line : rings) {
             System.out.println(line);
-            sleep(5);
+            try { Thread.sleep(5); } catch (InterruptedException e) {}
         }
     }
 
     static void printWarriorArt() {
-        String[] warriorArt = {
+        String[] warrior = {
             "                                THE ARENA AWAITS  ",
             "",
             "                                  /\\    /\\",
@@ -106,13 +112,13 @@ public class Main {
             "                                |__________|"
         };
 
-        for (String line : warriorArt) {
+        for (String line : warrior) {
             centerPrint(line, 5);
         }
     }
 
     static void printTournamentBanner() {
-        String[] bannerLines = {
+        String[] banner = {
             "        ╔═══════════════════════════════════════════════════════════╗",
             "        ║              THE TOURNAMENT OF LEGENDS BEGINS             ║",
             "        ║                                                           ║",
@@ -123,14 +129,14 @@ public class Main {
             "        ╚═══════════════════════════════════════════════════════════╝"
         };
 
-        for (String line : bannerLines) {
+        for (String line : banner) {
             System.out.println(line);
-            sleep(80);
+            try { Thread.sleep(80); } catch (InterruptedException e) {}
         }
     }
 
     static void printCreatorsSection() {
-        String[] creatorLines = {
+        String[] creators = {
             "               ╔═══════════════════════════════════════════╗",
             "               ║             FORGED BY LEGENDS:            ║",
             "               ╠═══════════════════════════════════════════╣",
@@ -143,22 +149,59 @@ public class Main {
             "               ╚═══════════════════════════════════════════╝"
         };
 
-        for (String line : creatorLines) {
+        for (String line : creators) {
             System.out.println(line);
-            sleep(70);
+            try { Thread.sleep(70); } catch (InterruptedException e) {}
         }
     }
 
-    static void printAnimatedBorder(String symbol) {
-        StringBuilder border = new StringBuilder("        ");
+    static void printCallToAction() {
+        printAnimatedBorder("▬");
+        System.out.println();
 
-        for (int i = 0; i < 63; i++) {
-            border.append(symbol);
+        String[] pulse = {
+            "              ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓",
+            "              ┃     PRESS ENTER TO BEGIN YOUR DESTINY     ┃",
+            "              ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛"
+        };
+
+        for (int i = 0; i < 1; i++) {
+            for (String line : pulse) {
+                System.out.println(line);
+            }
+            try { Thread.sleep(300); } catch (InterruptedException e) {}
+            if (i < 2) {
+                System.out.print("\033[3A"); // Move cursor up 3 lines
+            }
         }
 
-        for (char c : border.toString().toCharArray()) {
+        System.out.println("\n");
+        printAnimatedBorder("▬");
+    }
+
+    static void printTransition() {
+        System.out.println("\n\n");
+        String[] transition = {
+            "                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+            "                       THE BATTLE BEGINS NOW!",
+            "                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        };
+
+        for (String line : transition) {
+            centerPrint(line, 30);
+        }
+        System.out.println("\n");
+    }
+
+    static void printAnimatedBorder(String symbol) {
+        String border = "        ";
+        for (int i = 0; i < 63; i++) {
+            border += symbol;
+        }
+
+        for (char c : border.toCharArray()) {
             System.out.print(c);
-            sleep(5);
+            try { Thread.sleep(5); } catch (InterruptedException e) {}
         }
         System.out.println();
     }
@@ -166,7 +209,23 @@ public class Main {
     static void typewriter(String text, int delay) {
         for (char c : text.toCharArray()) {
             System.out.print(c);
-            sleep(delay);
+            try {
+                Thread.sleep(delay);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+        System.out.println();
+    }
+
+    static void typewriterGlow(String text, int delay) {
+        for (char c : text.toCharArray()) {
+            System.out.print(c);
+            try {
+                Thread.sleep(delay);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
         System.out.println();
     }
@@ -175,21 +234,18 @@ public class Main {
         int width = 80;
         int padding = (width - text.length()) / 2;
 
-        System.out.print(" ".repeat(Math.max(0, padding)));
+        for (int i = 0; i < padding; i++) {
+            System.out.print(" ");
+        }
 
         for (char c : text.toCharArray()) {
             System.out.print(c);
-            sleep(delay);
+            try {
+                Thread.sleep(delay);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
         System.out.println();
-    }
-
-    // helper method (cleaner than repeating try-catch everywhere)
-    static void sleep(int ms) {
-        try {
-            Thread.sleep(ms);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
     }
 }
