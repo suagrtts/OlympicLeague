@@ -29,6 +29,7 @@ public class GameWindow extends JFrame {
     }
 
     class OlympicAnimation implements java.awt.event.ActionListener {
+
         String[] ringLines = {
             "                         ████      ████      ████",
             "                       ██    ██  ██    ██  ██    ██",
@@ -57,7 +58,8 @@ public class GameWindow extends JFrame {
 
         String[] warriorArt = {
             "\n                                THE ARENA AWAITS",
-            "",
+            "                               6.3 inches - Ronnel",
+            "                               4.5 inches - Brixel",
             "                                  /\\    /\\",
             "                                 /  \\__/  \\",
             "                                |   o  o   |",
@@ -82,11 +84,44 @@ public class GameWindow extends JFrame {
                 index++;
             } else {
                 ((Timer) e.getSource()).stop();
+
+                // 👇 FUTURE USE (NOT SHOWN YET)
+                // You can trigger banners here later
+                // showTournamentBanner();
+                // showCreatorsSection();
             }
         }
     }
 
-    // TITLE TEXT
+
+    private String[] getTournamentBanner() {
+        return new String[] {
+            "        ╔═══════════════════════════════════════════════════════════╗",
+            "        ║              THE TOURNAMENT OF LEGENDS BEGINS             ║",
+            "        ║                                                           ║",
+            "        ║                  Victory awaits the bold                  ║",
+            "        ║                  Glory favors the brave                   ║",
+            "        ║               The throne demands the strongest            ║",
+            "        ║                                                           ║",
+            "        ╚═══════════════════════════════════════════════════════════╝"
+        };
+    }
+
+    private String[] getCreatorsSection() {
+        return new String[] {
+            "               ╔═══════════════════════════════════════════╗",
+            "               ║             FORGED BY LEGENDS:            ║",
+            "               ╠═══════════════════════════════════════════╣",
+            "               ║                                           ║",
+            "               ║                   Rovpoli                 ║",
+            "               ║                      kd                   ║",
+            "               ║                     biji                  ║",
+            "               ║                    selwyn                 ║",
+            "               ║                                           ║",
+            "               ╚═══════════════════════════════════════════╝"
+        };
+    }
+
     private String getTitleText() {
         return """
      ╔══════════════════════════════════════════════════════════════════════════════════╗
