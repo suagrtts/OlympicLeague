@@ -1,4 +1,4 @@
-package ligaolympica.character;
+package olympicleague.character;
 import java.util.*;
 
 public class GoatedKit extends GameCharacter {
@@ -18,20 +18,20 @@ public class GoatedKit extends GameCharacter {
 
     @Override
     public void skill1(GameCharacter target){
-        if(skill1Cooldown > 0){
+        if(getSkill1Cooldown() > 0){
             return;
         }else{
-            typewriter("\n" + name + " uses KIT KIT!", 30);
+            typewriter("\n" + getName() + " uses KIT KIT!", 30);
         }
-        if(this.mana >= 120){
+        if(getMana() >= 120){
             this.useMana(120);
-            this.skill1Cooldown = 1;
+            setSkill1Cooldown(1);
 
             int baseDamage = 300;
             int damage = randomDamage(baseDamage, 20);
 
-            if(this.attackBonus > 1.0) {
-                damage = (int)(damage * this.attackBonus);
+            if(getAttackBonus() > 1.0) {
+                damage = (int)(damage * getAttackBonus());
                 typewriter("Enhanced by Talona's Might!", 30);
             }
 
@@ -45,17 +45,17 @@ public class GoatedKit extends GameCharacter {
 
     @Override
     public void skill2(GameCharacter target) {
-        if(skill2Cooldown > 0){
+        if(getSkill2Cooldown() > 0){
             return;
         }else{
-            typewriter("\n" + name + " uses RAT SPOT!", 30);
+            typewriter("\n" + getName() + " uses RAT SPOT!", 30);
         }
-        if (this.mana >= 250) {
+        if (getMana() >= 250) {
             this.useMana(250);
-            this.skill2Cooldown = 4;
+            setSkill2Cooldown(4);
 
             this.nextAttackEvaded = true;
-            this.statusEffectTurns = 2;
+            setStatusEffectTurns(2);
             typewriter("Becomes incredibly elusive! Dodging all attacks for 2 turns!", 30);
         } else {
             typewriter("Not enough mana!", 30);
@@ -64,17 +64,17 @@ public class GoatedKit extends GameCharacter {
 
     @Override
     public void skill3(GameCharacter target) {
-        if(skill3Cooldown > 0){
+        if(getSkill3Cooldown() > 0){
             return;
         }else{
-            typewriter("\n" + name + " channels TALONA'S MIGHT!", 10);
+            typewriter("\n" + getName() + " channels TALONA'S MIGHT!", 10);
         }
-        if (this.mana >= 400) {
+        if (getMana() >= 400) {
             this.useMana(400);
-            this.skill3Cooldown = 5;
+            setSkill3Cooldown(5);
 
-            this.attackBonus = 1.2;
-            this.statusEffectTurns = 3;
+            setAttackBonus(1.2);
+            setStatusEffectTurns(3);
             typewriter("TALONA'S MIGHT ACTIVATED! +20% bite damage for 3 turns!", 30);
         } else {
             typewriter("Not enough mana!", 30);
@@ -103,7 +103,7 @@ public class GoatedKit extends GameCharacter {
             typewriter("Talona's Might is on cooldown for " + this.skill3Cooldown + " turns.", 10);
         }
         System.out.println();
-        typewriter(name + " - Health: " + health + "|" + maxHealth + " Mana: " + mana + "/" + maxMana, 10);
+        typewriter(getName() + " - Health: " + getHealth() + "|" + getMaxHealth() + " Mana: " + getMana() + "/" + getMaxMana(), 10);
     }
 
     @Override

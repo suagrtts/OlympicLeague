@@ -1,4 +1,4 @@
-package ligaolympica.character;
+package olympicleague.character;
 import java.util.*;
 
 public class Vor extends GameCharacter {
@@ -13,14 +13,14 @@ public class Vor extends GameCharacter {
 
     @Override
     public void skill1(GameCharacter target) {
-        if(skill1Cooldown > 0){
+        if(getSkill1Cooldown() > 0){
             return;
         }else{
-        typewriter("\n" + name + " slashes time with a TIME SLASH!", 30);
+        typewriter("\n" + getName() + " slashes time with a TIME SLASH!", 30);
         }
-        if (this.mana >= 150) {
+        if (getMana() >= 150) {
             this.useMana(150);
-            this.skill1Cooldown = 1;
+            setSkill1Cooldown(1);
 
             int baseDamage = 300;
             int damage = randomDamage(baseDamage, 20); // ±20 damage variance
@@ -36,19 +36,19 @@ public class Vor extends GameCharacter {
 
     @Override
     public void skill2(GameCharacter target) {
-        if(skill2Cooldown > 0){
+        if(getSkill2Cooldown() > 0){
             return;
         }else{
-            typewriter("\n" + name + " activates TEMPORAL SHIFT!", 30);
+            typewriter("\n" + getName() + " activates TEMPORAL SHIFT!", 30);
         }
-        if (this.mana >= 120) {
+        if (getMana() >= 120) {
             this.useMana(120);
-            this.skill2Cooldown = 2;
+            setSkill2Cooldown(2);
 
-            this.untargetable = true;
-            this.statusEffectTurns = 1; // Lasts for 1 turn
+            setUntargetable(true);
+            setStatusEffectTurns(1); // Lasts for 1 turn
 
-            typewriter("Time freezes momentarily! " + name + " will evade the next attack!", 30);
+            typewriter("Time freezes momentarily! " + getName() + " will evade the next attack!", 30);
         } else {
             typewriter("Not enough mana!", 30);
         }
@@ -56,17 +56,17 @@ public class Vor extends GameCharacter {
 
     @Override
     public void skill3(GameCharacter target) {
-        if(skill3Cooldown > 0){
+        if(getSkill3Cooldown() > 0){
             return;
         }else{
-        typewriter("\n" + name + " wields the power of time with CHRONO MARK!", 30);
+        typewriter("\n" + getName() + " wields the power of time with CHRONO MARK!", 30);
         }
-        if (this.mana >= 500) {
+        if (getMana() >= 500) {
             this.useMana(500);
-            this.skill3Cooldown = 5;
+            setSkill3Cooldown(5);
 
-            this.statusEffectTurns = 2;
-            this.attackBonus = 1.25;
+            setStatusEffectTurns(2);
+            setAttackBonus(1.25);
 
             typewriter("KEITH'S LEGEND! Time is marked on the target - damage increased by 25% for 2 turns!", 30);
         } else {
@@ -76,27 +76,27 @@ public class Vor extends GameCharacter {
 
     @Override
     public void displayStats() {
-            if(skill1Cooldown > 0) {
-                typewriter("Time Slash is on cooldown for " + this.skill1Cooldown + " turns.", 10);
+            if(getSkill1Cooldown() > 0) {
+                typewriter("Time Slash is on cooldown for " + getSkill1Cooldown() + " turns.", 10);
             }
-            if(skill2Cooldown > 0) {
-                typewriter("Temporal Shift is on cooldown for " + this.skill2Cooldown + " turns.", 10);
+            if(getSkill2Cooldown() > 0) {
+                typewriter("Temporal Shift is on cooldown for " + getSkill2Cooldown() + " turns.", 10);
             }
-            if(skill3Cooldown > 0) {
-                typewriter("Chrono Mark is on cooldown for " + this.skill3Cooldown + " turns.", 10);
+            if(getSkill3Cooldown() > 0) {
+                typewriter("Chrono Mark is on cooldown for " + getSkill3Cooldown() + " turns.", 10);
             }
 
             System.out.println();
-            typewriter(name + " - Health: " + health + "|" + maxHealth + ", Mana: " + mana + "/" + maxMana, 10);
+            typewriter(getName() + " - Health: " + getHealth() + "|" + getMaxHealth() + ", Mana: " + getMana() + "/" + getMaxMana(), 10);
             }
 
 
     @Override
     public void takeTurn(GameCharacter target) {
-        typewriter("\nChoose a skill for " + name + ":", 10);
-        typewriter("1) Time Slash - 300 Base Damage - CD: " + skill1Cooldown, 10);
-        typewriter("2) Temporal Shift - Evade Next Attack - CD: " + skill2Cooldown, 10);
-        typewriter("3) Chrono Mark - Increase Damage by 25% - CD: " + skill3Cooldown, 10);
+        typewriter("\nChoose a skill for " + getName() + ":", 10);
+        typewriter("1) Time Slash - 300 Base Damage - CD: " + getSkill1Cooldown(), 10);
+        typewriter("2) Temporal Shift - Evade Next Attack - CD: " + getSkill2Cooldown(), 10);
+        typewriter("3) Chrono Mark - Increase Damage by 25% - CD: " + getSkill3Cooldown(), 10);
         typewriter("0) Escape Battle", 10);
 
         boolean validChoice = false;
@@ -107,31 +107,31 @@ public class Vor extends GameCharacter {
                 choice = scan.nextInt();
                 switch (choice) {
                     case 1 -> {
-                        if (skill1Cooldown > 0) {
-                            typewriter("Skill is on cooldown for " + skill1Cooldown + " more turns!", 5);
+                        if (getSkill1Cooldown() > 0) {
+                            typewriter("Skill is on cooldown for " + getSkill1Cooldown() + " more turns!", 5);
                         } else {
                             skill1(target);
                             validChoice = true;
                         }
                     }
                     case 2 -> {
-                        if (skill2Cooldown > 0) {
-                            typewriter("Skill is on cooldown for " + skill2Cooldown + " more turns!", 5);
+                        if (getSkill2Cooldown() > 0) {
+                            typewriter("Skill is on cooldown for " + getSkill2Cooldown() + " more turns!", 5);
                         } else {
                             skill2(target);
                             validChoice = true;
                         }
                     }
                     case 3 -> {
-                        if (skill3Cooldown > 0) {
-                            typewriter("Skill is on cooldown for " + skill3Cooldown + " more turns!", 5);
+                        if (getSkill3Cooldown() > 0) {
+                            typewriter("Skill is on cooldown for " + getSkill3Cooldown() + " more turns!", 5);
                         } else {
                             skill3(target);
                         }
                     }
                     case 0 -> {
-                        typewriter(name + " attempts to flee the battle!", 10);
-                        this.hasEscaped = true;
+                        typewriter(getName() + " attempts to flee the battle!", 10);
+                        setEscaped(true);
                         validChoice = true;
                         return;
                     }

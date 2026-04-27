@@ -1,4 +1,4 @@
-package ligaolympica.character;
+package olympicleague.character;
 import java.util.*;
 
 public class Selwyn extends GameCharacter {
@@ -16,14 +16,14 @@ public class Selwyn extends GameCharacter {
 
     @Override
     public void skill1(GameCharacter target) {
-        if(skill1Cooldown > 0){
+        if(getSkill1Cooldown() > 0){
             return;
         }else{
-            typewriter("\n" + name + " triggers a RAGE BAIT!", 30);
+            typewriter("\n" + getName() + " triggers a RAGE BAIT!", 30);
         }
-        if (this.mana >= 220) {
+        if (getMana() >= 220) {
             this.useMana(220);
-            this.skill1Cooldown = 1;
+            setSkill1Cooldown(1);
 
             int baseDamage = 420;
             int damage = randomDamage(baseDamage, 30);
@@ -38,17 +38,17 @@ public class Selwyn extends GameCharacter {
 
     @Override
     public void skill2(GameCharacter target) {
-        if(skill2Cooldown > 0){
+        if(getSkill2Cooldown() > 0){
             return;
         }else{
-            typewriter("\n" + name + " activates RESPAWN SHIELD!", 30);
+            typewriter("\n" + getName() + " activates RESPAWN SHIELD!", 30);
         }
-        if (this.mana >= 280) {
+        if (getMana() >= 280) {
             this.useMana(280);
-            this.skill2Cooldown = 3;
+            setSkill2Cooldown(3);
 
-            this.defenseBonus = 0.4; // Takes only 40% damage
-            this.statusEffectTurns = 1;
+            setDefenseBonus(0.4); // Takes only 40% damage
+            setStatusEffectTurns(1);
             typewriter("Respawn Shield activated! Next attack damage reduced by 60%!", 30);
         } else {
             typewriter("Not enough mana!", 30);
@@ -57,14 +57,14 @@ public class Selwyn extends GameCharacter {
 
     @Override
     public void skill3(GameCharacter target) {
-        if(skill3Cooldown > 0){
+        if(getSkill3Cooldown() > 0){
             return;
         }else{
-            typewriter("\n" + name + " executes LOKI'S HACK!", 10);
+            typewriter("\n" + getName() + " executes LOKI'S HACK!", 10);
         }
-        if (this.mana >= 480) {
+        if (getMana() >= 480) {
             this.useMana(480);
-            this.skill3Cooldown = 5;
+            setSkill3Cooldown(5);
 
             int baseDamage = 450;
             int damage = randomDamage(baseDamage, 25);
@@ -79,36 +79,36 @@ public class Selwyn extends GameCharacter {
 
     @Override
     public void takeDamage(int damage) {
-        if (this.statusEffectTurns > 0 && this.defenseBonus == 0.4) {
+        if (getStatusEffectTurns() > 0 && getDefenseBonus() == 0.4) {
             damage = (int)(damage * 0.4);
-            typewriter(name + " blocks with Respawn Shield! Damage reduced to " + damage + "!", 10);
-            this.defenseBonus = 1.0;
-            this.statusEffectTurns = 0;
+            typewriter(getName() + " blocks with Respawn Shield! Damage reduced to " + damage + "!", 10);
+            setDefenseBonus(1.0);
+            setStatusEffectTurns(0);
         }
         super.takeDamage(damage);
     }
 
     @Override
     public void displayStats() {
-        if(skill1Cooldown > 0) {
-            typewriter("Rage Bait is on cooldown for " + this.skill1Cooldown + " turns.", 10);
+        if(getSkill1Cooldown() > 0) {
+            typewriter("Rage Bait is on cooldown for " + getSkill1Cooldown() + " turns.", 10);
         }
-        if(skill2Cooldown > 0) {
-            typewriter("Respawn Shield is on cooldown for " + this.skill2Cooldown + " turns.", 10);
+        if(getSkill2Cooldown() > 0) {
+            typewriter("Respawn Shield is on cooldown for " + getSkill2Cooldown() + " turns.", 10);
         }
-        if(skill3Cooldown > 0) {
-            typewriter("Loki's Hack is on cooldown for " + this.skill3Cooldown + " turns.", 10);
+        if(getSkill3Cooldown() > 0) {
+            typewriter("Loki's Hack is on cooldown for " + getSkill3Cooldown() + " turns.", 10);
         }
         System.out.println();
-        typewriter(name + " - Health: " + health + "|" + maxHealth + " Mana: " + mana + "/" + maxMana, 10);
+        typewriter(getName() + " - Health: " + getHealth() + "|" + getMaxHealth() + " Mana: " + getMana() + "/" + getMaxMana(), 10);
     }
 
     @Override
     public void takeTurn(GameCharacter target) {
-        typewriter("\nChoose a skill for " + name + ":", 30);
-        typewriter("1) Rage Bait - 420 Base Damage - CD: " + skill1Cooldown, 30);
-        typewriter("2) Respawn Shield - Reduce Next Damage by 60% - CD: " + skill2Cooldown, 30);
-        typewriter("3) Loki's Hack - 450 Critical Damage (Ignores Defense) - CD: " + skill3Cooldown, 30);
+        typewriter("\nChoose a skill for " + getName() + ":", 30);
+        typewriter("1) Rage Bait - 420 Base Damage - CD: " + getSkill1Cooldown(), 30);
+        typewriter("2) Respawn Shield - Reduce Next Damage by 60% - CD: " + getSkill2Cooldown(), 30);
+        typewriter("3) Loki's Hack - 450 Critical Damage (Ignores Defense) - CD: " + getSkill3Cooldown(), 30);
         typewriter("0) Escape Battle", 10);
 
         boolean validChoice = false;
@@ -119,32 +119,32 @@ public class Selwyn extends GameCharacter {
                 choice = scan.nextInt();
                 switch (choice) {
                     case 1 -> {
-                        if(skill1Cooldown > 0){
-                            typewriter("Skill is on cooldown for " + skill1Cooldown + " more turns!", 5);
+                        if(getSkill1Cooldown() > 0){
+                            typewriter("Skill is on cooldown for " + getSkill1Cooldown() + " more turns!", 5);
                         }else {
                             skill1(target);
                             validChoice = true;
                         }
                     }
                     case 2 -> {
-                        if(skill2Cooldown > 0){
-                            typewriter("Skill is on cooldown for " + skill2Cooldown + " more turns!", 5);
+                        if(getSkill2Cooldown() > 0){
+                            typewriter("Skill is on cooldown for " + getSkill2Cooldown() + " more turns!", 5);
                         }else {
                             skill2(target);
                             validChoice = true;
                         }
                     }
                     case 3 -> {
-                        if(skill3Cooldown > 0){
-                            typewriter("Skill is on cooldown for " + skill3Cooldown + " more turns!", 5);
+                        if(getSkill3Cooldown() > 0){
+                            typewriter("Skill is on cooldown for " + getSkill3Cooldown() + " more turns!", 5);
                         }else {
                             skill3(target);
                             validChoice = true;
                         }
                     }
                     case 0 -> {
-                        typewriter(name + " attempts to flee the battle!", 10);
-                        this.hasEscaped = true;
+                        typewriter(getName() + " attempts to flee the battle!", 10);
+                        setEscaped(true);
                         validChoice = true;
                         return;
                     }

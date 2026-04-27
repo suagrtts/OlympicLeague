@@ -1,5 +1,5 @@
-package ligaolympica;
-import ligaolympica.ui.Menu;
+package olympicleague.Main;
+import olympicleague.ui.Menu;
 
 public class Game {
     private final Menu menu = new Menu();

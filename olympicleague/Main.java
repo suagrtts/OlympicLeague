@@ -1,4 +1,4 @@
-package ligaolympica;
+package olympicleague.Main;
 
 import java.io.IOException;
 
