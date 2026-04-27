@@ -1,4 +1,4 @@
-package olympicleague.character;
+package character;
 import java.util.*;
 
 public class GoatedKit extends GameCharacter {
@@ -83,9 +83,9 @@ public class GoatedKit extends GameCharacter {
 
     @Override
     public void takeDamage(int damage) {
-        if (this.statusEffectTurns > 0 && this.nextAttackEvaded) {
-            typewriter(name + " dodges the attack with Rat Spot!", 10);
-            this.nextAttackEvaded = false;
+        if (getStatusEffectTurns() > 0 && isUntargetable()) {
+            typewriter(getName() + " dodges the attack with Rat Spot!", 10);
+            setUntargetable(false);
             return; // No damage taken
         }
         super.takeDamage(damage);
@@ -93,14 +93,14 @@ public class GoatedKit extends GameCharacter {
 
     @Override
     public void displayStats() {
-        if(skill1Cooldown > 0) {
-            typewriter("Kit Kit is on cooldown for " + this.skill1Cooldown + " turns.", 10);
+        if(getSkill1Cooldown() > 0) {
+            typewriter("Kit Kit is on cooldown for " + getSkill1Cooldown() + " turns.", 10);
         }
-        if(skill2Cooldown > 0) {
-            typewriter("Rat Spot is on cooldown for " + this.skill2Cooldown + " turns.", 10);
+        if(getSkill2Cooldown() > 0) {
+            typewriter("Rat Spot is on cooldown for " + getSkill2Cooldown() + " turns.", 10);
         }
-        if(skill3Cooldown > 0) {
-            typewriter("Talona's Might is on cooldown for " + this.skill3Cooldown + " turns.", 10);
+        if(getSkill3Cooldown() > 0) {
+            typewriter("Talona's Might is on cooldown for " + getSkill3Cooldown() + " turns.", 10);
         }
         System.out.println();
         typewriter(getName() + " - Health: " + getHealth() + "|" + getMaxHealth() + " Mana: " + getMana() + "/" + getMaxMana(), 10);
@@ -108,10 +108,10 @@ public class GoatedKit extends GameCharacter {
 
     @Override
     public void takeTurn(GameCharacter target) {
-        typewriter("\nChoose a skill for " + name + ":", 30);
-        typewriter("1) Kit Kit - 300 Base Damage - CD: " + skill1Cooldown, 30);
-        typewriter("2) Rat Spot - Dodge All Attacks for 2 Turns - CD: " + skill2Cooldown, 30);
-        typewriter("3) Talona's Might - +50% Damage for 3 Turns - CD: " + skill3Cooldown, 30);
+        typewriter("\nChoose a skill for " + getName() + ":", 30);
+        typewriter("1) Kit Kit - 300 Base Damage - CD: " + getSkill1Cooldown(), 30);
+        typewriter("2) Rat Spot - Dodge All Attacks for 2 Turns - CD: " + getSkill2Cooldown(), 30);
+        typewriter("3) Talona's Might - +50% Damage for 3 Turns - CD: " + getSkill3Cooldown(), 30);
         typewriter("0) Escape Battle", 30);
 
         boolean validChoice = false;
@@ -122,32 +122,32 @@ public class GoatedKit extends GameCharacter {
                 choice = scan.nextInt();
                 switch (choice) {
                     case 1 -> {
-                        if(skill1Cooldown > 0){
-                            typewriter("Skill is on cooldown for " + skill1Cooldown + " more turns!", 5);
+                        if(getSkill1Cooldown() > 0){
+                            typewriter("Skill is on cooldown for " + getSkill1Cooldown() + " more turns!", 5);
                         }else {
                             skill1(target);
                             validChoice = true;
                         }
                     }
                     case 2 -> {
-                        if(skill2Cooldown > 0){
-                            typewriter("Skill is on cooldown for " + skill2Cooldown + " more turns!", 5);
+                        if(getSkill2Cooldown() > 0){
+                            typewriter("Skill is on cooldown for " + getSkill2Cooldown() + " more turns!", 5);
                         }else {
                             skill2(target);
                             validChoice = true;
                         }
                     }
                     case 3 -> {
-                        if(skill3Cooldown > 0){
-                            typewriter("Skill is on cooldown for " + skill3Cooldown + " more turns!", 5);
+                        if(getSkill3Cooldown() > 0){
+                            typewriter("Skill is on cooldown for " + getSkill3Cooldown() + " more turns!", 5);
                         }else {
                             skill3(target);
                             validChoice = true;
                         }
                     }
                     case 0 -> {
-                        typewriter(name + " attempts to flee the battle!", 10);
-                        this.hasEscaped = true;
+                        typewriter(getName() + " attempts to flee the battle!", 10);
+                        setEscaped(true);
                         validChoice = true;
                         return;
                     }

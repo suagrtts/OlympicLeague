@@ -1,5 +1,3 @@
-package olympicleague.Main;
-
 import java.io.IOException;
 
 public class Main {

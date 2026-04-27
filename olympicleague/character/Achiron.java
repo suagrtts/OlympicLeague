@@ -1,4 +1,4 @@
-package olympicleague.character;
+package character;
 import java.util.*;
 
 public class Achiron extends GameCharacter {

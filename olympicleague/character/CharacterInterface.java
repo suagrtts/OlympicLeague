@@ -1,4 +1,4 @@
-package olympicleague.character;
+package character;
 
 public interface CharacterInterface {
     String getName();
