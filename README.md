@@ -15,7 +15,7 @@ Key Features
 9 Playable Characters: Including Achiron (warrior of Ares), Atalyn (huntress of Artemis), Orris (son of Poseidon), Orven (son of Hermes), Biji (blessed by Apollo), Heralde (favored by Zeus), Vor (master of time), Selwyn (blessed by Loki), Goated Kit,
 Combat System: Turn-based battles with mana management, skill cooldowns, status effects (stuns, shields, evasion), and damage bonuses
 
-Game Modes:
+hello.Game Modes:
 PvP: Two players battle each other
 PvE: Player vs AI opponent
 Arcade Mode: Survive through waves of opponents with increasing difficulty (Easy/Medium/Hard)

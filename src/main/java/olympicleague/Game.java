@@ -1,22 +1,15 @@
-import ui.*;
+
+
+import olympicleague.ui.Menu;
+import Util.GameUtils;
 
 public class Game {
     private final Menu menu = new Menu();
 
     public void start() {
-        typewriter("Welcome to Liga Olympica!", 30);
+        // We use GameUtils to call the method now
+        GameUtils.typewriter("Welcome to Liga Olympica!", 30);
         menu.showMainMenu();
     }
 
-    public void typewriter(String text, int delay) {
-        for (char c : text.toCharArray()) {
-            System.out.print(c);
-            try {
-                Thread.sleep(delay);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
-        System.out.println();
-    }
 }

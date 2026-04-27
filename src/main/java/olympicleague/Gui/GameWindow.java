@@ -1,3 +1,5 @@
+package Gui;
+
 import java.awt.*;
 import javax.swing.*;
 
@@ -60,6 +62,7 @@ public class GameWindow extends JFrame {
             "\n                                THE ARENA AWAITS",
             "                               6.3 inches - Ronnel",
             "                               4.5 inches - Brixel",
+            "                               6.3 inches - Vor   ",
             "                                  /\\    /\\",
             "                                 /  \\__/  \\",
             "                                |   o  o   |",

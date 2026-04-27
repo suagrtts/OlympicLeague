@@ -400,11 +400,11 @@
 <header class="hero">
   <p class="hero-eyebrow">System Architecture Documentation</p>
   <h1 class="hero-title">Liga Olympica</h1>
-  <p class="hero-sub">Turn-Based Combat Game · Java · UML Analysis</p>
+  <p class="hero-sub">Turn-Based Combat hello.Game · Java · UML Analysis</p>
   <div class="hero-meta">
     <div class="hero-stat"><span class="hero-stat-num">10</span><span class="hero-stat-label">Characters</span></div>
     <div class="hero-stat"><span class="hero-stat-num">4</span><span class="hero-stat-label">Packages</span></div>
-    <div class="hero-stat"><span class="hero-stat-num">3</span><span class="hero-stat-label">Game Modes</span></div>
+    <div class="hero-stat"><span class="hero-stat-num">3</span><span class="hero-stat-label">hello.Game Modes</span></div>
     <div class="hero-stat"><span class="hero-stat-num">16</span><span class="hero-stat-label">Java Files</span></div>
   </div>
 </header>
@@ -437,7 +437,7 @@
       </div>
       <div class="ov-card fade-in">
         <div class="ov-icon">🎮</div>
-        <div class="ov-title">Three Game Modes</div>
+        <div class="ov-title">Three hello.Game Modes</div>
         <div class="ov-desc">PvP (two human players share keyboard), PvE (fight AI with random skill selection), and Arcade Mode (gauntlet with 3 difficulty tiers, health restores between fights).</div>
       </div>
       <div class="ov-card fade-in">
@@ -770,33 +770,33 @@
 <text x="975" y="836" fill="#d1c4a0" font-size="11" font-family="Rajdhani">– arcadeBattle(GC, GC[]) : void</text>
 <text x="975" y="852" fill="#9ca3af" font-size="10" font-family="Rajdhani" font-style="italic">Orchestrates all game modes</text>
 
-<!-- Game class -->
+<!-- hello.Game class -->
 <rect x="960" y="880" width="200" height="100" rx="2" fill="#081818" stroke="#3ab8b0" stroke-width="1.5"/>
 <rect x="960" y="880" width="200" height="28" rx="2" fill="#0a2020"/>
 <text x="1060" y="895" text-anchor="middle" fill="#3ab8b0" font-size="10" font-family="Rajdhani" letter-spacing="2">«class»</text>
-<text x="1060" y="911" text-anchor="middle" fill="#5eead4" font-size="16" font-weight="700" font-family="Rajdhani">Game</text>
+<text x="1060" y="911" text-anchor="middle" fill="#5eead4" font-size="16" font-weight="700" font-family="Rajdhani">hello.Game</text>
 <line x1="960" y1="916" x2="1160" y2="916" stroke="#3ab8b0" stroke-width="0.5"/>
 <text x="975" y="936" fill="#9ca3af" font-size="11" font-family="Rajdhani">– menu : Menu</text>
 <text x="975" y="955" fill="#d1c4a0" font-size="11" font-family="Rajdhani">+ start() : void</text>
 <text x="975" y="971" fill="#9ca3af" font-size="10" font-family="Rajdhani" font-style="italic">Entry point wrapper</text>
 
-<!-- Main class -->
+<!-- hello.Main class -->
 <rect x="960" y="990" width="200" height="90" rx="2" fill="#081818" stroke="#3ab8b0" stroke-width="1.5"/>
 <rect x="960" y="990" width="200" height="28" rx="2" fill="#0a2020"/>
 <text x="1060" y="1005" text-anchor="middle" fill="#3ab8b0" font-size="10" font-family="Rajdhani" letter-spacing="2">«class»</text>
-<text x="1060" y="1021" text-anchor="middle" fill="#5eead4" font-size="16" font-weight="700" font-family="Rajdhani">Main</text>
+<text x="1060" y="1021" text-anchor="middle" fill="#5eead4" font-size="16" font-weight="700" font-family="Rajdhani">hello.Main</text>
 <line x1="960" y1="1026" x2="1160" y2="1026" stroke="#3ab8b0" stroke-width="0.5"/>
 <text x="975" y="1048" fill="#d1c4a0" font-size="11" font-family="Rajdhani">+ main(args) : void</text>
-<text x="975" y="1064" fill="#9ca3af" font-size="10" font-family="Rajdhani" font-style="italic">Splash screen + Game start</text>
+<text x="975" y="1064" fill="#9ca3af" font-size="10" font-family="Rajdhani" font-style="italic">Splash screen + hello.Game start</text>
 
 <!-- Menu → Battle -->
 <line x1="960" y1="755" x2="1160" y2="585" stroke="#4a90c8" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow-dep)"/>
 <text x="1100" y="660" fill="#4a90c8" font-size="10" font-family="Rajdhani">creates</text>
 
-<!-- Game → Menu -->
+<!-- hello.Game → Menu -->
 <line x1="1060" y1="880" x2="1060" y2="860" stroke="#3ab8b0" stroke-width="1.2" marker-end="url(#arrow-dep)"/>
 
-<!-- Main → Game -->
+<!-- hello.Main → hello.Game -->
 <line x1="1060" y1="990" x2="1060" y2="980" stroke="#3ab8b0" stroke-width="1.2" marker-end="url(#arrow-dep)"/>
 
 <!-- extends label for concrete chars -->
@@ -909,19 +909,19 @@
 
 <!-- ─── MAIN MENU USE CASES ─── -->
 <ellipse cx="550" cy="100" rx="120" ry="28" fill="#1a1808" stroke="#c9a84c" stroke-width="1.5"/>
-<text x="550" y="96" text-anchor="middle" fill="#f0d080" font-size="12" font-weight="600" font-family="Rajdhani">Launch Game /</text>
-<text x="550" y="110" text-anchor="middle" fill="#f0d080" font-size="12" font-weight="600" font-family="Rajdhani">View Main Menu</text>
+<text x="550" y="96" text-anchor="middle" fill="#f0d080" font-size="12" font-weight="600" font-family="Rajdhani">Launch hello.Game /</text>
+<text x="550" y="110" text-anchor="middle" fill="#f0d080" font-size="12" font-weight="600" font-family="Rajdhani">View hello.Main Menu</text>
 
 <ellipse cx="370" cy="190" rx="100" ry="26" fill="#1a1808" stroke="#c9a84c" stroke-width="1.5"/>
 <text x="370" y="186" text-anchor="middle" fill="#f0d080" font-size="12" font-weight="600" font-family="Rajdhani">Browse Character</text>
 <text x="370" y="200" text-anchor="middle" fill="#f0d080" font-size="12" font-weight="600" font-family="Rajdhani">Info / Roster</text>
 
 <ellipse cx="550" cy="210" rx="90" ry="26" fill="#1a1808" stroke="#c9a84c" stroke-width="1.5"/>
-<text x="550" y="206" text-anchor="middle" fill="#f0d080" font-size="12" font-weight="600" font-family="Rajdhani">Start PvP Game</text>
+<text x="550" y="206" text-anchor="middle" fill="#f0d080" font-size="12" font-weight="600" font-family="Rajdhani">Start PvP hello.Game</text>
 <text x="550" y="220" text-anchor="middle" fill="#f0d080" font-size="12" font-weight="600" font-family="Rajdhani">(Two Players)</text>
 
 <ellipse cx="750" cy="210" rx="90" ry="26" fill="#1a1808" stroke="#c9a84c" stroke-width="1.5"/>
-<text x="750" y="206" text-anchor="middle" fill="#f0d080" font-size="12" font-weight="600" font-family="Rajdhani">Start PvE Game</text>
+<text x="750" y="206" text-anchor="middle" fill="#f0d080" font-size="12" font-weight="600" font-family="Rajdhani">Start PvE hello.Game</text>
 <text x="750" y="220" text-anchor="middle" fill="#f0d080" font-size="12" font-weight="600" font-family="Rajdhani">(vs AI)</text>
 
 <ellipse cx="630" cy="320" rx="100" ry="26" fill="#1a1808" stroke="#c9a84c" stroke-width="1.5"/>
@@ -1078,10 +1078,10 @@
       <div class="arch-box">
         <h3>Primary Use Cases</h3>
         <ul class="arch-list">
-          <li><strong>Launch Game</strong> — Splash screen displays, Main calls Game.start(), Menu is shown.</li>
+          <li><strong>Launch hello.Game</strong> — Splash screen displays, hello.Main calls hello.Game.start(), Menu is shown.</li>
           <li><strong>Browse Character Info</strong> — Player views any character's backstory, HP, MP, and all 3 skills.</li>
-          <li><strong>Start PvP Game</strong> — Both players pick characters; Battle.startBattle(false) runs.</li>
-          <li><strong>Start PvE Game</strong> — Player picks; AI randomly picks from 9 chars; startBattle(true).</li>
+          <li><strong>Start PvP hello.Game</strong> — Both players pick characters; Battle.startBattle(false) runs.</li>
+          <li><strong>Start PvE hello.Game</strong> — Player picks; AI randomly picks from 9 chars; startBattle(true).</li>
           <li><strong>Start Arcade Mode</strong> — Player picks character and difficulty; fights a shuffled gauntlet of opponents.</li>
           <li><strong>Select Character</strong> — selectCharacter() method presents numbered roster, returns new instance.</li>
         </ul>
@@ -1313,16 +1313,16 @@
       <div class="arch-box">
         <h3>Package Structure</h3>
         <ul class="arch-list">
-          <li><span class="pkg pkg-root">root</span><strong>ligaolympica</strong> — Main.java (splash + entry), Game.java (start wrapper)</li>
+          <li><span class="pkg pkg-root">root</span><strong>ligaolympica</strong> — hello.Main.java (splash + entry), hello.Game.java (start wrapper)</li>
           <li><span class="pkg pkg-char">character</span><strong>ligaolympica.character</strong> — CharacterInterface, GameCharacter, 9 hero classes</li>
           <li><span class="pkg pkg-battle">battle</span><strong>ligaolympica.battle</strong> — Battle.java: all combat logic, round management, AI mode</li>
           <li><span class="pkg pkg-ui">ui</span><strong>ligaolympica.ui</strong> — Menu.java: all user interaction, game mode routing</li>
         </ul>
       </div>
       <div class="arch-box">
-        <h3>Game Flow Summary</h3>
+        <h3>hello.Game Flow Summary</h3>
         <ul class="arch-list">
-          <li>Main → splash screen → Game.start() → Menu.showMainMenu()</li>
+          <li>hello.Main → splash screen → hello.Game.start() → Menu.showMainMenu()</li>
           <li>Menu gathers input → creates Battle(p1, p2) → calls startBattle()</li>
           <li>Battle loops: reset, turn-swap, stun check, updateTurnEffects, takeTurn/autoTakeTurn</li>
           <li>Round ends when HP drops to 0 or 40 turns pass; track wins1/wins2 first to 2</li>

@@ -337,7 +337,7 @@ footer {
 <header class="hero">
   <div class="hero-top-line"></div>
   <h1>LIGA OLYMPICA</h1>
-  <p class="hero-sub">Project Division · 5 Members · Full-Stack Java Game</p>
+  <p class="hero-sub">Project Division · 5 Members · Full-Stack Java hello.Game</p>
   <span class="hero-tag">Console + Swing GUI Edition</span>
 </header>
 
@@ -395,15 +395,15 @@ footer {
     <tbody>
       <tr>
         <td><span class="m-dot" style="background:var(--m1)"></span><strong class="c1">Member 1 — Rovpoli</strong></td>
-        <td>Project Lead · Game Engine</td>
+        <td>Project Lead · hello.Game Engine</td>
         <td>Core architecture, battle logic, game loop</td>
         <td>
           <span class="file-pill">GameCharacter.java</span>
           <span class="file-pill">CharacterInterface.java</span>
           <span class="file-pill">Battle.java</span>
           <span class="file-pill">BattlePanel.java</span>
-          <span class="file-pill">Main.java</span>
-          <span class="file-pill">Game.java</span>
+          <span class="file-pill">hello.Main.java</span>
+          <span class="file-pill">hello.Game.java</span>
         </td>
         <td class="c1"><strong>~900</strong></td>
       </tr>
@@ -451,7 +451,7 @@ footer {
         <td>GUI Systems Engineer</td>
         <td>Window management, splash, theme, utilities</td>
         <td>
-          <span class="file-pill">GameWindow.java</span>
+          <span class="file-pill">Gui.hello.GameWindow.java</span>
           <span class="file-pill">MainMenuPanel.java</span>
           <span class="file-pill">SplashScreen.java</span>
           <span class="file-pill">Theme.java</span>
@@ -485,14 +485,14 @@ footer {
     <tbody>
       <!-- Member 1 -->
       <tr>
-        <td><code>Main.java</code></td>
+        <td><code>hello.Main.java</code></td>
         <td><span class="file-pill pkg-orig">root</span></td>
         <td>250</td>
         <td><span class="m-dot" style="background:var(--m1)"></span><span class="c1">Rovpoli</span></td>
         <td>Console splash screen, logo art, entry point</td>
       </tr>
       <tr>
-        <td><code>Game.java</code></td>
+        <td><code>hello.Game.java</code></td>
         <td><span class="file-pill pkg-orig">root</span></td>
         <td>22</td>
         <td><span class="m-dot" style="background:var(--m1)"></span><span class="c1">Rovpoli</span></td>
@@ -647,11 +647,11 @@ footer {
         <td>GUI entry point; sets LookAndFeel; launches SplashScreen on EDT</td>
       </tr>
       <tr>
-        <td><code>GameWindow.java</code></td>
+        <td><code>Gui.hello.GameWindow.java</code></td>
         <td><span class="file-pill pkg-gui">gui</span></td>
         <td>153</td>
         <td><span class="m-dot" style="background:var(--m5)"></span><span class="c5">Member 5</span></td>
-        <td>Main JFrame; CardLayout navigation between all panels; showMenu/PvP/PvE/Arcade/Roster flows; post-battle dialog</td>
+        <td>hello.Main JFrame; CardLayout navigation between all panels; showMenu/PvP/PvE/Arcade/Roster flows; post-battle dialog</td>
       </tr>
       <tr>
         <td><code>MainMenuPanel.java</code></td>
@@ -665,7 +665,7 @@ footer {
         <td><span class="file-pill pkg-gui">gui</span></td>
         <td>148</td>
         <td><span class="m-dot" style="background:var(--m5)"></span><span class="c5">Member 5</span></td>
-        <td>Fade-in JWindow intro; pulse animation; click/keypress to advance; launches GameWindow</td>
+        <td>Fade-in JWindow intro; pulse animation; click/keypress to advance; launches Gui.hello.GameWindow</td>
       </tr>
       <tr>
         <td><code>Theme.java</code></td>
@@ -701,15 +701,15 @@ footer {
         <div class="mc-avatar bg1 b1 c1">R</div>
         <div>
           <div class="mc-name c1">Rovpoli</div>
-          <div class="mc-role">Project Lead · Game Engine</div>
+          <div class="mc-role">Project Lead · hello.Game Engine</div>
         </div>
       </div>
 
       <div class="mc-section">
         <h4>Files Owned</h4>
         <ul class="file-list">
-          <li><span class="file-pkg pkg-orig">root</span><span>Main.java</span><span class="file-lines">250 lines</span></li>
-          <li><span class="file-pkg pkg-orig">root</span><span>Game.java</span><span class="file-lines">22 lines</span></li>
+          <li><span class="file-pkg pkg-orig">root</span><span>hello.Main.java</span><span class="file-lines">250 lines</span></li>
+          <li><span class="file-pkg pkg-orig">root</span><span>hello.Game.java</span><span class="file-lines">22 lines</span></li>
           <li><span class="file-pkg pkg-orig">character</span><span>CharacterInterface.java</span><span class="file-lines">31 lines</span></li>
           <li><span class="file-pkg pkg-orig">character</span><span>GameCharacter.java</span><span class="file-lines">264 lines</span></li>
           <li><span class="file-pkg pkg-orig">battle</span><span>Battle.java</span><span class="file-lines">240 lines</span></li>
@@ -724,7 +724,7 @@ footer {
           <li><strong>Build GameCharacter</strong> — HP/MP, cooldowns, status effects, damage formula, buff/debuff system</li>
           <li><strong>Write Battle.java</strong> — best-of-3 loop, stun handling, turn alternation, 40-turn cap, arcade mode, typewriter output</li>
           <li><strong>Write BattlePanel.java</strong> — full GUI battle screen; battle thread + input queue; ArenaCanvas with 60fps animation timer; FighterState machine (idle bob, attack lunge, hurt shake, death fall, heal ring, stun stars, victory bounce); Projectile + Spark particle system; screen shake</li>
-          <li><strong>Console splash screen</strong> — ASCII art logo in Main.java</li>
+          <li><strong>Console splash screen</strong> — ASCII art logo in hello.Main.java</li>
           <li><strong>Overall integration testing</strong> — ensure all characters plug into Battle and BattlePanel correctly</li>
         </ul>
       </div>
@@ -876,7 +876,7 @@ footer {
         <h4>Files Owned</h4>
         <ul class="file-list">
           <li><span class="file-pkg pkg-gui">gui</span><span>GameLauncher.java</span><span class="file-lines">22 lines</span></li>
-          <li><span class="file-pkg pkg-gui">gui</span><span>GameWindow.java</span><span class="file-lines">153 lines</span></li>
+          <li><span class="file-pkg pkg-gui">gui</span><span>Gui.hello.GameWindow.java</span><span class="file-lines">153 lines</span></li>
           <li><span class="file-pkg pkg-gui">gui</span><span>MainMenuPanel.java</span><span class="file-lines">194 lines</span></li>
           <li><span class="file-pkg pkg-gui">gui</span><span>SplashScreen.java</span><span class="file-lines">148 lines</span></li>
           <li><span class="file-pkg pkg-gui">gui</span><span>Theme.java</span><span class="file-lines">53 lines</span></li>
@@ -889,9 +889,9 @@ footer {
         <ul class="resp-list">
           <li><strong>Theme.java</strong> — Define and own all color constants (BG_DEEP, GOLD, HP_GREEN…), all font definitions (FONT_TITLE, FONT_HEADER, FONT_MONO…), and the darker()/alpha() utility helpers. Every other GUI file imports from here</li>
           <li><strong>GameLauncher.java</strong> — Set system look and feel; call SwingUtilities.invokeLater; instantiate and show SplashScreen. This is the GUI's main() entry point</li>
-          <li><strong>SplashScreen.java</strong> — Transparent JWindow with fade-in alpha animation; pulsing gold border; "Press any key" prompt with sine-wave opacity; click/key handler that opens GameWindow</li>
+          <li><strong>SplashScreen.java</strong> — Transparent JWindow with fade-in alpha animation; pulsing gold border; "Press any key" prompt with sine-wave opacity; click/key handler that opens Gui.hello.GameWindow</li>
           <li><strong>MainMenuPanel.java</strong> — Custom-painted title canvas (LIGA OLYMPICA text with gradient + glow); animated Olympic rings; three large custom-painted mode buttons (PvP, PvE, Roster); 50ms glow-pulse Timer; creator credits</li>
-          <li><strong>GameWindow.java</strong> — The single JFrame; CardLayout swap between MENU / SELECT1 / SELECT2 / BATTLE / ROSTER panels; full navigation flow (showMenu, startPvP, startPvE, showRoster, showPostBattleDialog); AI random character picker; replaceCard() to prevent memory leaks from stale panels</li>
+          <li><strong>Gui.hello.GameWindow.java</strong> — The single JFrame; CardLayout swap between MENU / SELECT1 / SELECT2 / BATTLE / ROSTER panels; full navigation flow (showMenu, startPvP, startPvE, showRoster, showPostBattleDialog); AI random character picker; replaceCard() to prevent memory leaks from stale panels</li>
           <li><strong>BattleLogStream.java</strong> — OutputStream subclass that forwards write() calls to JTextArea on the EDT while simultaneously mirroring to the original console PrintStream. Allows all existing typewriter() calls in Battle.java to appear in the GUI log with zero changes</li>
         </ul>
       </div>
@@ -923,7 +923,7 @@ footer {
         <li><span class="m-dot" style="background:var(--m2)"></span><span class="c2">KD</span><span class="dep-arrow">→</span> All character classes extend <strong>GameCharacter</strong></li>
         <li><span class="m-dot" style="background:var(--m3)"></span><span class="c3">Biji</span><span class="dep-arrow">→</span> All character classes extend <strong>GameCharacter</strong></li>
         <li><span class="m-dot" style="background:var(--m4)"></span><span class="c4">Selwyn</span><span class="dep-arrow">→</span> Menu.java creates <strong>Battle</strong> objects</li>
-        <li><span class="m-dot" style="background:var(--m5)"></span><span class="c5">M5</span><span class="dep-arrow">→</span> GameWindow creates <strong>BattlePanel</strong> which runs the battle</li>
+        <li><span class="m-dot" style="background:var(--m5)"></span><span class="c5">M5</span><span class="dep-arrow">→</span> Gui.hello.GameWindow creates <strong>BattlePanel</strong> which runs the battle</li>
       </ul>
     </div>
     <div class="dep-box">
@@ -947,7 +947,7 @@ footer {
       <h3>CharacterSelectPanel (Selwyn) used by</h3>
       <ul class="dep-list">
         <li><span class="m-dot" style="background:var(--m1)"></span><span class="c1">Rovpoli</span><span class="dep-arrow">→</span> BattlePanel calls makeButton() factory from CharacterSelectPanel</li>
-        <li><span class="m-dot" style="background:var(--m5)"></span><span class="c5">M5</span><span class="dep-arrow">→</span> GameWindow instantiates CharacterSelectPanel for both P1 and P2 flows</li>
+        <li><span class="m-dot" style="background:var(--m5)"></span><span class="c5">M5</span><span class="dep-arrow">→</span> Gui.hello.GameWindow instantiates CharacterSelectPanel for both P1 and P2 flows</li>
       </ul>
     </div>
     <div class="dep-box">
@@ -989,7 +989,7 @@ footer {
         <ul class="tl-tasks">
           <li><span class="c1">Rovpoli</span> — Finalize CharacterInterface, complete GameCharacter base class</li>
           <li><span class="c5">M5</span> — Complete Theme.java (all colors + fonts) so KD, Biji, Selwyn can import it</li>
-          <li><span class="c5">M5</span> — Complete GameWindow skeleton (CardLayout wired up, even if panels are stubs)</li>
+          <li><span class="c5">M5</span> — Complete Gui.hello.GameWindow skeleton (CardLayout wired up, even if panels are stubs)</li>
           <li><span class="c5">M5</span> — Complete BattleLogStream so System.out redirect works from day 1</li>
         </ul>
       </div>
@@ -1040,7 +1040,7 @@ footer {
         <p>BattlePanel depends on everything above being stable.</p>
         <ul class="tl-tasks">
           <li><span class="c1">Rovpoli</span> — Complete BattlePanel with ArenaCanvas, FighterState, particle system</li>
-          <li><span class="c5">M5</span> — Wire all panels into GameWindow; test navigation flow</li>
+          <li><span class="c5">M5</span> — Wire all panels into Gui.hello.GameWindow; test navigation flow</li>
           <li>All members — Integration testing: start PvP, PvE, Arcade; check all 9 characters render and fight correctly</li>
         </ul>
       </div>
@@ -1123,7 +1123,7 @@ footer {
         <td class="check">⚠️ sprite name must match</td>
         <td class="check">⚠️ character data must match</td>
         <td class="check">👑 owner</td>
-        <td class="check">⚠️ GameWindow instantiates it</td>
+        <td class="check">⚠️ Gui.hello.GameWindow instantiates it</td>
       </tr>
       <tr>
         <td>AnimatedBar.java fields (displayed, max)</td>
@@ -1139,7 +1139,7 @@ footer {
         <td class="check">⚠️ add sprite to PixelArt</td>
         <td class="check">may own the new class</td>
         <td class="check">⚠️ add to Menu + CharacterSelect arrays</td>
-        <td class="check">⚠️ add to GameWindow random picker</td>
+        <td class="check">⚠️ add to Gui.hello.GameWindow random picker</td>
       </tr>
     </tbody>
   </table>
@@ -1164,7 +1164,7 @@ footer {
         <li><strong>3rd</strong> — <code>ligaolympica.battle</code> (depends on characters)</li>
         <li><strong>4th</strong> — <code>ligaolympica.ui</code> (depends on battle + characters)</li>
         <li><strong>5th</strong> — <code>ligaolympica.gui</code> (Theme first, then all others)</li>
-        <li><strong>6th</strong> — <code>ligaolympica</code> root (Main, Game)</li>
+        <li><strong>6th</strong> — <code>ligaolympica</code> root (hello.Main, hello.Game)</li>
       </ul>
     </div>
   </div>

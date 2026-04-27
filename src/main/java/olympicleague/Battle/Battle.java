@@ -1,33 +1,34 @@
-package battle;
+package Battle;
 
-import character.GameCharacter;
+import Character.GameCharacter;
+import Character.Skill;
+import java.util.Scanner;
 
 public class Battle {
     private final GameCharacter player1;
     private final GameCharacter player2;
+    private final Scanner scan; // Added Scanner to the Battle class
 
     public Battle(GameCharacter player1, GameCharacter player2) {
         this.player1 = player1;
         this.player2 = player2;
+        this.scan = new Scanner(System.in);
     }
 
     public boolean startBattle() {
         return startBattle(false);
     }
 
-    // New overload: if player2IsComputer is true, player2 will use autoTakeTurn
+    // Best of 3 rounds: first to 2 wins
     public boolean startBattle(boolean player2IsComputer) {
-        // Best of 3 rounds: first to 2 wins
         System.out.println("\nMatch Start (Best of 3): " + player1.getName() + " vs " + player2.getName());
 
         int wins1 = 0;
         int wins2 = 0;
         int round = 1;
-
         final int maxRounds = 3;
 
         while (wins1 < 2 && wins2 < 2 && round <= maxRounds) {
-            // Reset characters for the round
             player1.resetForNewRound();
             player2.resetForNewRound();
 
@@ -35,7 +36,7 @@ public class Battle {
 
             GameCharacter attacker;
             GameCharacter defender;
-            // Alternate who starts each round for fairness
+
             if (round % 2 == 1) {
                 attacker = player1;
                 defender = player2;
@@ -51,52 +52,34 @@ public class Battle {
                 System.out.println("\n--- Turn " + turn + " ---");
                 System.out.println(attacker.getName() + "'s turn!");
 
-
-                if (attacker.isStunned()) {
-                    typewriter(attacker.getName() + " is stunned and cannot act!", 30);
-                    attacker.setStunned(false); // Clear stun after missing turn
-
-                    // Still update cooldowns and other effects
-                    attacker.updateTurnEffects();
-                    attacker.displayStats();
-                    System.out.println();
-
-                    typewriter(player1.getName() + " - HP: " + player1.getHealth() + "/" + player1.getMaxHealth()
-                        + " | " + player2.getName() + " - HP: " + player2.getHealth() + "/" + player2.getMaxHealth(), 10);
-
-                    attacker.restoreMana(150);
-                    defender.restoreMana(150);
-
-                    // Swap attacker/defender
-                    GameCharacter temp = attacker;
-                    attacker = defender;
-                    defender = temp;
-
-                    turn++;
-                    continue; // Skip to next turn
-                }
-
-                // Update cooldowns and buffs at the START of the character's turn
+                // 1. Update cooldowns and statuses at the start of the turn
                 attacker.updateTurnEffects();
 
-                // Character acts: if defender is player2 and player2IsComputer is true, use autoTakeTurn for that character when they act
-                if (attacker == player2 && player2IsComputer) {
-                    attacker.autoTakeTurn(defender);
+                // 2. Check Stun
+                if (attacker.isStunned()) {
+                    typewriter(attacker.getName() + " is stunned and cannot act!", 30);
+                    attacker.setStunned(false); // Clear stun
                 } else {
-                    attacker.takeTurn(defender);
-
-                    if (attacker.hasEscaped()) {
-                        typewriter("\n" + attacker.getName() + " has fled the battle!", 10);
-                        return false;  // ← Return false to indicate escape
+                    // 3. Take Action
+                    if (attacker == player2 && player2IsComputer) {
+                        typewriter("Thinking...", 15);
+                        String aiLog = attacker.autoTakeTurn(defender);
+                        typewriter(aiLog, 20);
+                    } else {
+                        handleHumanTurn(attacker, defender);
+                        if (attacker.hasEscaped()) {
+                            typewriter("\n" + attacker.getName() + " has fled the battle!", 10);
+                            return false;
+                        }
                     }
                 }
 
-                // Show status for the acting character
-                attacker.displayStats();
+                // Show HP at the end of the action
                 System.out.println();
+                typewriter(player1.getName() + " - HP: " + player1.getHealth() + "/" + player1.getMaxHealth() +
+                        " | " + player2.getName() + " - HP: " + player2.getHealth() + "/" + player2.getMaxHealth(), 10);
 
-                typewriter(player1.getName() + " - HP: " + player1.getHealth() + "/" + player1.getMaxHealth() + " | " + player2.getName() + " - HP: " + player2.getHealth() + "/" + player2.getMaxHealth(), 10);
-                // Both characters regain some mana each turn
+                // Mana regen
                 attacker.restoreMana(150);
                 defender.restoreMana(150);
 
@@ -120,7 +103,6 @@ public class Battle {
             }
 
             typewriter("Score: " + player1.getName() + " " + wins1 + " - " + wins2 + " " + player2.getName(), 10);
-
             round++;
         }
 
@@ -156,54 +138,32 @@ public class Battle {
             System.out.println("\n--- Turn " + turn + " ---");
             System.out.println(attacker.getName() + "'s turn!");
 
-            if (attacker.isStunned()) {
-                typewriter(attacker.getName() + " is stunned and cannot act!", 30);
-                attacker.setStunned(false); // Clear stun after missing turn
-
-                // Still update cooldowns and other effects
-                attacker.updateTurnEffects();
-                attacker.displayStats();
-                System.out.println();
-
-                typewriter(player1.getName() + " - HP: " + player1.getHealth() + "/" + player1.getMaxHealth()
-                    + " | " + player2.getName() + " - HP: " + player2.getHealth() + "/" + player2.getMaxHealth(), 10);
-
-                attacker.restoreMana(150);
-                defender.restoreMana(150);
-
-                // Swap attacker/defender
-                GameCharacter temp = attacker;
-                attacker = defender;
-                defender = temp;
-
-                turn++;
-                continue; // Skip to next turn
-            }
-
             attacker.updateTurnEffects();
 
-            // Character acts: if defender is player2 and player2IsComputer is true, use autoTakeTurn for that character when they act
-            if (attacker == player2 && player2IsComputer) {
-                attacker.autoTakeTurn(defender);
+            if (attacker.isStunned()) {
+                typewriter(attacker.getName() + " is stunned and cannot act!", 30);
+                attacker.setStunned(false);
             } else {
-                attacker.takeTurn(defender);
-
-                if (attacker.hasEscaped()) {
-                    typewriter("\n" + attacker.getName() + " has fled the battle!", 10);
-                    return false;  // ← Return false to indicate escape
+                if (attacker == player2 && player2IsComputer) {
+                    typewriter("Thinking...", 15);
+                    String aiLog = attacker.autoTakeTurn(defender);
+                    typewriter(aiLog, 20);
+                } else {
+                    handleHumanTurn(attacker, defender);
+                    if (attacker.hasEscaped()) {
+                        typewriter("\n" + attacker.getName() + " has fled the battle!", 10);
+                        return false;
+                    }
                 }
             }
 
-            // Show status
-            attacker.displayStats();
             System.out.println();
+            typewriter(player1.getName() + " - HP: " + player1.getHealth() + "/" + player1.getMaxHealth() +
+                    " | " + player2.getName() + " - HP: " + player2.getHealth() + "/" + player2.getMaxHealth(), 10);
 
-            typewriter(player1.getName() + " - HP: " + player1.getHealth() + "/" + player1.getMaxHealth() + " | " + player2.getName() + " - HP: " + player2.getHealth() + "/" + player2.getMaxHealth(), 10);
-            // Both characters regain some mana each turn
             attacker.restoreMana(150);
             defender.restoreMana(150);
 
-            // Swap attacker/defender
             GameCharacter temp = attacker;
             attacker = defender;
             defender = temp;
@@ -224,7 +184,73 @@ public class Battle {
             typewriter("╚════════════════════════════╝", 0);
             System.out.println();
         }
-        return true; //This can be reached if the battle ends normally
+        return true;
+    }
+
+    // --- NEW HELPER METHODS MOVED FROM THE OLD CHARACTERS ---
+
+    private void handleHumanTurn(GameCharacter player, GameCharacter enemy) {
+        displayStats(player);
+        typewriter("\nChoose a skill for " + player.getName() + ":", 10);
+
+        int i = 1;
+        for (Skill s : player.getSkills()) {
+            typewriter(i + ") " + s.getName() + " - " + s.getDescription() + " (CD: " + s.getCurrentCooldown() + ")", 10);
+            i++;
+        }
+        typewriter("0) Escape Battle", 10);
+
+        boolean validChoice = false;
+        while (!validChoice) {
+            System.out.print("Enter the number of your choice: ");
+            try {
+                int choice = Integer.parseInt(scan.nextLine());
+
+                if (choice == 0) {
+                    player.setEscaped(true);
+                    validChoice = true;
+                } else if (choice > 0 && choice <= player.getSkills().size()) {
+                    int skillIndex = choice - 1;
+                    Skill chosenSkill = player.getSkills().get(skillIndex);
+
+                    if (!chosenSkill.isReady()) {
+                        typewriter("Skill is on cooldown for " + chosenSkill.getCurrentCooldown() + " more turns!", 5);
+                    } else {
+                        // This executes the skill and prints the lore/math result!
+                        String combatLog = player.takeTurn(enemy, skillIndex);
+                        typewriter(combatLog, 20);
+                        validChoice = true;
+                    }
+                } else {
+                    typewriter("Invalid choice. Please select an available option.", 5);
+                }
+            } catch (NumberFormatException e) {
+                typewriter("Invalid input. Please enter a valid number.", 5);
+            }
+        }
+    }
+
+    private void displayStats(GameCharacter c) {
+        StringBuilder stats = new StringBuilder();
+        stats.append(c.getName()).append(" - HP: ").append(c.getHealth()).append("/").append(c.getMaxHealth())
+                .append(" | MP: ").append(c.getMana()).append("/").append(c.getMaxMana()).append("\n");
+
+        boolean hasCooldowns = false;
+        for (Skill skill : c.getSkills()) {
+            if (!skill.isReady()) {
+                if (!hasCooldowns) {
+                    stats.append("Cooldowns: ");
+                    hasCooldowns = true;
+                }
+                stats.append(skill.getName()).append("(").append(skill.getCurrentCooldown()).append(") ");
+            }
+        }
+        if (hasCooldowns) {
+            typewriter(stats.toString(), 10);
+        } else {
+            // Just print the HP/MP line
+            typewriter(c.getName() + " - HP: " + c.getHealth() + "/" + c.getMaxHealth() + " | MP: " + c.getMana() + "/" + c.getMaxMana(), 10);
+        }
     }
 
     public void typewriter(String text, int delay) {
