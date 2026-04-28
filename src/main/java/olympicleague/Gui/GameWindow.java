@@ -1,5 +1,4 @@
-package Gui;
-
+package olympicleague.gui;
 import java.awt.*;
 import javax.swing.*;
 
