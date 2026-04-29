@@ -1,4 +1,4 @@
-package Battle;
+package battle;
 
 import Character.GameCharacter;
 import Character.Skill;

@@ -1,3 +1,5 @@
+package olympicleague;
+
 import Ui.GameIntro;
 
 public class Main {

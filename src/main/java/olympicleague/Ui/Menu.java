@@ -1,4 +1,4 @@
-package olympicleague.ui;
+package ui;
 
 import java.util.*;
 import Battle.Battle;

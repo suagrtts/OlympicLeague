@@ -1,4 +1,4 @@
-package Character;
+package character;
 
 public class SirKhai extends GameCharacter {
     public SirKhai() {

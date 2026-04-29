@@ -1,4 +1,4 @@
-package Character;
+package character;
 
 public class Atalyn extends GameCharacter {
     public Atalyn() {

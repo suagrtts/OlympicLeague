@@ -1,4 +1,4 @@
-package Character;
+package character;
 
 public class Orris extends GameCharacter {
     public Orris() {

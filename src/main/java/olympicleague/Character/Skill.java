@@ -1,4 +1,4 @@
-package Character;
+package character;
 
 public abstract class Skill {
     private final String name;
