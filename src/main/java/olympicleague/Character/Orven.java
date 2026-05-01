@@ -1,4 +1,4 @@
-package character;
+package Character;
 
 public class Orven extends GameCharacter {
     public Orven() {
