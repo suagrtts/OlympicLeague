@@ -1,4 +1,5 @@
-package gui;
+package Gui;
+
 import java.awt.*;
 import javax.swing.*;
 
@@ -13,10 +14,13 @@ public class GameWindow extends JFrame {
         setLocationRelativeTo(null);
 
         textArea = new JTextArea();
-        textArea.setFont(new Font("Consolas", Font.PLAIN, 16));
+
+
+        textArea.setFont(Theme.CONSOLE);
+        textArea.setBackground(Theme.BACKGROUND);
+        textArea.setForeground(Theme.FOREGROUND);
+
         textArea.setEditable(false);
-        textArea.setBackground(Color.BLACK);
-        textArea.setForeground(Color.GREEN);
         textArea.setLineWrap(false);
 
         add(new JScrollPane(textArea));
@@ -32,13 +36,13 @@ public class GameWindow extends JFrame {
     class OlympicAnimation implements java.awt.event.ActionListener {
 
         String[] ringLines = {
-            "                         ████      ████      ████",
-            "                       ██    ██  ██    ██  ██    ██",
-            "                       ██    ████    ████    ████",
-            "                         ████  ██  ██  ██  ██  ████",
-            "                             ██████████████████    ██",
-            "                               ████      ████      ██",
-            "                                            ██████████"
+                "                         ████      ████      ████",
+                "                       ██    ██  ██    ██  ██    ██",
+                "                       ██    ████    ████    ████",
+                "                         ████  ██  ██  ██  ██  ████",
+                "                             ██████████████████    ██",
+                "                               ████      ████      ██",
+                "                                            ██████████"
         };
 
         int index = 0;
@@ -58,23 +62,23 @@ public class GameWindow extends JFrame {
     class WarriorAnimation implements java.awt.event.ActionListener {
 
         String[] warriorArt = {
-            "\n                                THE ARENA AWAITS",
-            "                               6.3 inches - Ronnel",
-            "                               4.5 inches - Brixel",
-            "                               6.3 inches - Vor   ",
-            "                                  /\\    /\\",
-            "                                 /  \\__/  \\",
-            "                                |   o  o   |",
-            "                                |     >    |",
-            "                                 \\  \\__/  /",
-            "                                  |____|",
-            "                               ___/|  |\\___",
-            "                              /   /|  |\\   \\",
-            "                             |___| |  | |___|",
-            "                                  ||  ||",
-            "                                  ||  ||",
-            "                                 _||  ||_",
-            "                                |__________|"
+                "\n                                THE ARENA AWAITS",
+                "                               6.3 inches - Ronnel",
+                "                               4.5 inches - Brixel",
+                "                               6.3 inches - Vor   ",
+                "                                  /\\    /\\",
+                "                                 /  \\__/  \\",
+                "                                |   o  o   |",
+                "                                |     >    |",
+                "                                 \\  \\__/  /",
+                "                                  |____|",
+                "                               ___/|  |\\___",
+                "                              /   /|  |\\   \\",
+                "                             |___| |  | |___|",
+                "                                  ||  ||",
+                "                                  ||  ||",
+                "                                 _||  ||_",
+                "                                |__________|"
         };
 
         int index = 0;
@@ -98,29 +102,29 @@ public class GameWindow extends JFrame {
 
     private String[] getTournamentBanner() {
         return new String[] {
-            "        ╔═══════════════════════════════════════════════════════════╗",
-            "        ║              THE TOURNAMENT OF LEGENDS BEGINS             ║",
-            "        ║                                                           ║",
-            "        ║                  Victory awaits the bold                  ║",
-            "        ║                  Glory favors the brave                   ║",
-            "        ║               The throne demands the strongest            ║",
-            "        ║                                                           ║",
-            "        ╚═══════════════════════════════════════════════════════════╝"
+                "        ╔═══════════════════════════════════════════════════════════╗",
+                "        ║              THE TOURNAMENT OF LEGENDS BEGINS             ║",
+                "        ║                                                           ║",
+                "        ║                  Victory awaits the bold                  ║",
+                "        ║                  Glory favors the brave                   ║",
+                "        ║               The throne demands the strongest            ║",
+                "        ║                                                           ║",
+                "        ╚═══════════════════════════════════════════════════════════╝"
         };
     }
 
     private String[] getCreatorsSection() {
         return new String[] {
-            "               ╔═══════════════════════════════════════════╗",
-            "               ║             FORGED BY LEGENDS:            ║",
-            "               ╠═══════════════════════════════════════════╣",
-            "               ║                                           ║",
-            "               ║                   Rovpoli                 ║",
-            "               ║                      kd                   ║",
-            "               ║                     biji                  ║",
-            "               ║                    selwyn                 ║",
-            "               ║                                           ║",
-            "               ╚═══════════════════════════════════════════╝"
+                "               ╔═══════════════════════════════════════════╗",
+                "               ║             FORGED BY LEGENDS:            ║",
+                "               ╠═══════════════════════════════════════════╣",
+                "               ║                                           ║",
+                "               ║                   Rovpoli                 ║",
+                "               ║                      kd                   ║",
+                "               ║                     biji                  ║",
+                "               ║                    selwyn                 ║",
+                "               ║                                           ║",
+                "               ╚═══════════════════════════════════════════╝"
         };
     }
 
@@ -153,3 +157,4 @@ public class GameWindow extends JFrame {
         });
     }
 }
+
