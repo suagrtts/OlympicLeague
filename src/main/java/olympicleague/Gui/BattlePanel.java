@@ -6,7 +6,6 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -16,35 +15,33 @@ import java.util.List;
 
 public class BattlePanel extends JPanel {
 
-    private final Color BG_DEEP = new Color(10, 10, 15);
-    private final Color BG_CARD = new Color(22, 24, 37);
-    private final Color GOLD = new Color(201, 168, 76);
-    private final Color GOLD_LIGHT = new Color(240, 208, 128);
-    private final Color TEXT_LIGHT = new Color(232, 224, 204);
-    private final Color BORDER_DIM = new Color(201, 168, 76, 64);
-
-    private final Color CRIMSON_ACCENT = new Color(192, 57, 43);
-    private final Color TEAL_ACCENT = new Color(58, 184, 176);
-    private final Color PURPLE_ACCENT = new Color(139, 92, 246);
+    // Dynamically create the transparent border using the Theme's TITLE_COLOR
+    private final Color BORDER_DIM = new Color(
+            Theme.TITLE_COLOR.getRed(),
+            Theme.TITLE_COLOR.getGreen(),
+            Theme.TITLE_COLOR.getBlue(),
+            64
+    );
 
     private ArenaCanvas canvas;
     private JPanel buttonPanel;
 
     public BattlePanel() {
         setLayout(new BorderLayout());
-        setBackground(BG_DEEP);
+        setBackground(Theme.PANEL_DARK); // Replaced BG_DEEP
 
         canvas = new ArenaCanvas();
         add(canvas, BorderLayout.CENTER);
 
         buttonPanel = new JPanel();
-        buttonPanel.setBackground(BG_DEEP);
+        buttonPanel.setBackground(Theme.PANEL_DARK);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        JButton attackBtn = createThemeButton("ATTACK", CRIMSON_ACCENT);
-        JButton healBtn = createThemeButton("HEAL", TEAL_ACCENT);
-        JButton skill3Btn = createThemeButton("SKILL 3", PURPLE_ACCENT);
-        JButton stunBtn = createThemeButton("STUN", GOLD);
+        // Replaced hardcoded accent colors with Theme constants
+        JButton attackBtn = createThemeButton("ATTACK", Theme.ACCENT_RED);
+        JButton healBtn = createThemeButton("HEAL", Theme.ACCENT_BLUE);
+        JButton skill3Btn = createThemeButton("SKILL 3", Theme.ACCENT_PURPLE);
+        JButton stunBtn = createThemeButton("STUN", Theme.TITLE_COLOR);
 
         attackBtn.addActionListener(e -> canvas.triggerAction("ATTACK"));
         healBtn.addActionListener(e -> canvas.triggerAction("HEAL"));
@@ -61,9 +58,9 @@ public class BattlePanel extends JPanel {
 
     private JButton createThemeButton(String text, Color accentColor) {
         JButton btn = new JButton(text);
-        btn.setBackground(BG_CARD);
+        btn.setBackground(Theme.PANEL_LIGHT); // Replaced BG_CARD
         btn.setForeground(accentColor);
-        btn.setFont(new Font("Serif", Font.BOLD, 14));
+        btn.setFont(Theme.SUBTITLE); // Replaced hardcoded Serif font
         btn.setFocusPainted(false);
         btn.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(BORDER_DIM, 1),
@@ -73,10 +70,11 @@ public class BattlePanel extends JPanel {
         btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btn.setBorder(BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(GOLD, 1),
+                        BorderFactory.createLineBorder(Theme.TITLE_COLOR, 1),
                         BorderFactory.createEmptyBorder(10, 20, 10, 20)
                 ));
-                btn.setForeground(GOLD_LIGHT);
+                // Uses your Theme.highlight() method to make the button text glow!
+                btn.setForeground(Theme.highlight(accentColor, 1.5f));
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btn.setBorder(BorderFactory.createCompoundBorder(
@@ -103,7 +101,7 @@ public class BattlePanel extends JPanel {
 
         public ArenaCanvas() {
             setPreferredSize(new Dimension(800, 400));
-            setBackground(BG_DEEP);
+            setBackground(Theme.PANEL_DARK);
             setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, BORDER_DIM));
             particles = new ArrayList<>();
         }
@@ -119,9 +117,9 @@ public class BattlePanel extends JPanel {
         public void triggerAction(String action) {
             p1State = action;
             if (action.equals("ATTACK") || action.equals("SKILL3")) {
-                particles.add(new Projectile(150, 250, 600, 250, action.equals("ATTACK") ? CRIMSON_ACCENT : PURPLE_ACCENT));
+                particles.add(new Projectile(150, 250, 600, 250, action.equals("ATTACK") ? Theme.ACCENT_RED : Theme.ACCENT_PURPLE));
             } else if (action.equals("HEAL")) {
-                particles.add(new Spark(125, 250, TEAL_ACCENT));
+                particles.add(new Spark(125, 250, Theme.ACCENT_BLUE));
             }
         }
 
@@ -142,19 +140,23 @@ public class BattlePanel extends JPanel {
             Graphics2D g2d = (Graphics2D) g;
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-            g2d.setFont(new Font("Serif", Font.BOLD, 16));
-            g2d.setColor(GOLD_LIGHT);
+            g2d.setFont(Theme.SUBTITLE); // Consistent thematic font
+
+            // Text color highlighted for better readability against dark backgrounds
+            g2d.setColor(Theme.highlight(Theme.TITLE_COLOR, 1.2f));
             g2d.drawString("PLAYER 1: " + p1State, 50, 40);
             g2d.drawString("PLAYER 2: " + p2State, 620, 40);
 
-            g2d.setColor(new Color(40, 44, 60));
+            // Player 1 Box
+            g2d.setColor(Theme.PANEL_LIGHT);
             g2d.fillRoundRect(100, 180, 70, 120, 10, 10);
-            g2d.setColor(GOLD);
+            g2d.setColor(Theme.TITLE_COLOR);
             g2d.drawRoundRect(100, 180, 70, 120, 10, 10);
 
-            g2d.setColor(new Color(40, 44, 60));
+            // Player 2 Box
+            g2d.setColor(Theme.PANEL_LIGHT);
             g2d.fillRoundRect(630, 180, 70, 120, 10, 10);
-            g2d.setColor(CRIMSON_ACCENT);
+            g2d.setColor(Theme.ACCENT_RED);
             g2d.drawRoundRect(630, 180, 70, 120, 10, 10);
 
             Iterator<Particle> iterator = particles.iterator();

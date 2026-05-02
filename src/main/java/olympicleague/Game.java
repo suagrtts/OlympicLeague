@@ -1,6 +1,4 @@
-package olympicleague;
-
-import olympicleague.ui.Menu;
+import Ui.*;
 import Util.GameUtils;
 
 public class Game {

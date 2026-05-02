@@ -1,18 +1,8 @@
-package ui;
+package Ui;
 
 import java.util.*;
-import Battle.Battle;
-import Character.Achiron;
-import Character.Atalyn;
-import Character.Biji;
-import Character.GameCharacter;
-import Character.GoatedKit;
-import Character.Heralde;
-import Character.Orris;
-import Character.Orven;
-import Character.Selwyn;
-import Character.SirKhai;
-import Character.Vor;
+import Battle.*;
+import Character.*;
 
 public class Menu {
     private final Scanner scanner;

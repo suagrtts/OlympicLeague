@@ -1,4 +1,4 @@
-package character;
+package Character;
 
 public class Heralde extends GameCharacter {
     public Heralde() {
