@@ -1,11 +1,11 @@
+package olympicleague;
 
-
-import Ui.*;
+import Ui.GameIntro;
 
 public class Main {
 
     public static void main(String[] args) {
-        ui.GameIntro.showIntro();
+        GameIntro.showIntro();
 
         Game game = new Game();
         game.start();
