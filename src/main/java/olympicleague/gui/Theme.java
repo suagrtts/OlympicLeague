@@ -65,4 +65,13 @@ public class Theme {
     public static Color alpha(Color c, int a) {
         return new Color(c.getRed(), c.getGreen(), c.getBlue(), a);
     }
+
+    public static Color darker(Color c, float factor) {
+        return new Color(
+            Math.max(0, (int)(c.getRed()   * factor)),
+            Math.max(0, (int)(c.getGreen() * factor)),
+            Math.max(0, (int)(c.getBlue()  * factor)),
+            c.getAlpha()
+        );
+    }
 }
