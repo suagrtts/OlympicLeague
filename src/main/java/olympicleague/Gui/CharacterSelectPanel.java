@@ -75,4 +75,51 @@ public class CharacterSelectPanel extends JPanel {
             "Achiron", "Heralde", "Orris", "Vor", "SirKhai",
             "Atalyn", "Orven", "Biji", "GoatedKit", "Selwyn"
     };
+
+    private int selectedIndex = 0;
+
+    // update constructor to add grid
+    public CharacterSelectPanel(int playerNumber, Runnable onConfirm) {
+        this.playerNumber = playerNumber;
+        this.onConfirm = onConfirm;
+        setBackground(Theme.BACKGROUND);
+        setLayout(new BorderLayout(10, 10));
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        add(buildTitleLabel(), BorderLayout.NORTH);
+        add(buildRosterGrid(), BorderLayout.WEST);  // ADD
+    }
+
+    private JPanel buildRosterGrid() {
+        JPanel grid = new JPanel(new GridLayout(3, 4, 8, 8));
+        grid.setBackground(Theme.BACKGROUND);
+        grid.setPreferredSize(new Dimension(360, 300));
+        for (int i = 0; i < NAMES.length; i++) {
+            final int idx = i;
+            JPanel card = new JPanel(new BorderLayout(4, 4));
+            card.setBackground(Theme.PANEL_DARK);
+            card.setBorder(BorderFactory.createLineBorder(Theme.ACCENT_PURPLE, 1));
+            card.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            SpriteCanvas mini = new SpriteCanvas(
+                    SPRITE_NAMES[i], SpriteLoader.AnimType.IDLE, 48, false, 8
+            );
+            mini.setOpaque(false);
+            JLabel nameLbl = new JLabel(NAMES[i], SwingConstants.CENTER);
+            nameLbl.setFont(Theme.SMALL);
+            nameLbl.setForeground(Theme.FOREGROUND);
+            card.add(mini, BorderLayout.CENTER);
+            card.add(nameLbl, BorderLayout.SOUTH);
+            card.addMouseListener(new MouseAdapter() {
+                @Override public void mouseClicked(MouseEvent e) {
+                    selectedIndex = idx;
+                    updateDetail(idx);
+                }
+                @Override public void mouseEntered(MouseEvent e) { card.setBackground(Theme.PANEL_LIGHT); }
+                @Override public void mouseExited(MouseEvent e)  { card.setBackground(selectedIndex == idx ? Theme.PANEL_LIGHT : Theme.PANEL_DARK); }
+            });
+            grid.add(card);
+        }
+        return grid;
+    }
+
+    private void updateDetail(int idx) { /* stub for now */ }
 }
