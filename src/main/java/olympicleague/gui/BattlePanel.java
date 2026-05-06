@@ -122,14 +122,8 @@ public class BattlePanel extends JPanel {
     }
 
     private ArenaPanel buildArena() {
-        boolean vorIsP1 = player1.getName().equals("Vor");
-        boolean vorIsP2 = player2.getName().equals("Vor");
-
-        boolean p1Flipped = vorIsP1;
-        boolean p2Flipped = !vorIsP2;
-
-        p1Sprite = new SpriteCanvas(player1.getName(), SpriteLoader.AnimType.IDLE, 200, p1Flipped, 8);
-        p2Sprite = new SpriteCanvas(player2.getName(), SpriteLoader.AnimType.IDLE, 200, p2Flipped, 8);
+        p1Sprite = new SpriteCanvas(player1.getName(), SpriteLoader.AnimType.IDLE, 200, false, 8);
+        p2Sprite = new SpriteCanvas(player2.getName(), SpriteLoader.AnimType.IDLE, 200, true, 8);
 
         arenaPanel = new ArenaPanel(p1Sprite, p2Sprite);
         return arenaPanel;
