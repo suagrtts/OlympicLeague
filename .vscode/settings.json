@@ -1,7 +1,8 @@
 {
+
     "java.project.sourcePaths": [
-        "src/main/java/olympicleague/gui",
-        "src/main/java/olympicleague"
-    ],
-    "java.project.referencedLibraries": []
+        "src/main/java",
+        "src/main/resources"
+    ]
+
 }
