@@ -4,7 +4,7 @@ public class Biji extends GameCharacter {
     public Biji() {
         super("Biji", "The Melodic Warrior...", 1600, 1200);
 
-        this.addSkill(new Skill("Power Chord", 1, "380 Base Dmg. Cost: 200MP") {
+        this.addSkill(new Skill("Power Chord", 0, "380 Base Dmg. Cost: 200MP") {
             @Override public String execute(GameCharacter source, GameCharacter target) {
                 if (source.getMana() < 200) return "Not enough mana!";
                 source.useMana(200);

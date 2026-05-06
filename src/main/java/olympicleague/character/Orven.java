@@ -4,7 +4,7 @@ public class Orven extends GameCharacter {
     public Orven() {
         super("Orven", "A demigod son of Hermes...", 1600, 700);
 
-        this.addSkill(new Skill("Swift Strike", 1, "250 Base Dmg. Cost: 140MP") {
+        this.addSkill(new Skill("Swift Strike", 0, "250 Base Dmg. Cost: 140MP") {
             @Override public String execute(GameCharacter source, GameCharacter target) {
                 if (source.getMana() < 140) return "Not enough mana!";
                 source.useMana(140);

@@ -13,7 +13,7 @@ public class Skeleton extends GameCharacter {
               1900, 700);
 
         // Skill 1 — Bone Shatter (true damage, bypasses shields)
-        this.addSkill(new Skill("Bone Shatter", 1, "280 TRUE Dmg (ignores defense). Cost: 140MP") {
+        this.addSkill(new Skill("Bone Shatter", 0, "280 TRUE Dmg (ignores defense). Cost: 140MP") {
             @Override
             public String execute(GameCharacter source, GameCharacter target) {
                 if (source.getMana() < 140) return "Not enough mana for Bone Shatter!";

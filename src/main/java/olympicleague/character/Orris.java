@@ -4,7 +4,7 @@ public class Orris extends GameCharacter {
     public Orris() {
         super("Orris", "A demigod son of Poseidon...", 1500, 600);
 
-        this.addSkill(new Skill("Tidal Wave", 1, "300 Base Dmg. Cost: 130MP") {
+        this.addSkill(new Skill("Tidal Wave", 0, "300 Base Dmg. Cost: 130MP") {
             @Override public String execute(GameCharacter source, GameCharacter target) {
                 if (source.getMana() < 130) return "Not enough mana!";
                 source.useMana(130);

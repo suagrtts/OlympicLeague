@@ -4,7 +4,7 @@ public class Achiron extends GameCharacter {
     public Achiron() {
         super("Achiron", "The Unyielding Warrior...", 1800, 1000);
 
-        this.addSkill(new Skill("Spear Thrust", 1, "400 Base Dmg. Cost: 180MP") {
+        this.addSkill(new Skill("Spear Thrust", 0, "400 Base Dmg. Cost: 180MP") {
             @Override public String execute(GameCharacter source, GameCharacter target) {
                 if (source.getMana() < 180) return "Not enough mana!";
                 source.useMana(180);

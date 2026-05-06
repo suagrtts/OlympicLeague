@@ -4,7 +4,7 @@ public class Vor extends GameCharacter {
     public Vor() {
         super("Vor", "Incarnation of Keith, God of Time...", 1700, 1000);
 
-        this.addSkill(new Skill("Time Slash", 1, "300 Base Dmg. Cost: 150MP") {
+        this.addSkill(new Skill("Time Slash", 0, "300 Base Dmg. Cost: 150MP") {
             @Override public String execute(GameCharacter source, GameCharacter target) {
                 if (source.getMana() < 150) return "Not enough mana!";
                 source.useMana(150);

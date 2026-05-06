@@ -4,7 +4,7 @@ public class Heralde extends GameCharacter {
     public Heralde() {
         super("Heralde", "Legends say Heralde strangled a lion...", 1800, 450);
 
-        this.addSkill(new Skill("Lion's Strike", 1, "220 Base Dmg. Cost: 90MP") {
+        this.addSkill(new Skill("Lion's Strike", 0, "220 Base Dmg. Cost: 90MP") {
             @Override public String execute(GameCharacter source, GameCharacter target) {
                 if (source.getMana() < 90) return "Not enough mana!";
                 source.useMana(90);

@@ -4,7 +4,7 @@ public class Selwyn extends GameCharacter {
     public Selwyn() {
         super("Selwyn", "The Digital Overlord...", 1700, 1100);
 
-        this.addSkill(new Skill("Rage Bait", 1, "420 Base Dmg. Cost: 220MP") {
+        this.addSkill(new Skill("Rage Bait", 0, "420 Base Dmg. Cost: 220MP") {
             @Override public String execute(GameCharacter source, GameCharacter target) {
                 if (source.getMana() < 220) return "Not enough mana!";
                 source.useMana(220);

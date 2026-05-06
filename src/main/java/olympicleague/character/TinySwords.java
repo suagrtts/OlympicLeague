@@ -10,7 +10,7 @@ public class TinySwords extends GameCharacter {
               1650, 900);
 
         // Skill 1 — Twin Slash (fast, cheap, low cooldown)
-        this.addSkill(new Skill("Twin Slash", 1, "350 Base Dmg × 2 hits. Cost: 160MP") {
+        this.addSkill(new Skill("Twin Slash", 0, "350 Base Dmg × 2 hits. Cost: 160MP") {
             @Override
             public String execute(GameCharacter source, GameCharacter target) {
                 if (source.getMana() < 160) return "Not enough mana for Twin Slash!";

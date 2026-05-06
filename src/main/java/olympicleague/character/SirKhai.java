@@ -4,11 +4,11 @@ public class SirKhai extends GameCharacter {
     public SirKhai() {
         super("Sir Khai", "The legendary goat, undefeated champion of the arena...", 2500, 1500);
 
-        this.addSkill(new Skill("Divine Slash", 1, "600 Base Dmg. Cost: 200MP") {
+        this.addSkill(new Skill("Divine Slash", 0, "600 Base Dmg. Cost: 200MP") {
             @Override public String execute(GameCharacter source, GameCharacter target) {
                 if (source.getMana() < 200) return "Not enough mana!";
                 source.useMana(200);
-                int dmg = target.takeDamage(source.randomDamage(10000000, 30));
+                int dmg = target.takeDamage(source.randomDamage(60000, 30));
                 return source.getName() + " unleashes DIVINE SLASH! Dealt " + dmg + " damage!";
             }
         });

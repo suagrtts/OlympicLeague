@@ -4,7 +4,7 @@ public class Atalyn extends GameCharacter {
     public Atalyn() {
         super("Atalyn", "Hunter of Artemis...", 1500, 950);
 
-        this.addSkill(new Skill("Piercing Arrow", 1, "360 Base Dmg. Cost: 150MP") {
+        this.addSkill(new Skill("Piercing Arrow", 0, "360 Base Dmg. Cost: 150MP") {
             @Override public String execute(GameCharacter source, GameCharacter target) {
                 if (source.getMana() < 150) return "Not enough mana!";
                 source.useMana(150);
