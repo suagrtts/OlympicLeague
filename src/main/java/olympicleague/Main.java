@@ -1,6 +1,6 @@
 package olympicleague;
 
-import Ui.GameIntro;
+import olympicleague.ui.GameIntro;
 
 public class Main {
 

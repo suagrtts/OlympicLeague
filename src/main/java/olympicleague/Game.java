@@ -1,7 +1,7 @@
 package olympicleague;
 
 import olympicleague.ui.Menu;
-import Util.GameUtils;
+import olympicleague.util.GameUtils;
 
 public class Game {
     private final Menu menu = new Menu();

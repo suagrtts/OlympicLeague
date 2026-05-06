@@ -1,12 +1,5 @@
 package olympicleague.character;
 
-/**
- * Skeleton — The Undying Warrior.
- * An ancient soldier resurrected by dark magic, the Skeleton feels
- * no pain and reassembles from any wound. Its bones rattle as a warning
- * to the living — it cannot be stopped, only delayed.
- * God: Hades, God of the Underworld.
- */
 public class Skeleton extends GameCharacter {
 
     private boolean reassembledThisRound = false;

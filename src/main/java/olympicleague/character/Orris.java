@@ -1,4 +1,4 @@
-package character;
+package olympicleague.character;
 
 public class Orris extends GameCharacter {
     public Orris() {

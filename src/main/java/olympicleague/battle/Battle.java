@@ -1,8 +1,8 @@
-package battle;
+package olympicleague.battle;
 
-import Character.GameCharacter;
-import Character.Skill;
-import java.util.Scanner;
+import olympicleague.character.GameCharacter;
+import olympicleague.character.Skill;
+import java.util.Scanner;   
 
 public class Battle {
     private final GameCharacter player1;

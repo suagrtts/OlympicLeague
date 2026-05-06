@@ -1,7 +1,7 @@
-package ui;
+package olympicleague.ui;
 
 import java.io.IOException;
-import Util.GameUtils;
+import olympicleague.util.GameUtils;
 
 public class GameIntro {
 

@@ -1,3 +1,5 @@
+package olympicleague.gui;
+
 import javax.swing.*;
 import java.awt.*;
 

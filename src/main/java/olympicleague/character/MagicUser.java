@@ -1,4 +1,4 @@
-package character;
+package olympicleague.character;
 
 public interface MagicUser {
     int getMana();

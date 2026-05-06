@@ -1,13 +1,9 @@
-package gui;
+package olympicleague.gui;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-/**
- * SpriteCanvas — a JPanel that plays an animated sprite strip in a loop.
- * Used in both the roster cards (small, always looping) and the battle arena.
- */
 public class SpriteCanvas extends JPanel {
 
     private String charName;

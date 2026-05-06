@@ -1,4 +1,4 @@
-package character;
+package olympicleague.character;
 
 public class Heralde extends GameCharacter {
     public Heralde() {

@@ -1,4 +1,4 @@
-package character;
+package olympicleague.character;
 
 import java.util.ArrayList;
 import java.util.List;

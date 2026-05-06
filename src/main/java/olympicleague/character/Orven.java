@@ -1,4 +1,4 @@
-package character;
+package olympicleague.character;
 
 public class Orven extends GameCharacter {
     public Orven() {

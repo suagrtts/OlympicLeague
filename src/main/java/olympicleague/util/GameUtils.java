@@ -1,4 +1,4 @@
-package Util;
+package olympicleague.util;
 
 public class GameUtils {
 

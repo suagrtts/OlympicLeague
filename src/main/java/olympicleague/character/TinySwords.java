@@ -1,13 +1,5 @@
 package olympicleague.character;
 
-/**
- * TinySwords — The Diminutive Duelist.
- * Don't let the name fool you: this tiny warrior's twin blades
- * strike with blinding speed and lethal precision.
- * God: Athena, Goddess of Wisdom and Warfare.
- *
- * Replaces: Vor (deprecated)
- */
 public class TinySwords extends GameCharacter {
 
     public TinySwords() {

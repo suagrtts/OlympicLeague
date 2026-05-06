@@ -1,4 +1,4 @@
-package character;
+package olympicleague.character;
 
 public class Atalyn extends GameCharacter {
     public Atalyn() {

@@ -1,4 +1,4 @@
-package character;
+package olympicleague.character;
 
 public class Selwyn extends GameCharacter {
     public Selwyn() {

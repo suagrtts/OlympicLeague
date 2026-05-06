@@ -1,4 +1,4 @@
-package character;
+package olympicleague.character;
 
 public interface Combatant {
     String takeTurn(GameCharacter target, int skillIndex);

@@ -1,10 +1,14 @@
-package gui;
+package olympicleague.gui;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
+/**
+ * BattleLogStream — redirects System.out prints into a JTextArea for the battle log.
+ * (Previously an empty stub)
+ */
 public class BattleLogStream extends OutputStream {
 
     private final JTextArea target;

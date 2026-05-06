@@ -1,12 +1,5 @@
 package olympicleague.character;
 
-/**
- * EvilWizard — The Dark Archmage.
- * A twisted sorcerer whose obsession with forbidden magic has warped both
- * body and soul. The Evil Wizard commands devastating arcane forces and can
- * drain the very life from opponents. Based on the EVil_Wizard_2 sprite set.
- * God: Hecate, Goddess of Magic and Witchcraft.
- */
 public class EvilWizard extends GameCharacter {
 
     public EvilWizard() {

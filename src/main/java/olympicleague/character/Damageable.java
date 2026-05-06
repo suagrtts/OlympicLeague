@@ -1,4 +1,4 @@
-package character;
+package olympicleague.character;
 
 public interface Damageable {
     int getHealth();
