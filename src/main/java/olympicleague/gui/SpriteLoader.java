@@ -7,40 +7,17 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.imageio.ImageIO;
 
-/**
- * SpriteLoader — all sprites use TinyUnits assets as a prototype.
- *
- * To swap a character's sprite later, only edit the CHAR_SPRITES table below.
- * Each row:  { charName, idlePath, attackPath, nIdle, nAttack, hurtPath, nHurt }
- *
- * All paths are relative to src/main/resources (loaded via getResourceAsStream).
- *
- * TinyUnits frame facts (all sheets are square frames, width/height = frame size):
- *   Warrior_Idle     → 8 frames  (192×192 each)
- *   Warrior_Attack1  → 4 frames
- *   Warrior_Attack2  → 4 frames
- *   Warrior_Guard    → 6 frames  (used as "hurt")
- *   Archer_Idle      → 6 frames
- *   Archer_Shoot     → 8 frames
- *   Monk Idle        → 6 frames
- *   Monk Heal        → 11 frames
- *   Lancer_Idle      → 12 frames (320×320 each)
- *   Lancer_Right_Attack → 3 frames
- */
 public class SpriteLoader {
 
     public enum AnimType { IDLE, ATTACK, HURT }
 
     // ── Character → sprite mapping ───────────────────────────────────────────
-    // { charName, idlePath, attackPath, nIdle, nAttack, hurtPath, nHurt }
-    // All paths start from /sprite/TinyUnits/... inside resources root.
     private static final String[][] CHAR_SPRITES = {
-        // Player characters — each gets a distinct colour/unit type
         {
             "Achiron",
-            "/sprite/TinyUnits/Yellow Units/Warrior/Warrior_Idle.png",    "8",
-            "/sprite/TinyUnits/Yellow Units/Warrior/Warrior_Attack1.png", "4",
-            "/sprite/TinyUnits/Yellow Units/Warrior/Warrior_Guard.png",   "6",
+            "/sprite/TinyUnits/Black Units/Lancer/Lancer_Idle.png",         "12",
+            "/sprite/TinyUnits/Black Units/Lancer/Lancer_Right_Attack.png", "3",
+            "/sprite/TinyUnits/Black Units/Lancer/Lancer_Idle.png",         "4",
         },
         {
             "Atalyn",
@@ -50,9 +27,9 @@ public class SpriteLoader {
         },
         {
             "Heralde",
-            "/sprite/TinyUnits/Black Units/Lancer/Lancer_Idle.png",         "12",
-            "/sprite/TinyUnits/Black Units/Lancer/Lancer_Right_Attack.png", "3",
-            "/sprite/TinyUnits/Black Units/Lancer/Lancer_Idle.png",         "4",
+            "/sprite/TinyUnits/Yellow Units/Warrior/Warrior_Idle.png",    "8",
+            "/sprite/TinyUnits/Yellow Units/Warrior/Warrior_Attack1.png", "4",
+            "/sprite/TinyUnits/Yellow Units/Warrior/Warrior_Guard.png",   "6",
         },
         {
             "Vor",
@@ -90,7 +67,6 @@ public class SpriteLoader {
             "/sprite/TinyUnits/Yellow Units/Archer/Archer_Shoot.png",  "8",
             "/sprite/TinyUnits/Yellow Units/Archer/Archer_Run.png",    "4",
         },
-        // AI / enemy characters
         {
             "Skeleton",
             "/sprite/TinyUnits/Black Units/Warrior/Warrior_Idle.png",    "8",
@@ -102,10 +78,22 @@ public class SpriteLoader {
             "/sprite/TinyUnits/Black Units/Monk/Idle.png", "6",
             "/sprite/TinyUnits/Black Units/Monk/Heal.png", "11",
             "/sprite/TinyUnits/Black Units/Monk/Run.png",  "4",
-        },
+        }
     };
-    //  column layout: [0]=charName, then triplets of (path, path, nFrames, path, nFrames, path, nFrames)
-    // Simplify access with constants:
+
+    // ── NEW: VFX → sprite mapping ───────────────────────────────────────────
+    private static final String[][] VFX_SPRITES = {
+        {"Heal", "/effects/Heal/Spritesheet/Heal_spritesheet.png", "12"},
+        {"HeavensFury", "/effects/HeavensFury/Spritesheet/HeavensFury_spritesheet.png", "12"},
+        {"HolyNova", "/effects/HolyNova/Spritesheet/HolyNova_spritesheet.png", "10"},
+        {"HolyShield", "/effects/HolyShield/Spritesheet/HolyShield_spritesheet.png", "11"},
+        {"HolySlash_A", "/effects/HolySlash_A/Spritesheet/HolySlash_A_spritesheet.png", "5"},
+        {"HolySlash_B", "/effects/HolySlash_B/Spritesheet/HolySlash_B_spritesheet.png", "4"},
+        {"HolySlash_C", "/effects/HolySlash_C/Spritesheet/HolySlash_C_spritesheet.png", "7"},
+        {"Smite", "/effects/Smite/Spritesheet/Smite_spritesheet.png", "11"},
+        {"SwordOfJustice", "/effects/SwordOfJustice/Spritesheet/SwordOfJustice_spritesheet.png", "13"}
+    };
+
     private static final int IDX_IDLE_PATH   = 1;
     private static final int IDX_IDLE_N      = 2;
     private static final int IDX_ATK_PATH    = 3;
@@ -113,7 +101,10 @@ public class SpriteLoader {
     private static final int IDX_HURT_PATH   = 5;
     private static final int IDX_HURT_N      = 6;
 
-    // ── Frame count lookup ────────────────────────────────────────────────────
+    private static final Map<String, BufferedImage> rawCache = new HashMap<>();
+    private static final Map<String, BufferedImage> frameCache = new HashMap<>();
+
+    // ── Character Frame API ──────────────────────────────────────────────────
     public static int getFrameCount(String charName, AnimType anim) {
         for (String[] row : CHAR_SPRITES) {
             if (row[0].equals(charName)) {
@@ -127,15 +118,6 @@ public class SpriteLoader {
         return 1;
     }
 
-    // ── Per-row raw image cache (path → raw sheet) ────────────────────────────
-    private static final Map<String, BufferedImage> rawCache = new HashMap<>();
-
-    // ── Scaled frame cache (path+size+frame → frame image) ───────────────────
-    private static final Map<String, BufferedImage> frameCache = new HashMap<>();
-
-    // ── Public API ────────────────────────────────────────────────────────────
-
-    /** Get one scaled frame for the given character and animation state. */
     public static BufferedImage getFrame(String charName, AnimType anim, int frameIdx, int size) {
         String[] row = findRow(charName);
         if (row == null) return makeFallback(size, charName);
@@ -159,9 +141,8 @@ public class SpriteLoader {
         BufferedImage sheet = loadSheet(path);
         if (sheet == null) return makeFallback(size, charName);
 
-        // TinyUnits sheets: frame height = frame width = sheet.height
         int fh = sheet.getHeight();
-        int fw = fh;  // square frames always
+        int fw = fh;  
         int actualN = sheet.getWidth() / fw;
         frameIdx = frameIdx % Math.max(1, actualN);
 
@@ -172,12 +153,51 @@ public class SpriteLoader {
         return scaled;
     }
 
-    /** Convenience: first idle frame — used for portraits. */
+    // ── NEW: VFX Frame API ───────────────────────────────────────────────────
+    public static int getVFXFrameCount(String effectName) {
+        for (String[] row : VFX_SPRITES) {
+            if (row[0].equals(effectName)) return Integer.parseInt(row[2]);
+        }
+        return 1;
+    }
+
+    public static BufferedImage getVFXFrame(String effectName, int frameIdx, int size) {
+        String path = "";
+        int n = 1;
+        for (String[] row : VFX_SPRITES) {
+            if (row[0].equals(effectName)) {
+                path = row[1];
+                n = Integer.parseInt(row[2]);
+                break;
+            }
+        }
+        if (path.isEmpty()) return null;
+
+        frameIdx = frameIdx % Math.max(1, n);
+        String cacheKey = "VFX:" + path + ":" + frameIdx + ":" + size;
+        BufferedImage cached = frameCache.get(cacheKey);
+        if (cached != null) return cached;
+
+        BufferedImage sheet = loadSheet(path);
+        if (sheet == null) return null; 
+
+        int fh = sheet.getHeight();
+        int fw = fh;
+        int actualN = Math.max(1, sheet.getWidth() / fw);
+        frameIdx = frameIdx % actualN;
+
+        BufferedImage rawFrame = sheet.getSubimage(frameIdx * fw, 0, fw, fh);
+        BufferedImage scaled = scaleFrame(rawFrame, size);
+
+        frameCache.put(cacheKey, scaled);
+        return scaled;
+    }
+
+    // ── Utility Methods ──────────────────────────────────────────────────────
     public static BufferedImage getIdleFrame(String charName, int size) {
         return getFrame(charName, AnimType.IDLE, 0, size);
     }
 
-    /** Flip an image horizontally (so right-side fighters face left). */
     public static BufferedImage flipH(BufferedImage src) {
         int w = src.getWidth(), h = src.getHeight();
         BufferedImage out = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
@@ -187,25 +207,15 @@ public class SpriteLoader {
         return out;
     }
 
-    /**
-     * Load a background image (main menu).
-     * Resources live at: /background/background1.png … background4.png
-     */
     public static BufferedImage getBackground(int index, int w, int h) {
         String path = "/background/background" + (index + 1) + ".png";
         return loadAndScale(path, w, h);
     }
 
-    /**
-     * Load a battleground image (battle arena).
-     * Resources live at: /battleground/battleground1.png … battleground4.png
-     */
     public static BufferedImage getBattleground(int index, int w, int h) {
         String path = "/battleground/battleground" + (index + 1) + ".png";
         return loadAndScale(path, w, h);
     }
-
-    // ── Internal helpers ──────────────────────────────────────────────────────
 
     private static String[] findRow(String charName) {
         for (String[] row : CHAR_SPRITES) {
@@ -232,7 +242,6 @@ public class SpriteLoader {
     }
 
     private static BufferedImage scaleFrame(BufferedImage src, int size) {
-        // Maintain aspect ratio inside a square canvas
         double scale = Math.min((double) size / src.getWidth(), (double) size / src.getHeight());
         int dw = (int) (src.getWidth()  * scale);
         int dh = (int) (src.getHeight() * scale);
@@ -241,8 +250,7 @@ public class SpriteLoader {
 
         BufferedImage out = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = out.createGraphics();
-        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                           RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
         g.drawImage(src, dx, dy, dw, dh, null);
         g.dispose();
         return out;
@@ -253,8 +261,7 @@ public class SpriteLoader {
         if (raw == null) return null;
         BufferedImage out = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = out.createGraphics();
-        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                           RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         g.drawImage(raw, 0, 0, w, h, null);
         g.dispose();
         return out;
