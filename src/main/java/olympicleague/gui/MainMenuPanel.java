@@ -119,7 +119,7 @@ public class MainMenuPanel extends JPanel {
         gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 2; btnPanel.add(arcadeBtn, gbc);
         gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 2; btnPanel.add(rosterBtn, gbc);
 
-        JLabel credits = new JLabel("Forged by: Rovpoli · kd · biji · selwyn", JLabel.CENTER);
+        JLabel credits = new JLabel("Forged by: vor · kd · biji · selwyn · ronnelyn", JLabel.CENTER);
         credits.setFont(Theme.FONT_SMALL);
         credits.setForeground(Theme.TEXT_DIM);
         gbc.gridy = 3; btnPanel.add(credits, gbc);
