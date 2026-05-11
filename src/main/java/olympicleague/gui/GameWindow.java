@@ -33,6 +33,7 @@ public class GameWindow extends JFrame {
     }
 
     public void showMenu() {
+        MenuMusic.start();
         replaceCard(CARD_MENU, new MainMenuPanel(
             this::startPvP,
             this::startPvE,
@@ -43,6 +44,7 @@ public class GameWindow extends JFrame {
     }
 
     private void startPvP() {
+        MenuMusic.start();
         battleIsAI = false;
         replaceCard(CARD_SELECT1, new CharacterSelectPanel(
             "Player 1",
@@ -62,6 +64,7 @@ public class GameWindow extends JFrame {
     }
 
     private void startPvE() {
+        MenuMusic.start();
         battleIsAI = true;
         replaceCard(CARD_SELECT1, new CharacterSelectPanel(
             "Player 1",
@@ -72,6 +75,7 @@ public class GameWindow extends JFrame {
     }
 
     private void showArcadeDifficulty() {
+        MenuMusic.start();
         replaceCard(CARD_DIFF, new ArcadeDifficultyPanel(
             diff -> { arcadeDifficulty = diff; startArcade(); },
             this::showMenu
@@ -80,6 +84,7 @@ public class GameWindow extends JFrame {
     }
 
     private void startArcade() {
+        MenuMusic.start();
         replaceCard(CARD_SELECT1, new CharacterSelectPanel(
             "Player 1 — Arcade",
             gc -> { p1 = gc; launchArcade(); },
@@ -89,6 +94,7 @@ public class GameWindow extends JFrame {
     }
 
     private void launchArcade() {
+        MenuMusic.start();
         GameCharacter[] opponents = buildArcadeOpponents(arcadeDifficulty, p1.getName());
         replaceCard(CARD_ARCADE, new ArcadePanel(p1, opponents, arcadeDifficulty, this::showMenu, this::showMenu));
         cards.show(root, CARD_ARCADE);
@@ -110,17 +116,20 @@ public class GameWindow extends JFrame {
     }
 
     private void launchBattle() {
+        MenuMusic.stop();
         replaceCard(CARD_BATTLE, new BattlePanel(p1, p2, battleIsAI, this::showPostBattle));
         cards.show(root, CARD_BATTLE);
     }
 
     private void showRoster() {
+        MenuMusic.start();
         replaceCard(CARD_ROSTER, new RosterPanel(this::showMenu));
         cards.show(root, CARD_ROSTER);
     }
 
     private void showPostBattle() {
         SwingUtilities.invokeLater(() -> {
+            MenuMusic.start();
             JPanel panel = buildPostBattlePanel();
             replaceCard("POSTBATTLE", panel);
             cards.show(root, "POSTBATTLE");

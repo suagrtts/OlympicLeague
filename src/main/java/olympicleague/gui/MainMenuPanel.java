@@ -1,7 +1,6 @@
 package olympicleague.gui;
 
 import javax.swing.*;
-import javax.swing.border.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -9,6 +8,8 @@ public class MainMenuPanel extends JPanel {
 
     private final Runnable onPvP, onPvE, onArcade, onRoster;
     private BufferedImage bgImage;
+    private final int bgIdx;
+    private int bgW = -1, bgH = -1;
 
     public MainMenuPanel(Runnable onPvP, Runnable onPvE, Runnable onArcade, Runnable onRoster) {
         this.onPvP    = onPvP;
@@ -17,8 +18,7 @@ public class MainMenuPanel extends JPanel {
         this.onRoster = onRoster;
 
         // Load a random background from the background package
-        int bgIdx = (int)(Math.random() * 4);
-        bgImage = SpriteLoader.getBackground(bgIdx, 940, 720);
+        bgIdx = (int)(Math.random() * 4);
 
         setLayout(new BorderLayout());
         setBackground(Theme.BG_DEEP);
@@ -28,6 +28,12 @@ public class MainMenuPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g0) {
         super.paintComponent(g0);
+        int w = getWidth(), h = getHeight();
+        if (w > 0 && h > 0 && (bgImage == null || w != bgW || h != bgH)) {
+            bgImage = SpriteLoader.getBackground(bgIdx, w, h);
+            bgW = w;
+            bgH = h;
+        }
         if (bgImage != null) {
             Graphics2D g = (Graphics2D) g0.create();
             // Draw background with darkening overlay

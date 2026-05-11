@@ -606,14 +606,15 @@ public class BattlePanel extends JPanel {
     private static class ArenaPanel extends JPanel {
         private final SpriteCanvas p1Sprite, p2Sprite;
         private BufferedImage bg;
+        private final int bgIdx;
+        private int bgW = -1, bgH = -1;
         public final JLabel roundBanner;
 
         ArenaPanel(SpriteCanvas p1Sprite, SpriteCanvas p2Sprite) {
             this.p1Sprite = p1Sprite;
             this.p2Sprite = p2Sprite;
 
-            int bgIdx = (int) (Math.random() * 4);
-            bg = SpriteLoader.getBackground(bgIdx, 900, 360);
+            bgIdx = (int) (Math.random() * 4);
 
             setLayout(null);
             setBackground(Theme.BG_DEEP);
@@ -631,6 +632,12 @@ public class BattlePanel extends JPanel {
         @Override
         protected void paintComponent(Graphics g0) {
             super.paintComponent(g0);
+            int w = getWidth(), h = getHeight();
+            if (w > 0 && h > 0 && (bg == null || w != bgW || h != bgH)) {
+                bg = SpriteLoader.getBackground(bgIdx, w, h);
+                bgW = w;
+                bgH = h;
+            }
             if (bg != null) {
                 Graphics2D g = (Graphics2D) g0.create();
                 g.drawImage(bg, 0, 0, getWidth(), getHeight(), null);
@@ -643,10 +650,15 @@ public class BattlePanel extends JPanel {
         @Override
         public void doLayout() {
             int w = getWidth(), h = getHeight();
-            int spriteSize = 200;
+            int spriteSize = Math.max(140, Math.min(280, Math.min(w, h) / 3));
+            int marginX = Math.max(30, w / 14);
+            int groundY = h - spriteSize - Math.max(14, h / 18);
 
-            p1Sprite.setBounds(80, h - spriteSize - 20, spriteSize, spriteSize);
-            p2Sprite.setBounds(w - 80 - spriteSize, h - spriteSize - 20, spriteSize, spriteSize);
+            p1Sprite.setDisplaySize(spriteSize);
+            p2Sprite.setDisplaySize(spriteSize);
+
+            p1Sprite.setBounds(marginX, groundY, spriteSize, spriteSize);
+            p2Sprite.setBounds(w - marginX - spriteSize, groundY, spriteSize, spriteSize);
 
             roundBanner.setBounds(0, h / 2 - 80, w, 120);
         }

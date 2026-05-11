@@ -41,6 +41,7 @@ public class ArcadePanel extends JPanel {
     }
 
     private void showBriefing() {
+        MenuMusic.start();
         JPanel brief = new JPanel(new GridBagLayout());
         brief.setBackground(Theme.BG_DEEP);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -82,6 +83,7 @@ public class ArcadePanel extends JPanel {
             return;
         }
 
+        MenuMusic.stop();
         GameCharacter opponent = opponents[currentOpponentIndex];
         // Reset opponent for fresh fight; player keeps current HP
         opponent.resetForNewRound();
@@ -98,6 +100,7 @@ public class ArcadePanel extends JPanel {
     }
 
     private void onBattleEnd() {
+        MenuMusic.start();
         if (!player.isAlive() || player.getHealth() <= 0) {
             showGameOver();
             return;
@@ -115,6 +118,7 @@ public class ArcadePanel extends JPanel {
     }
 
     private void showIntermission(int healAmt) {
+        MenuMusic.start();
         JPanel inter = new JPanel(new GridBagLayout());
         inter.setBackground(Theme.BG_DEEP);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -147,6 +151,7 @@ public class ArcadePanel extends JPanel {
     }
 
     private void showVictory() {
+        MenuMusic.start();
         JPanel vic = new JPanel(new GridBagLayout());
         vic.setBackground(Theme.BG_DEEP);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -182,6 +187,7 @@ public class ArcadePanel extends JPanel {
     }
 
     private void showGameOver() {
+        MenuMusic.start();
         JPanel go = new JPanel(new GridBagLayout());
         go.setBackground(Theme.BG_DEEP);
         GridBagConstraints gbc = new GridBagConstraints();

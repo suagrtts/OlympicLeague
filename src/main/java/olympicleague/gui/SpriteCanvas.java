@@ -8,7 +8,7 @@ public class SpriteCanvas extends JPanel {
 
     private String charName;
     private SpriteLoader.AnimType animType;
-    private final int displaySize;
+    private int displaySize;
     private final boolean flipped;
     private final int fps;
 
@@ -27,6 +27,16 @@ public class SpriteCanvas extends JPanel {
         setPreferredSize(new Dimension(displaySize, displaySize));
         loadFrames();
         startTimer();
+    }
+
+    public void setDisplaySize(int displaySize) {
+        int s = Math.max(32, displaySize);
+        if (this.displaySize == s) return;
+        this.displaySize = s;
+        setPreferredSize(new Dimension(s, s));
+        loadFrames();
+        revalidate();
+        repaint();
     }
 
     public void setCharacter(String charName, SpriteLoader.AnimType animType) {
