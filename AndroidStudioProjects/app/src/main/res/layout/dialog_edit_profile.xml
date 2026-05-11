@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/dialog_rounded">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit Profile"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/green_dark"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Username"
+        android:textSize="12sp"
+        android:textColor="@color/text_secondary"
+        android:layout_marginBottom="4dp" />
+
+    <EditText
+        android:id="@+id/etEditUsername"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/input_border"
+        android:paddingHorizontal="16dp"
+        android:hint="Username"
+        android:inputType="textPersonName"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email"
+        android:textSize="12sp"
+        android:textColor="@color/text_secondary"
+        android:layout_marginBottom="4dp" />
+
+    <EditText
+        android:id="@+id/etEditEmail"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/input_border"
+        android:paddingHorizontal="16dp"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Password"
+        android:textSize="12sp"
+        android:textColor="@color/text_secondary"
+        android:layout_marginBottom="4dp" />
+
+    <EditText
+        android:id="@+id/etEditPassword"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/input_border"
+        android:paddingHorizontal="16dp"
+        android:hint="New Password"
+        android:inputType="textPassword"
+        android:layout_marginBottom="24dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/btnCancelEdit"
+            style="?attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:textColor="@color/text_secondary" />
+
+        <Button
+            android:id="@+id/btnSaveProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/green_dark"
+            android:text="Save"
+            android:textColor="@color/white"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+</LinearLayout>
