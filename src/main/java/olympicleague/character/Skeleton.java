@@ -6,11 +6,11 @@ public class Skeleton extends GameCharacter {
 
     public Skeleton() {
         super("Skeleton",
-              "Once a proud soldier of the Olympian wars, now an eternal servant " +
-              "of Hades. The Skeleton was cursed to fight forever, unable to die " +
-              "while the underworld still has use for it. It remembers nothing " +
-              "but the clash of bone against steel.",
-              1900, 700);
+                "Once a proud soldier of the Olympian wars, now an eternal servant " +
+                        "of Hades. The Skeleton was cursed to fight forever, unable to die " +
+                        "while the underworld still has use for it. It remembers nothing " +
+                        "but the clash of bone against steel.",
+                1900, 700);
 
         // Skill 1 — Bone Shatter (true damage, bypasses shields)
         this.addSkill(new Skill("Bone Shatter", 0, "280 TRUE Dmg (ignores defense). Cost: 140MP") {
@@ -20,7 +20,7 @@ public class Skeleton extends GameCharacter {
                 source.useMana(140);
                 int dmg = target.takeTrueDamage(source.randomDamage(280, 25));
                 return "BONE SHATTER! " + source.getName() + "'s brittle arm cracks with force — "
-                       + dmg + " TRUE damage to " + target.getName() + "!";
+                        + dmg + " TRUE damage to " + target.getName() + "!";
             }
         });
 
@@ -33,7 +33,7 @@ public class Skeleton extends GameCharacter {
                 source.setDefenseBonus(0.55);
                 source.setStatusEffectTurns(2);
                 return "UNDYING RESOLVE! " + source.getName() +
-                       "'s bones knit together — damage reduced by 45% for 2 turns!";
+                        "'s bones knit together — damage reduced by 45% for 2 turns!";
             }
         });
 
@@ -46,9 +46,31 @@ public class Skeleton extends GameCharacter {
                 int dmg = target.takeDamage(source.randomDamage(500, 30));
                 target.setStunned(true);
                 return "HADES' JUDGMENT! The underworld reaches out through " + source.getName()
-                       + " — " + dmg + " damage and " + target.getName() + " is STUNNED!";
+                        + " — " + dmg + " damage and " + target.getName() + " is STUNNED!";
             }
         });
+    }
+
+    @Override
+    public int takeDamage(int damage) {
+        int actual = super.takeDamage(damage);
+        if (!this.isAlive() && !reassembledThisRound) {
+            reassembledThisRound = true;
+            this.revive(this.getMaxHealth() / 2);
+            // Note: actual damage returned is still the amount dealt before revival,
+            // so the battle log remains accurate
+        }
+        return actual;
+    }
+
+    @Override
+    public int takeTrueDamage(int damage) {
+        int actual = super.takeTrueDamage(damage);
+        if (!this.isAlive() && !reassembledThisRound) {
+            reassembledThisRound = true;
+            this.revive(this.getMaxHealth() / 2);
+        }
+        return actual;
     }
 
     @Override
