@@ -35,7 +35,7 @@ public class Selwyn extends GameCharacter {
     public int takeDamage(int damage) {
         boolean hadShield = (this.getStatusEffectTurns() > 0 && Math.abs(this.getDefenseBonus() - 0.4) < 0.001);
         int actual = super.takeDamage(damage);
-        if (hadShield) {
+        if (hadShield && actual > 0) {
             this.setDefenseBonus(1.0);
             this.setStatusEffectTurns(0);
         }
