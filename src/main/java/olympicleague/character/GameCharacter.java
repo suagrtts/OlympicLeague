@@ -53,7 +53,7 @@ public class GameCharacter implements Damageable, MagicUser, Combatant {
         if (!this.isAlive || this.untargetable) return 0;
 
         int actualDamage = damage;
-        if (this.statusEffectTurns > 0 && this.defenseBonus != 1.0) {
+        if (this.defenseBonus != 1.0) {
             actualDamage = (int)(damage * this.defenseBonus);
         }
 
