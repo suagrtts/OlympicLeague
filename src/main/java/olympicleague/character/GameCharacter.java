@@ -77,6 +77,11 @@ public class GameCharacter implements Damageable, MagicUser, Combatant {
     @Override
     public void restoreMana(int amount) { this.mana = Math.min(this.mana + amount, this.maxMana); }
 
+    public void revive(int hp) {
+        this.health = Math.min(hp, this.maxHealth);
+        this.isAlive = true;
+    }
+
     @Override
     public void updateTurnEffects() {
         for (Skill skill : skills) skill.reduceCooldown();
