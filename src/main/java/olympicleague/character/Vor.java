@@ -2,7 +2,11 @@ package olympicleague.character;
 
 public class Vor extends GameCharacter {
     public Vor() {
-        super("Vor", "Incarnation of Keith, God of Time...", 1700, 1000);
+        super("Vor",
+              "Incarnation of Keith, God of Time. Vor exists simultaneously in every moment — " +
+              "past, present, and future overlap in his perception. He does not fight to win; " +
+              "he fights because he has already seen the outcome and chooses to honour it.",
+              1700, 1000);
 
         this.addSkill(new Skill("Time Slash", 0, "300 Base Dmg. Cost: 150MP") {
             @Override public String execute(GameCharacter source, GameCharacter target) {

@@ -2,7 +2,12 @@ package olympicleague.character;
 
 public class Achiron extends GameCharacter {
     public Achiron() {
-        super("Achiron", "The Unyielding Warrior...", 1800, 1000);
+        super("Achiron",
+              "The Unyielding Warrior, champion of Ares. Forged in the fires of a hundred campaigns, " +
+              "Achiron has never known defeat — only the enemy's silence at the end of a battle. " +
+              "His shield has turned aside gods' bolts; his spear has felled titans. " +
+              "Ares did not bless him with strength. Ares blessed him with the will to keep fighting.",
+              1800, 1000);
 
         this.addSkill(new Skill("Spear Thrust", 0, "400 Base Dmg. Cost: 180MP") {
             @Override public String execute(GameCharacter source, GameCharacter target) {
