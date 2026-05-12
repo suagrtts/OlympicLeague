@@ -7,10 +7,50 @@ import java.awt.event.*;
 
 public class RosterPanel extends JPanel {
 
+    private static final String[] GODS = {
+            "Ares", "Zeus", "Poseidon", "Time",
+            "Artemis", "Hermes", "Apollo", "Talona", "Loki", "Athena"
+    };
+
+    private static final int[] HP = {
+            1800, 1800, 1500, 1700,
+            1500, 1600, 1600, 1200, 1700, 1650
+    };
+
+    private static final int[] MP = {
+            1000, 450, 600, 1000,
+            950, 700, 1200, 500, 1100, 900
+    };
+
+    private static final String[][] SKILLS = {
+            {"Spear Thrust",   "Aegis Shield",   "Wrath of Ares"},
+            {"Lion's Strike",  "Iron Hide",       "Thunder Wrath"},
+            {"Tidal Wave",     "Ocean's Shield",  "Poseidon's Wrath"},
+            {"Time Slash",     "Temporal Shift",  "Chrono Mark"},
+            {"Piercing Arrow", "Hunter's Reflex", "Moonlit Mark"},
+            {"Swift Strike",   "Vanish",          "Hermes' Speed"},
+            {"Power Chord",    "Healing Hymn",    "Symphony of Destruction"},
+            {"Kit Kit",        "Rat Spot",        "Talona's Might"},
+            {"Rage Bait",      "Respawn Shield",  "Loki's Hack"},
+            {"Twin Slash",     "Blade Veil",      "Athena's Fury"}
+    };
+
+    private static final String[][] SKILL_DESC = {
+            {"400 Base Dmg. Cost: 180MP",         "Reduce next damage by 50%. Cost: 320MP",       "+50% damage for 2 turns. Cost: 500MP"},
+            {"220 Base Dmg. Cost: 90MP",          "Reduce damage by 30% for 2 turns. Cost: 100MP","400 True Dmg. Cost: 180MP"},
+            {"300 Base Dmg. Cost: 130MP",         "Absorb 20% Dmg for 2 turns. Cost: 110MP",      "500 True Dmg. Cost: 180MP"},
+            {"300 Base Dmg. Cost: 150MP",         "Evade next attack. Cost: 120MP",                "+25% Dmg for 2 turns. Cost: 500MP"},
+            {"360 Base Dmg. Cost: 150MP",         "Evade next attack. Cost: 120MP",                "+50% Damage for 2 turns. Cost: 500MP"},
+            {"250 Base Dmg. Cost: 140MP",         "Untargetable next turn. Cost: 120MP",           "Attack twice. Cost: 200MP"},
+            {"380 Base Dmg. Cost: 200MP",         "Heals 400 HP. Cost: 300MP",                    "600 Dmg + Stun. Cost: 550MP"},
+            {"300 Base Bite Dmg. Cost: 120MP",    "Untargetable for 2 turns. Cost: 250MP",         "+20% bite damage for 3 turns. Cost: 400MP"},
+            {"420 Base Dmg. Cost: 220MP",         "Reduce next hit by 60%. Cost: 280MP",           "450 Dmg ignoring defenses. Cost: 480MP"},
+            {"350 Base Dmg x2 hits. Cost: 160MP", "Untargetable for 1 turn. Cost: 280MP",          "+60% ATK for 2 turns. Cost: 450MP"}
+    };
+
     private final Runnable onBack;
     private int selectedIdx = 0;
 
-    // Detail widgets
     private JLabel detailName, detailHp, detailMp, detailGod;
     private JLabel[] skillLabels = new JLabel[3];
     private JLabel[] skillDescLabels = new JLabel[3];
@@ -41,7 +81,7 @@ public class RosterPanel extends JPanel {
         title.setForeground(Theme.GOLD);
 
         header.add(backBtn, BorderLayout.WEST);
-        header.add(title, BorderLayout.CENTER);
+        header.add(title,   BorderLayout.CENTER);
         return header;
     }
 
@@ -58,7 +98,7 @@ public class RosterPanel extends JPanel {
         wrapper.setOpaque(false);
         wrapper.setPreferredSize(new Dimension(340, 0));
 
-        cardGrid = new JPanel(new GridLayout(3, 3, 6, 6));
+        cardGrid = new JPanel(new GridLayout(4, 3, 6, 6));
         cardGrid.setOpaque(false);
 
         for (int i = 0; i < CharacterSelectPanel.NAMES.length; i++) {
@@ -97,7 +137,10 @@ public class RosterPanel extends JPanel {
         for (int i = 0; i < cs.length; i++) {
             if (cs[i] instanceof JPanel c) {
                 c.setBackground(i == selectedIdx ? Theme.BG_CARD2 : Theme.BG_CARD);
-                c.setBorder(BorderFactory.createLineBorder(i == selectedIdx ? Theme.GOLD : Theme.alpha(Theme.GOLD, 60), i == selectedIdx ? 2 : 1));
+                c.setBorder(BorderFactory.createLineBorder(
+                        i == selectedIdx ? Theme.GOLD : Theme.alpha(Theme.GOLD, 60),
+                        i == selectedIdx ? 2 : 1
+                ));
             }
         }
     }
@@ -106,8 +149,8 @@ public class RosterPanel extends JPanel {
         JPanel detail = new JPanel();
         detail.setBackground(Theme.BG_CARD);
         detail.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(Theme.alpha(Theme.GOLD, 80)),
-            BorderFactory.createEmptyBorder(16, 16, 16, 16)
+                BorderFactory.createLineBorder(Theme.alpha(Theme.GOLD, 80)),
+                BorderFactory.createEmptyBorder(16, 16, 16, 16)
         ));
         detail.setLayout(new BoxLayout(detail, BoxLayout.Y_AXIS));
 
@@ -121,14 +164,16 @@ public class RosterPanel extends JPanel {
         detailMp   = styledLabel("", Theme.FONT_SKILL,  Theme.MP_BLUE);
 
         JPanel statsRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 14, 0));
-        statsRow.setOpaque(false); statsRow.setAlignmentX(Component.LEFT_ALIGNMENT);
+        statsRow.setOpaque(false);
+        statsRow.setAlignmentX(Component.LEFT_ALIGNMENT);
         statsRow.add(new JLabel("HP:") {{ setFont(Theme.FONT_SKILL); setForeground(Theme.TEXT_DIM); }});
         statsRow.add(detailHp);
         statsRow.add(new JLabel("  MP:") {{ setFont(Theme.FONT_SKILL); setForeground(Theme.TEXT_DIM); }});
         statsRow.add(detailMp);
 
         JLabel skillsHdr = styledLabel("SKILLS", Theme.FONT_SKILL, Theme.GOLD_DIM);
-        JPanel skillsPanel = new JPanel(); skillsPanel.setOpaque(false);
+        JPanel skillsPanel = new JPanel();
+        skillsPanel.setOpaque(false);
         skillsPanel.setLayout(new BoxLayout(skillsPanel, BoxLayout.Y_AXIS));
         skillsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         for (int i = 0; i < 3; i++) {
@@ -153,37 +198,12 @@ public class RosterPanel extends JPanel {
     }
 
     private JLabel styledLabel(String text, Font f, Color c) {
-        JLabel l = new JLabel(text); l.setFont(f); l.setForeground(c);
-        l.setAlignmentX(Component.LEFT_ALIGNMENT); return l;
+        JLabel l = new JLabel(text);
+        l.setFont(f);
+        l.setForeground(c);
+        l.setAlignmentX(Component.LEFT_ALIGNMENT);
+        return l;
     }
-
-    private static final String[] GODS = {
-        "Ares","Zeus","Poseidon","Time","Artemis","Hermes","Apollo","Talona","Loki"
-    };
-    private static final int[] HP = {1800,1600,1700,1500,1500,1600,1400,1550,1700};
-    private static final int[] MP = {900,1000,950,1100,1000,950,1200,900,1100};
-    private static final String[][] SKILLS = {
-        {"Spear Thrust","Aegis Shield","Wrath of Ares"},
-        {"Lion's Strike","Iron Hide","Thunder Wrath"},
-        {"Tidal Wave","Ocean's Shield","Poseidon's Wrath"},
-        {"Time Slash","Temporal Shift","Chrono Mark"},
-        {"Piercing Arrow","Hunter's Reflex","Moonlit Mark"},
-        {"Swift Strike","Vanish","Hermes' Speed"},
-        {"Power Chord","Healing Hymn","Symphony of Destruction"},
-        {"Kit Kit","Rat Spot","Talona's Might"},
-        {"Rage Bait","Respawn Shield","Loki's Hack"}
-    };
-    private static final String[][] SKILL_DESC = {
-        {"380 Base Dmg","Shield 50% next hit","500 True Dmg"},
-        {"350 Base Dmg","Shield 45% next hit","480 True Dmg"},
-        {"370 Base Dmg","Shield 55% next hit","490 True Dmg"},
-        {"360 Base Dmg","Untargetable 1 turn","420 Dmg + Mark"},
-        {"350 Base Dmg","Evade next attack","450 Dmg + Mark"},
-        {"340 Base Dmg","Untargetable 1 turn","Double attack"},
-        {"330 Base Dmg","Heal 300 HP","400 Dmg + Stun"},
-        {"320 Base Dmg","Dodge 2 turns","440 Dmg"},
-        {"420 Base Dmg","Shield 60% next hit","450 True Dmg"}
-    };
 
     private void updateDetail(int idx) {
         detailSprite.setCharacter(CharacterSelectPanel.NAMES[idx], SpriteLoader.AnimType.IDLE);
