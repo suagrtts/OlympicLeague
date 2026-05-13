@@ -11,6 +11,8 @@ public class BattlePanel extends JPanel {
     private final GameCharacter player1;
     private final GameCharacter player2;
     private final boolean isAI;
+    /** When true, match victory/defeat stingers are handled by {@link ArcadePanel} (no duplicate grand/gameover). */
+    private final boolean arcadeRun;
     private final Runnable onBattleEnd;
 
     // State
@@ -33,9 +35,15 @@ public class BattlePanel extends JPanel {
     private static final int ATTACK_PAUSE_MS = 300;
 
     public BattlePanel(GameCharacter player1, GameCharacter player2, boolean isAI, Runnable onBattleEnd) {
+        this(player1, player2, isAI, onBattleEnd, false);
+    }
+
+    public BattlePanel(GameCharacter player1, GameCharacter player2, boolean isAI, Runnable onBattleEnd,
+                       boolean arcadeRun) {
         this.player1 = player1;
         this.player2 = player2;
         this.isAI = isAI;
+        this.arcadeRun = arcadeRun;
         this.onBattleEnd = onBattleEnd;
 
         setLayout(new BorderLayout(0, 0));
@@ -249,12 +257,14 @@ public class BattlePanel extends JPanel {
             switchTimer.setRepeats(false);
             switchTimer.start();
         } else {
+            Skill usedSkill = actor.getSkills().get(skillIndex);
             String result = actor.takeTurn(target, skillIndex);
             log(actor.getName() + ": " + result);
             actor.restoreMana(150);
             target.restoreMana(150);
             updateBars();
 
+            BattleSound.playSkillSfx(usedSkill, result, actor);
             playSkillAnimation(actor, target, result);
         }
     }
@@ -277,24 +287,9 @@ public class BattlePanel extends JPanel {
             player2.restoreMana(150);
             updateBars();
 
+            BattleSound.playSkillSfx(player2.getLastUsedSkill(), result, player2);
             playSkillAnimation(player2, player1, result);
         }
-    }
-
-    private SpriteLoader.AnimType resolveAttackAnim(GameCharacter actor, String resultLog) {
-        String name = actor.getName();
-        if (name.equals("Atalyn") || name.equals("Orven") || name.equals("GoatedKit")) {
-            return SpriteLoader.AnimType.SHOOT;
-        }
-        if (name.equals("Biji") || name.equals("Selwyn") || name.equals("EvilWizard")) {
-            return SpriteLoader.AnimType.HEAL;
-        }
-        return SpriteLoader.AnimType.ATTACK;
-    }
-
-    private boolean isArcher(GameCharacter actor) {
-        String n = actor.getName();
-        return n.equals("Atalyn") || n.equals("Orven") || n.equals("GoatedKit");
     }
 
     private String determineVFX(String log) {
@@ -345,13 +340,7 @@ public class BattlePanel extends JPanel {
     private void playSkillAnimation(GameCharacter actor, GameCharacter target, String resultLog) {
         String lowerLog = resultLog.toLowerCase();
 
-        boolean isOffensive = lowerLog.contains("dealt") || lowerLog.contains("hits for") ||
-                lowerLog.contains("deals") || lowerLog.contains("rips through") ||
-                lowerLog.contains("tears") || lowerLog.contains("true damage") ||
-                lowerLog.contains("strike 1") || lowerLog.contains("hit 1") ||
-                lowerLog.contains("cuts through") || lowerLog.contains("infects for") ||
-                lowerLog.contains("crashes for") || lowerLog.contains("damage to") ||
-                lowerLog.contains("damage and") || lowerLog.contains("strike for");
+        boolean isOffensive = BattleFxUtil.isOffensiveDamageLog(resultLog);
 
         boolean isEvade = lowerLog.contains("evade") || lowerLog.contains("untargetable") ||
                 lowerLog.contains("elusive") || lowerLog.contains("cannot be targeted") ||
@@ -373,7 +362,7 @@ public class BattlePanel extends JPanel {
         if (isOffensive) {
             Point targetLoc = defenderSprite.getLocation();
 
-            if (isArcher(actor)) {
+            if (BattleFxUtil.isArcherStyleCharacter(actor)) {
                 attackerSprite.setAnimType(SpriteLoader.AnimType.SHOOT);
 
                 int arrowStartX = actorIsP1 ? startLoc.x + 180 : startLoc.x - 20;
@@ -429,7 +418,7 @@ public class BattlePanel extends JPanel {
                 Point attackPoint = new Point(targetLoc.x + offset, targetLoc.y);
 
                 animateMovement(attackerSprite, startLoc, attackPoint, DASH_DURATION_MS, () -> {
-                    attackerSprite.setAnimType(resolveAttackAnim(actor, resultLog));
+                    attackerSprite.setAnimType(BattleFxUtil.resolveAttackAnim(actor, resultLog));
                     defenderSprite.setAnimType(SpriteLoader.AnimType.HURT);
 
                     // ── floating damage on melee hit ──
@@ -596,6 +585,14 @@ public class BattlePanel extends JPanel {
         log("Score: " + p1Wins + " - " + p2Wins);
         updateRoundLabel();
 
+        boolean p1WonRound = player1.isAlive() && !player2.isAlive();
+        boolean p2WonRound = !player1.isAlive() && player2.isAlive();
+        if (p1WonRound || p2WonRound) {
+            if (!isAI || p1WonRound) {
+                BattleSound.playRoundWin();
+            }
+        }
+
         arenaPanel.roundBanner.setText(winner);
         arenaPanel.roundBanner.setVisible(true);
 
@@ -608,6 +605,13 @@ public class BattlePanel extends JPanel {
                 else if (p2Wins > p1Wins) matchWinner = "🏆 " + player2.getName() + " WINS MATCH! 🏆";
                 log(matchWinner);
                 arenaPanel.roundBanner.setText(matchWinner);
+                if (isAI) {
+                    if (p1Wins > p2Wins && !arcadeRun) {
+                        BattleSound.playGrandWinner();
+                    } else if (p2Wins > p1Wins) {
+                        BattleSound.playGameOver();
+                    }
+                }
                 endBattle();
             });
             endTimer.setRepeats(false);

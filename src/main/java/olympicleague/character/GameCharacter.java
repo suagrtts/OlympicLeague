@@ -24,6 +24,9 @@ public class GameCharacter implements Damageable, MagicUser, Combatant {
     private boolean isStunned = false;
     private boolean hasEscaped = false;
 
+    /** Last skill executed (GUI / SFX); not used by combat resolution. */
+    private Skill lastUsedSkill;
+
     public GameCharacter(String name, String backstory, int health, int mana) {
         this.name = name;
         this.backstory = backstory;
@@ -106,6 +109,7 @@ public class GameCharacter implements Damageable, MagicUser, Combatant {
         this.untargetable = false;
         this.isStunned = false;
         this.hasEscaped = false;
+        this.lastUsedSkill = null;
         for (Skill skill : skills) skill.resetCooldown();
     }
 
@@ -113,6 +117,7 @@ public class GameCharacter implements Damageable, MagicUser, Combatant {
     public String takeTurn(GameCharacter target, int skillIndex) {
         Skill chosenSkill = skills.get(skillIndex);
         chosenSkill.putOnCooldown();
+        this.lastUsedSkill = chosenSkill;
         return chosenSkill.execute(this, target);
     }
 
@@ -121,7 +126,10 @@ public class GameCharacter implements Damageable, MagicUser, Combatant {
         // Collect skills that are off cooldown
         List<Skill> available = new ArrayList<>();
         for (Skill s : skills) if (s.isReady()) available.add(s);
-        if (available.isEmpty()) return name + " passes their turn.";
+        if (available.isEmpty()) {
+            this.lastUsedSkill = null;
+            return name + " passes their turn.";
+        }
 
         // Prefer the highest-index ready skill (ultimates tend to be defined last).
         // 30% chance to use a random skill instead, to keep AI unpredictable.
@@ -132,7 +140,13 @@ public class GameCharacter implements Damageable, MagicUser, Combatant {
             chosen = available.get(random.nextInt(available.size()));
         }
         chosen.putOnCooldown();
+        this.lastUsedSkill = chosen;
         return chosen.execute(this, target);
+    }
+
+    /** Skill from the last {@link #takeTurn} or {@link #autoTakeTurn}; may be {@code null}. */
+    public Skill getLastUsedSkill() {
+        return lastUsedSkill;
     }
 
     // Getters / Setters
