@@ -1,10 +1,10 @@
 package olympicleague.gui;
 
-import olympicleague.character.*;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
+import javax.swing.*;
+import olympicleague.character.*;
 
 public class BattlePanel extends JPanel {
 
@@ -283,6 +283,34 @@ public class BattlePanel extends JPanel {
         }
     }
 
+
+    /**
+     * Resolve the correct attack animation for a character based on the skill result.
+     * Archers  → SHOOT  when attacking
+     * Monks    → HEAL   when casting (all their skills are cast-based)
+     * Warriors / Lancers → ATTACK
+     */
+    private SpriteLoader.AnimType resolveAttackAnim(GameCharacter actor, String resultLog) {
+        String name = actor.getName();
+        // Archer characters
+        if (name.equals("Atalyn") || name.equals("Orven") || name.equals("Goated Kit")) {
+            return SpriteLoader.AnimType.SHOOT;
+        }
+        // Monk characters — all skills use the cast/heal animation
+        if (name.equals("Biji") || name.equals("Selwyn") || name.equals("EvilWizard")) {
+            return SpriteLoader.AnimType.HEAL;
+        }
+        // Everyone else: standard melee ATTACK
+        return SpriteLoader.AnimType.ATTACK;
+    }
+
+
+    /** True for characters whose attack animation should be a stationary shoot + travelling arrow. */
+    private boolean isArcher(GameCharacter actor) {
+        String n = actor.getName();
+        return n.equals("Atalyn") || n.equals("Orven") || n.equals("GoatedKit");
+    }
+
     private String determineVFX(String log) {
         String l = log.toLowerCase();
         if (l.contains("heal") || l.contains("soul drain")) return "Heal";
@@ -331,50 +359,97 @@ public class BattlePanel extends JPanel {
 
         Point startLoc = attackerSprite.getLocation();
         String vfxName = determineVFX(resultLog);
-        boolean isHealVfx = "Heal".equals(vfxName);
 
-        // ─── 1. OFFENSIVE SKILL (Dash & Attack + VFX) ────────────────────────
+        // ─── 1. OFFENSIVE SKILL ────────────────────────────────────────────────
         if (isOffensive) {
             Point targetLoc = defenderSprite.getLocation();
-            int offset = actorIsP1 ? -100 : 100;
-            Point attackPoint = new Point(targetLoc.x + offset, targetLoc.y);
 
-            animateMovement(attackerSprite, startLoc, attackPoint, DASH_DURATION_MS, () -> {
-                attackerSprite.setAnimType(SpriteLoader.AnimType.ATTACK);
-                defenderSprite.setAnimType(SpriteLoader.AnimType.HURT);
+            if (isArcher(actor)) {
+                // ── ARCHER: stay put, shoot, arrow travels to target ──────────────────
+                attackerSprite.setAnimType(SpriteLoader.AnimType.SHOOT);
 
-                // Play strike SFX for every offensive hit (player or AI).
-                BattleSound.playSwordCut();
-                if (isHealVfx) {
-                    BattleSound.playHeal();
-                }
+                // Arrow starts at the bow hand — right edge of P1, left edge of P2
+                int arrowStartX = actorIsP1
+                        ? startLoc.x + 180
+                        : startLoc.x - 20;
+                int arrowStartY = startLoc.y + 60;
+                int arrowEndX   = actorIsP1
+                        ? targetLoc.x + 20
+                        : targetLoc.x + 180;
+                int arrowEndY   = targetLoc.y + 60;
 
-                // FIXED: Wrapped in try-catch to prevent softlocks from image load errors
-                try {
-                    VFXCanvas vfx = new VFXCanvas(vfxName, 250, null);
-                    vfx.setLocation(targetLoc.x - 25, targetLoc.y - 25);
-                    arenaPanel.add(vfx, 0);
+                // Delay arrow launch slightly so the SHOOT frame is visible first
+                Timer launchDelay = new Timer(200, e -> {
+                    ArrowCanvas arrow = new ArrowCanvas(actor.getName(), actorIsP1,
+                            new Point(arrowStartX, arrowStartY),
+                            new Point(arrowEndX,   arrowEndY),
+                            500,
+                            () -> {
+                                // Arrow landed — hurt + VFX on target
+                                defenderSprite.setAnimType(SpriteLoader.AnimType.HURT);
+                                try {
+                                    VFXCanvas vfx = new VFXCanvas(vfxName, 250, null, !actorIsP1);
+                                    vfx.setLocation(targetLoc.x - 25, targetLoc.y - 25);
+                                    arenaPanel.add(vfx, 0);
+                                    arenaPanel.repaint();
+                                } catch (Exception ex) {
+                                    System.err.println("VFX Error: " + vfxName);
+                                }
+                                Timer afterHit = new Timer(ATTACK_PAUSE_MS, e2 -> {
+                                    attackerSprite.setAnimType(SpriteLoader.AnimType.IDLE);
+                                    if (!target.isAlive()) {
+                                        handleRoundEnd();
+                                    } else {
+                                        defenderSprite.setAnimType(SpriteLoader.AnimType.IDLE);
+                                        Timer switchTimer = new Timer(200, e3 -> setPlayerTurn(nextTurnP1));
+                                        switchTimer.setRepeats(false);
+                                        switchTimer.start();
+                                    }
+                                });
+                                afterHit.setRepeats(false);
+                                afterHit.start();
+                            });
+                    arenaPanel.add(arrow, 0);
                     arenaPanel.repaint();
-                } catch (Exception ex) {
-                    System.err.println("VFX Error: " + vfxName);
-                }
-
-                Timer attackPause = new Timer(ATTACK_PAUSE_MS, e -> {
-                    attackerSprite.setAnimType(SpriteLoader.AnimType.IDLE);
-                    if (!target.isAlive()) {
-                        animateMovement(attackerSprite, attackPoint, startLoc, DASH_DURATION_MS, () -> handleRoundEnd());
-                    } else {
-                        defenderSprite.setAnimType(SpriteLoader.AnimType.IDLE);
-                        animateMovement(attackerSprite, attackPoint, startLoc, DASH_DURATION_MS, () -> {
-                            Timer switchTimer = new Timer(200, e2 -> setPlayerTurn(nextTurnP1));
-                            switchTimer.setRepeats(false);
-                            switchTimer.start();
-                        });
-                    }
                 });
-                attackPause.setRepeats(false);
-                attackPause.start();
-            });
+                launchDelay.setRepeats(false);
+                launchDelay.start();
+
+            } else {
+                // ── MELEE: dash to target, strike, dash back ──────────────────────────
+                int offset = actorIsP1 ? -100 : 100;
+                Point attackPoint = new Point(targetLoc.x + offset, targetLoc.y);
+
+                animateMovement(attackerSprite, startLoc, attackPoint, DASH_DURATION_MS, () -> {
+                    attackerSprite.setAnimType(resolveAttackAnim(actor, resultLog));
+                    defenderSprite.setAnimType(SpriteLoader.AnimType.HURT);
+
+                    try {
+                        VFXCanvas vfx = new VFXCanvas(vfxName, 250, null, !actorIsP1);
+                        vfx.setLocation(targetLoc.x - 25, targetLoc.y - 25);
+                        arenaPanel.add(vfx, 0);
+                        arenaPanel.repaint();
+                    } catch (Exception ex) {
+                        System.err.println("VFX Error: " + vfxName);
+                    }
+
+                    Timer attackPause = new Timer(ATTACK_PAUSE_MS, e -> {
+                        attackerSprite.setAnimType(SpriteLoader.AnimType.IDLE);
+                        if (!target.isAlive()) {
+                            animateMovement(attackerSprite, attackPoint, startLoc, DASH_DURATION_MS, () -> handleRoundEnd());
+                        } else {
+                            defenderSprite.setAnimType(SpriteLoader.AnimType.IDLE);
+                            animateMovement(attackerSprite, attackPoint, startLoc, DASH_DURATION_MS, () -> {
+                                Timer switchTimer = new Timer(200, e2 -> setPlayerTurn(nextTurnP1));
+                                switchTimer.setRepeats(false);
+                                switchTimer.start();
+                            });
+                        }
+                    });
+                    attackPause.setRepeats(false);
+                    attackPause.start();
+                });
+            }
         }
         // ─── 2. EVASIVE SKILL (Backstep + VFX) ───────────────────────────────
         else if (isEvade) {
@@ -382,7 +457,7 @@ public class BattlePanel extends JPanel {
             Point dodgePoint = new Point(startLoc.x + backDir, startLoc.y);
 
             try {
-                VFXCanvas vfx = new VFXCanvas(vfxName, 200, null);
+                VFXCanvas vfx = new VFXCanvas(vfxName, 200, null, !actorIsP1);
                 vfx.setLocation(dodgePoint.x, dodgePoint.y);
                 arenaPanel.add(vfx, 0);
                 arenaPanel.repaint();
@@ -405,7 +480,7 @@ public class BattlePanel extends JPanel {
         // ─── 3. POWER UP SKILL (Shake + VFX) ─────────────────────────────────
         else if (isPowerUp) {
             try {
-                VFXCanvas vfx = new VFXCanvas(vfxName, 300, null);
+                VFXCanvas vfx = new VFXCanvas(vfxName, 300, null, !actorIsP1);
                 vfx.setLocation(startLoc.x - 50, startLoc.y - 50);
                 arenaPanel.add(vfx, 0);
                 arenaPanel.repaint();
@@ -435,10 +510,7 @@ public class BattlePanel extends JPanel {
             Point hoverPoint = new Point(startLoc.x, startLoc.y - 60);
 
             try {
-                if (isHealVfx) {
-                    BattleSound.playHeal();
-                }
-                VFXCanvas vfx = new VFXCanvas(vfxName, 250, null);
+                VFXCanvas vfx = new VFXCanvas(vfxName, 250, null, !actorIsP1);
                 vfx.setLocation(hoverPoint.x - 25, hoverPoint.y - 25);
                 arenaPanel.add(vfx, 0);
                 arenaPanel.repaint();
@@ -482,20 +554,14 @@ public class BattlePanel extends JPanel {
 
     private void handleRoundEnd() {
         String winner = "";
-        boolean hasRoundWinner = false;
         if (player1.isAlive() && !player2.isAlive()) {
             p1Wins++;
             winner = player1.getName() + " wins Round " + currentRound + "!";
-            hasRoundWinner = true;
         } else if (!player1.isAlive() && player2.isAlive()) {
             p2Wins++;
             winner = player2.getName() + " wins Round " + currentRound + "!";
-            hasRoundWinner = true;
         } else {
             winner = "Round " + currentRound + " — Draw!";
-        }
-        if (hasRoundWinner) {
-            BattleSound.playGrandWinner();
         }
         log(winner);
         log("Score: " + p1Wins + " - " + p2Wins);
@@ -528,7 +594,6 @@ public class BattlePanel extends JPanel {
         battleOver = true;
         setSkillButtonsEnabled(false);
         skillButtonPanel.removeAll();
-        BattleSound.playGameOver();
         JButton menuBtn = CharacterSelectPanel.makeButton("🏠 Main Menu", Theme.GOLD);
         menuBtn.addActionListener(e -> onBattleEnd.run());
         skillButtonPanel.add(menuBtn);
@@ -555,23 +620,29 @@ public class BattlePanel extends JPanel {
         });
     }
 
-    private void setSkillButtonsEnabled(boolean enabled) {
-        for (Component c : skillButtonPanel.getComponents()) {
-            if (c instanceof JButton btn) {
-                if (btn.getText().contains("Flee")) {
-                    btn.setEnabled(true);
-                    continue;
-                }
-                if (enabled) {
-                    int idx = skillButtonPanel.getComponentZOrder(btn);
-                    GameCharacter actor = player1Turn ? player1 : player2;
-                    if (idx < actor.getSkills().size()) {
-                        btn.setEnabled(actor.getSkills().get(idx).isReady());
-                    }
-                } else {
-                    btn.setEnabled(false);
-                }
+private void setSkillButtonsEnabled(boolean enabled) {
+        Component[] comps = skillButtonPanel.getComponents();
+        int skillIdx = 0;
+        GameCharacter actor = player1Turn ? player1 : player2;
+
+        for (Component c : comps) {
+            if (!(c instanceof JButton btn)) continue;
+
+            if (btn.getText().contains("Flee") || btn.getText().contains("🏃")) {
+                btn.setEnabled(true); // Flee always available
+                continue;
             }
+
+            if (!enabled) {
+                btn.setEnabled(false);
+            } else if (skillIdx < actor.getSkills().size()) {
+                Skill s = actor.getSkills().get(skillIdx);
+                btn.setEnabled(s.isReady());
+                btn.setText(s.getName() + (s.isReady() ? "" : " (" + s.getCurrentCooldown() + ")"));
+                btn.setBackground(s.isReady() ? Theme.BG_CARD2 : Theme.SKILL_CD);
+                btn.setForeground(s.isReady() ? Theme.TEXT_LIGHT : Theme.TEXT_DIM);
+            }
+            skillIdx++;
         }
     }
 
@@ -580,9 +651,11 @@ public class BattlePanel extends JPanel {
         private final int maxFrames;
         private int currentFrame = 0;
         private final BufferedImage[] frames;
+        private final boolean flipped;
         private Timer timer = null;
 
-        public VFXCanvas(String effectName, int size, Runnable onComplete) {
+        public VFXCanvas(String effectName, int size, Runnable onComplete, boolean flipped) {
+            this.flipped = flipped;
             setOpaque(false);
             setSize(size, size);
 
@@ -614,7 +687,11 @@ public class BattlePanel extends JPanel {
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             if (currentFrame < maxFrames && frames[currentFrame] != null) {
-                g.drawImage(frames[currentFrame], 0, 0, null);
+                if (flipped) {
+                    g.drawImage(SpriteLoader.flipH(frames[currentFrame]), 0, 0, null);
+                } else {
+                    g.drawImage(frames[currentFrame], 0, 0, null);
+                }
             }
         }
     }
@@ -623,15 +700,14 @@ public class BattlePanel extends JPanel {
     private static class ArenaPanel extends JPanel {
         private final SpriteCanvas p1Sprite, p2Sprite;
         private BufferedImage bg;
-        private final int bgIdx;
-        private int bgW = -1, bgH = -1;
         public final JLabel roundBanner;
 
         ArenaPanel(SpriteCanvas p1Sprite, SpriteCanvas p2Sprite) {
             this.p1Sprite = p1Sprite;
             this.p2Sprite = p2Sprite;
 
-            bgIdx = (int) (Math.random() * 4);
+            int bgIdx = (int) (Math.random() * 4);
+            bg = SpriteLoader.getBattleground(bgIdx, 900, 360);
 
             setLayout(null);
             setBackground(Theme.BG_DEEP);
@@ -649,12 +725,6 @@ public class BattlePanel extends JPanel {
         @Override
         protected void paintComponent(Graphics g0) {
             super.paintComponent(g0);
-            int w = getWidth(), h = getHeight();
-            if (w > 0 && h > 0 && (bg == null || w != bgW || h != bgH)) {
-                bg = SpriteLoader.getBackground(bgIdx, w, h);
-                bgW = w;
-                bgH = h;
-            }
             if (bg != null) {
                 Graphics2D g = (Graphics2D) g0.create();
                 g.drawImage(bg, 0, 0, getWidth(), getHeight(), null);
@@ -667,17 +737,91 @@ public class BattlePanel extends JPanel {
         @Override
         public void doLayout() {
             int w = getWidth(), h = getHeight();
-            int spriteSize = Math.max(140, Math.min(280, Math.min(w, h) / 3));
-            int marginX = Math.max(30, w / 14);
-            int groundY = h - spriteSize - Math.max(14, h / 18);
+            int spriteSize = 200;
 
-            p1Sprite.setDisplaySize(spriteSize);
-            p2Sprite.setDisplaySize(spriteSize);
-
-            p1Sprite.setBounds(marginX, groundY, spriteSize, spriteSize);
-            p2Sprite.setBounds(w - marginX - spriteSize, groundY, spriteSize, spriteSize);
+            p1Sprite.setBounds(80, h - spriteSize - 20, spriteSize, spriteSize);
+            p2Sprite.setBounds(w - 80 - spriteSize, h - spriteSize - 20, spriteSize, spriteSize);
 
             roundBanner.setBounds(0, h / 2 - 80, w, 120);
         }
     }
+    // ── ArrowCanvas: travelling arrow projectile ──────────────────────────────
+    private class ArrowCanvas extends JPanel {
+        private final BufferedImage arrowImg;
+        private Point current;
+        private final Point end;
+        private final Runnable onArrival;
+
+        ArrowCanvas(String charName, boolean facingRight, Point start, Point end,
+                    int durationMs, Runnable onArrival) {
+            this.end       = end;
+            this.current   = new Point(start);
+            this.onArrival = onArrival;
+
+            // Load the arrow sprite for this character's colour
+            // Arrow.png is a single 64x64 image — no sheet slicing needed
+            String arrowPath = resolveArrowPath(charName);
+            BufferedImage raw = null;
+            try (java.io.InputStream is = SpriteLoader.class.getResourceAsStream(arrowPath)) {
+                if (is != null) raw = javax.imageio.ImageIO.read(is);
+            } catch (Exception ex) {
+                System.err.println("ArrowCanvas: failed to load " + arrowPath);
+            }
+
+            // Scale and flip based on direction
+            if (raw != null) {
+                // Scale to a visible size
+                int sz = 48;
+                java.awt.image.BufferedImage scaled =
+                        new java.awt.image.BufferedImage(sz, sz, java.awt.image.BufferedImage.TYPE_INT_ARGB);
+                Graphics2D sg = scaled.createGraphics();
+                sg.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                        RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+                sg.drawImage(raw, 0, 0, sz, sz, null);
+                sg.dispose();
+                // P2 arrows fly left — flip horizontally
+                arrowImg = facingRight ? scaled : SpriteLoader.flipH(scaled);
+            } else {
+                arrowImg = null;
+            }
+
+            setOpaque(false);
+            setSize(48, 48);
+            setLocation(start);
+
+            long t0 = System.currentTimeMillis();
+            Timer t = new Timer(16, null);
+            t.addActionListener(e -> {
+                float pct = Math.min(1f, (float)(System.currentTimeMillis() - t0) / durationMs);
+                int cx = (int)(start.x + (end.x - start.x) * pct);
+                int cy = (int)(start.y + (end.y - start.y) * pct);
+                setLocation(cx, cy);
+                repaint();
+                if (pct >= 1f) {
+                    ((Timer) e.getSource()).stop();
+                    Container parent = getParent();
+                    if (parent != null) { parent.remove(this); parent.repaint(); }
+                    if (onArrival != null) onArrival.run();
+                }
+            });
+            t.start();
+        }
+
+        private String resolveArrowPath(String charName) {
+            return switch (charName) {
+                case "Atalyn"    -> "/sprite/TinyUnits/Red Units/Archer/Arrow.png";
+                case "Orven"     -> "/sprite/TinyUnits/Blue Units/Archer/Arrow.png";
+                case "GoatedKit"-> "/sprite/TinyUnits/Yellow Units/Archer/Arrow.png";
+                default          -> "/sprite/TinyUnits/Red Units/Archer/Arrow.png";
+            };
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if (arrowImg != null) g.drawImage(arrowImg, 0, 0, null);
+        }
+    }
+
+
 }

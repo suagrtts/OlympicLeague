@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GameWindow extends JFrame {
+
     private static final String CARD_MENU      = "MENU";
     private static final String CARD_SELECT1   = "SELECT1";
     private static final String CARD_SELECT2   = "SELECT2";
@@ -35,10 +36,10 @@ public class GameWindow extends JFrame {
     public void showMenu() {
         MenuMusic.start();
         replaceCard(CARD_MENU, new MainMenuPanel(
-            this::startPvP,
-            this::startPvE,
-            this::showArcadeDifficulty,
-            this::showRoster
+                this::startPvP,
+                this::startPvE,
+                this::showArcadeDifficulty,
+                this::showRoster
         ));
         cards.show(root, CARD_MENU);
     }
@@ -47,18 +48,18 @@ public class GameWindow extends JFrame {
         MenuMusic.start();
         battleIsAI = false;
         replaceCard(CARD_SELECT1, new CharacterSelectPanel(
-            "Player 1",
-            gc -> { p1 = gc; showP2Select(); },
-            this::showMenu
+                "Player 1",
+                gc -> { p1 = gc; showP2Select(); },
+                this::showMenu
         ));
         cards.show(root, CARD_SELECT1);
     }
 
     private void showP2Select() {
         replaceCard(CARD_SELECT2, new CharacterSelectPanel(
-            "Player 2",
-            gc -> { p2 = gc; launchBattle(); },
-            this::startPvP
+                "Player 2",
+                gc -> { p2 = gc; launchBattle(); },
+                this::startPvP
         ));
         cards.show(root, CARD_SELECT2);
     }
@@ -67,9 +68,9 @@ public class GameWindow extends JFrame {
         MenuMusic.start();
         battleIsAI = true;
         replaceCard(CARD_SELECT1, new CharacterSelectPanel(
-            "Player 1",
-            gc -> { p1 = gc; p2 = randomChar(p1.getName()); launchBattle(); },
-            this::showMenu
+                "Player 1",
+                gc -> { p1 = gc; p2 = randomChar(p1.getName()); launchBattle(); },
+                this::showMenu
         ));
         cards.show(root, CARD_SELECT1);
     }
@@ -77,8 +78,8 @@ public class GameWindow extends JFrame {
     private void showArcadeDifficulty() {
         MenuMusic.start();
         replaceCard(CARD_DIFF, new ArcadeDifficultyPanel(
-            diff -> { arcadeDifficulty = diff; startArcade(); },
-            this::showMenu
+                diff -> { arcadeDifficulty = diff; startArcade(); },
+                this::showMenu
         ));
         cards.show(root, CARD_DIFF);
     }
@@ -86,9 +87,9 @@ public class GameWindow extends JFrame {
     private void startArcade() {
         MenuMusic.start();
         replaceCard(CARD_SELECT1, new CharacterSelectPanel(
-            "Player 1 — Arcade",
-            gc -> { p1 = gc; launchArcade(); },
-            this::showArcadeDifficulty
+                "Player 1 — Arcade",
+                gc -> { p1 = gc; launchArcade(); },
+                this::showArcadeDifficulty
         ));
         cards.show(root, CARD_SELECT1);
     }
@@ -98,21 +99,6 @@ public class GameWindow extends JFrame {
         GameCharacter[] opponents = buildArcadeOpponents(arcadeDifficulty, p1.getName());
         replaceCard(CARD_ARCADE, new ArcadePanel(p1, opponents, arcadeDifficulty, this::showMenu, this::showMenu));
         cards.show(root, CARD_ARCADE);
-    }
-
-    private GameCharacter[] buildArcadeOpponents(String diff, String playerName) {
-        String[] pool = {"Achiron","Atalyn","Heralde","Vor","Orris","Orven","Biji","Selwyn","GoatedKit"};
-        java.util.List<String> list = new java.util.ArrayList<>(java.util.Arrays.asList(pool));
-        list.remove(playerName);
-        java.util.Collections.shuffle(list);
-        int count = switch (diff) {
-            case "EASY"   -> Math.min(4, list.size());
-            case "MEDIUM" -> Math.min(6, list.size());
-            default       -> list.size();
-        };
-        GameCharacter[] arr = new GameCharacter[count];
-        for (int i = 0; i < count; i++) arr[i] = makeChar(list.get(i));
-        return arr;
     }
 
     private void launchBattle() {
@@ -172,24 +158,34 @@ public class GameWindow extends JFrame {
         root.add(panel, name);
     }
 
+    // ── Delegates to CharacterSelectPanel to avoid duplication ───────────────
     public static GameCharacter makeChar(String name) {
-        return switch (name) {
-            case "Atalyn"    -> new Atalyn();
-            case "Heralde"   -> new Heralde();
-            case "Orris"     -> new Orris();
-            case "Orven"     -> new Orven();
-            case "Biji"      -> new Biji();
-            case "Selwyn"    -> new Selwyn();
-            case "GoatedKit" -> new GoatedKit();
-            case "Skeleton"  -> new Skeleton();
-            case "EvilWizard"-> new EvilWizard();
-            case "Vor"       -> new Vor();
-            default          -> new Achiron();
+        return CharacterSelectPanel.makeChar(name);
+    }
+
+    private GameCharacter[] buildArcadeOpponents(String diff, String playerName) {
+        String[] pool = {
+                "Achiron", "Atalyn", "Heralde", "Vor", "Orris",
+                "Orven", "Biji", "Selwyn", "GoatedKit", "TinySwords"
         };
+        java.util.List<String> list = new java.util.ArrayList<>(java.util.Arrays.asList(pool));
+        list.remove(playerName);
+        java.util.Collections.shuffle(list);
+        int count = switch (diff) {
+            case "EASY"   -> Math.min(4, list.size());
+            case "MEDIUM" -> Math.min(6, list.size());
+            default       -> list.size();
+        };
+        GameCharacter[] arr = new GameCharacter[count];
+        for (int i = 0; i < count; i++) arr[i] = makeChar(list.get(i));
+        return arr;
     }
 
     private GameCharacter randomChar(String excludeName) {
-        String[] names = {"Achiron","Atalyn","Heralde","Vor","Orris","Orven","Biji","Selwyn","GoatedKit"};
+        String[] names = {
+                "Achiron", "Atalyn", "Heralde", "Vor", "Orris",
+                "Orven", "Biji", "Selwyn", "GoatedKit", "TinySwords"
+        };
         java.util.List<String> list = new java.util.ArrayList<>(java.util.Arrays.asList(names));
         if (excludeName != null) list.remove(excludeName);
         return makeChar(list.get((int)(Math.random() * list.size())));

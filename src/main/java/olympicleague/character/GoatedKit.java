@@ -2,7 +2,12 @@ package olympicleague.character;
 
 public class GoatedKit extends GameCharacter {
     public GoatedKit() {
-        super("GoatedKit", "A legendary warrior blessed by Talona...", 1200, 500);
+        super("GoatedKit",
+              "A legendary warrior blessed by Talona, the Plague-Bringer. " +
+              "What appears to be a mere cat is in truth a divine instrument of pestilence — " +
+              "razor-clawed, impossibly quick, and entirely without mercy. " +
+              "Those who underestimate GoatedKit rarely get the chance to learn from that mistake.",
+              1200, 500);
 
         this.addSkill(new Skill("Kit Kit", 0, "300 Base Bite Dmg. Cost: 120MP") {
             @Override public String execute(GameCharacter source, GameCharacter target) {

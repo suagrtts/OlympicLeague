@@ -53,7 +53,7 @@ public class GameCharacter implements Damageable, MagicUser, Combatant {
         if (!this.isAlive || this.untargetable) return 0;
 
         int actualDamage = damage;
-        if (this.statusEffectTurns > 0 && this.defenseBonus != 1.0) {
+        if (this.defenseBonus != 1.0) {
             actualDamage = (int)(damage * this.defenseBonus);
         }
 
@@ -76,6 +76,11 @@ public class GameCharacter implements Damageable, MagicUser, Combatant {
     public void useMana(int amount) { this.mana = Math.max(0, this.mana - amount); }
     @Override
     public void restoreMana(int amount) { this.mana = Math.min(this.mana + amount, this.maxMana); }
+
+    public void revive(int hp) {
+        this.health = Math.min(hp, this.maxHealth);
+        this.isAlive = true;
+    }
 
     @Override
     public void updateTurnEffects() {
@@ -113,11 +118,19 @@ public class GameCharacter implements Damageable, MagicUser, Combatant {
 
     @Override
     public String autoTakeTurn(GameCharacter target) {
+        // Collect skills that are off cooldown
         List<Skill> available = new ArrayList<>();
         for (Skill s : skills) if (s.isReady()) available.add(s);
         if (available.isEmpty()) return name + " passes their turn.";
 
-        Skill chosen = available.get(random.nextInt(available.size()));
+        // Prefer the highest-index ready skill (ultimates tend to be defined last).
+        // 30% chance to use a random skill instead, to keep AI unpredictable.
+        Skill chosen;
+        if (available.size() > 1 && random.nextInt(10) < 7) {
+            chosen = available.get(available.size() - 1);
+        } else {
+            chosen = available.get(random.nextInt(available.size()));
+        }
         chosen.putOnCooldown();
         return chosen.execute(this, target);
     }
