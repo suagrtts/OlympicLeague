@@ -90,9 +90,7 @@ public class ArcadePanel extends JPanel {
 
         // P1 sprite faces right (no flip for most), P2 sprite faces left (flipped)
         // Pass isAI=true so opponent is controlled by AI
-        BattlePanel battlePanel = new BattlePanel(player, opponent, true, this::onBattleEnd) {
-            // Override to NOT reset player HP between arcade fights
-        };
+        BattlePanel battlePanel = new BattlePanel(player, opponent, true, this::onBattleEnd, true);
 
         String key = "BATTLE_" + currentOpponentIndex;
         contentWrapper.add(battlePanel, key);
@@ -152,6 +150,7 @@ public class ArcadePanel extends JPanel {
 
     private void showVictory() {
         MenuMusic.start();
+        BattleSound.playGrandWinner();
         JPanel vic = new JPanel(new GridBagLayout());
         vic.setBackground(Theme.BG_DEEP);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -188,7 +187,6 @@ public class ArcadePanel extends JPanel {
 
     private void showGameOver() {
         MenuMusic.start();
-        BattleSound.playGameOver();
         JPanel go = new JPanel(new GridBagLayout());
         go.setBackground(Theme.BG_DEEP);
         GridBagConstraints gbc = new GridBagConstraints();

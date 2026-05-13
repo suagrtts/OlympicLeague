@@ -21,43 +21,7 @@ public class CharacterSelectPanel extends JPanel {
             "Loki", "Athena"
     };
 
-    private static final int[] HP_VALUES = {
-            1800, 1800, 1500, 1700,
-            1500, 1600, 1600, 1200,
-            1700, 1650
-    };
-
-    private static final int[] MP_VALUES = {
-            1000, 450, 600, 1000,
-            950, 700, 1200, 500,
-            1100, 900
-    };
-
-    private static final String[][] SKILLS = {
-            {"Spear Thrust",  "Aegis Shield",    "Wrath of Ares"},
-            {"Lion's Strike", "Iron Hide",        "Thunder Wrath"},
-            {"Tidal Wave",    "Ocean's Shield",   "Poseidon's Wrath"},
-            {"Time Slash",    "Temporal Shift",   "Chrono Mark"},
-            {"Piercing Arrow","Hunter's Reflex",  "Moonlit Mark"},
-            {"Swift Strike",  "Vanish",           "Hermes' Speed"},
-            {"Power Chord",   "Healing Hymn",     "Symphony of Destruction"},
-            {"Kit Kit",       "Rat Spot",         "Talona's Might"},
-            {"Rage Bait",     "Respawn Shield",   "Loki's Hack"},
-            {"Twin Slash",    "Blade Veil",       "Athena's Fury"}
-    };
-
-    private static final String[][] SKILL_DESC = {
-            {"400 Base Dmg. Cost: 180MP",         "Reduce next damage by 50%. Cost: 320MP",       "+50% damage for 2 turns. Cost: 500MP"},
-            {"220 Base Dmg. Cost: 90MP",          "Reduce damage by 30% for 2 turns. Cost: 100MP","400 True Dmg. Cost: 180MP"},
-            {"300 Base Dmg. Cost: 130MP",         "Absorb 20% Dmg for 2 turns. Cost: 110MP",      "500 True Dmg. Cost: 180MP"},
-            {"300 Base Dmg. Cost: 150MP",         "Evade next attack. Cost: 120MP",                "+25% Dmg for 2 turns. Cost: 500MP"},
-            {"360 Base Dmg. Cost: 150MP",         "Evade next attack. Cost: 120MP",                "+50% Damage for 2 turns. Cost: 500MP"},
-            {"250 Base Dmg. Cost: 140MP",         "Untargetable next turn. Cost: 120MP",           "Attack twice. Cost: 200MP"},
-            {"380 Base Dmg. Cost: 200MP",         "Heals 400 HP. Cost: 300MP",                    "600 Dmg + Stun. Cost: 550MP"},
-            {"300 Base Bite Dmg. Cost: 120MP",    "Untargetable for 2 turns. Cost: 250MP",         "+20% bite damage for 3 turns. Cost: 400MP"},
-            {"420 Base Dmg. Cost: 220MP",         "Reduce next hit by 60%. Cost: 280MP",           "450 Dmg ignoring defenses. Cost: 480MP"},
-            {"350 Base Dmg x2 hits. Cost: 160MP", "Untargetable for 1 turn. Cost: 280MP",          "+60% ATK for 2 turns. Cost: 450MP"}
-    };
+    private static volatile GameCharacter[] rosterPreviewCache;
 
     private final String label;
     private final Consumer<GameCharacter> onConfirm;
@@ -239,17 +203,42 @@ public class CharacterSelectPanel extends JPanel {
     private void updateDetail(int idx) {
         if (detailName == null) return;
 
-        detailSprite.setCharacter(NAMES[idx], SpriteLoader.AnimType.IDLE);
-        detailName.setText(NAMES[idx]);
-        detailGod .setText("God: " + GODS[idx]);
-        detailHpVal.setText(String.valueOf(HP_VALUES[idx]));
-        detailMpVal.setText(String.valueOf(MP_VALUES[idx]));
+        GameCharacter c = getRosterPreview(idx);
+        detailSprite.setCharacter(c.getName(), SpriteLoader.AnimType.IDLE);
+        detailName.setText(c.getName());
+        detailGod .setText("God: " + getGodPatron(idx));
+        detailHpVal.setText(String.valueOf(c.getMaxHealth()));
+        detailMpVal.setText(String.valueOf(c.getMaxMana()));
 
+        java.util.List<Skill> skills = c.getSkills();
         for (int i = 0; i < 3; i++) {
-            skillLabels[i]    .setText("  " + (i+1) + ". " + SKILLS[idx][i]);
-            skillDescLabels[i].setText("       " + SKILL_DESC[idx][i]);
+            Skill s = skills.get(i);
+            skillLabels[i]    .setText("  " + (i + 1) + ". " + s.getName());
+            skillDescLabels[i].setText("       " + s.getDescription());
         }
         repaint();
+    }
+
+    /** Template character for roster / detail UI (stats and skills match battle definitions). */
+    public static GameCharacter getRosterPreview(int index) {
+        ensureRosterPreviewCache();
+        return rosterPreviewCache[index];
+    }
+
+    public static String getGodPatron(int index) {
+        return GODS[index];
+    }
+
+    private static void ensureRosterPreviewCache() {
+        if (rosterPreviewCache != null) return;
+        synchronized (CharacterSelectPanel.class) {
+            if (rosterPreviewCache != null) return;
+            GameCharacter[] arr = new GameCharacter[NAMES.length];
+            for (int i = 0; i < NAMES.length; i++) {
+                arr[i] = makeChar(NAMES[i]);
+            }
+            rosterPreviewCache = arr;
+        }
     }
 
     // ── Footer: Confirm button ───────────────────────────────────────────────
