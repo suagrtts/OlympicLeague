@@ -110,7 +110,7 @@ public class SpriteLoader {
                     "/sprite/TinyUnits/Black Units/Warrior/Warrior_Guard.png",   "6",
             },
             {
-                    "EvilWizard",
+                    "TinySwords",
                     "/sprite/TinyUnits/Black Units/Monk/Idle.png", "6",
                     "/sprite/TinyUnits/Black Units/Monk/Heal.png", "11",
                     "/sprite/TinyUnits/Black Units/Monk/Heal.png", "11",
