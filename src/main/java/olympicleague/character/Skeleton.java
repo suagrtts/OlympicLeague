@@ -12,7 +12,6 @@ public class Skeleton extends GameCharacter {
                         "but the clash of bone against steel.",
                 1900, 700);
 
-        // Skill 1 — Bone Shatter (true damage, bypasses shields)
         this.addSkill(new Skill("Bone Shatter", 0, "280 TRUE Dmg (ignores defense). Cost: 140MP") {
             @Override
             public String execute(GameCharacter source, GameCharacter target) {
@@ -24,7 +23,6 @@ public class Skeleton extends GameCharacter {
             }
         });
 
-        // Skill 2 — Undying Resolve (reduce incoming damage drastically)
         this.addSkill(new Skill("Undying Resolve", 3, "–45% damage taken for 2 turns. Cost: 200MP") {
             @Override
             public String execute(GameCharacter source, GameCharacter target) {
@@ -37,7 +35,6 @@ public class Skeleton extends GameCharacter {
             }
         });
 
-        // Skill 3 — Hades' Judgment (massive damage + stun)
         this.addSkill(new Skill("Hades' Judgment", 6, "500 Dmg + STUN target. Cost: 500MP") {
             @Override
             public String execute(GameCharacter source, GameCharacter target) {
@@ -54,23 +51,28 @@ public class Skeleton extends GameCharacter {
     @Override
     public int takeDamage(int damage) {
         int actual = super.takeDamage(damage);
-        if (!this.isAlive() && !reassembledThisRound) {
-            reassembledThisRound = true;
-            this.revive(this.getMaxHealth() / 2);
-            // Note: actual damage returned is still the amount dealt before revival,
-            // so the battle log remains accurate
-        }
+        triggerRevivalIfNeeded();
         return actual;
     }
 
     @Override
     public int takeTrueDamage(int damage) {
         int actual = super.takeTrueDamage(damage);
+        triggerRevivalIfNeeded();
+        return actual;
+    }
+
+    /**
+     * On first death per round, Skeleton reassembles at 50% HP.
+     * Returns a log message if revival triggered, or null if not.
+     */
+    public String triggerRevivalIfNeeded() {
         if (!this.isAlive() && !reassembledThisRound) {
             reassembledThisRound = true;
             this.revive(this.getMaxHealth() / 2);
+            return "💀 " + getName() + "'s bones REASSEMBLE! Revived at " + getHealth() + " HP!";
         }
-        return actual;
+        return null;
     }
 
     @Override

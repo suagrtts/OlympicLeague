@@ -29,7 +29,7 @@ public class SirKhai extends GameCharacter {
                 source.useMana(600);
                 int healAmount = (int)(source.getMaxHealth() * 0.6);
                 source.heal(healAmount);
-                source.setAttackBonus(1.75);
+                  source.setAttackBonus(1.75);
                 source.setStatusEffectTurns(3);
                 return "GOAT'S BLESSING descends! Healed " + healAmount + " HP and gained +75% damage for 3 turns!";
             }

@@ -1,26 +1,43 @@
 package olympicleague.util;
 
-public class GameUtils {
+/**
+ * Shared console-output helpers for the terminal UI.
+ * All methods are static — no instantiation needed.
+ */
+public final class GameUtils {
 
-    // Notice the word "static". This means we don't need to create a "new GameUtils()"
-    // object to use it. We can just call GameUtils.typewriter(...) directly!
-    public static void typewriter(String text, int delay) {
+    private GameUtils() {} // utility class
+
+    /** Prints each character with a delay, then appends a newline. */
+    public static void typewriter(String text, int delayMs) {
         for (char c : text.toCharArray()) {
             System.out.print(c);
-            try {
-                Thread.sleep(delay);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+            if (delayMs > 0) {
+                try {
+                    Thread.sleep(delayMs);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
             }
         }
         System.out.println();
     }
 
-    // You can also move those other cool print methods from Main.java here!
-    public static void centerPrint(String text, int delay) {
-        int width = 80;
-        int padding = (width - text.length()) / 2;
-        for (int i = 0; i < padding; i++) System.out.print(" ");
-        typewriter(text, delay);
+    /** Prints text centred within an 80-character terminal width. */
+    public static void centeredPrint(String text, int delayMs) {
+        int padding = Math.max(0, (80 - text.length()) / 2);
+        System.out.print(" ".repeat(padding));
+        typewriter(text, delayMs);
+    }
+
+    /** Prints a decorative separator line of '═' characters. */
+    public static void separator(int width) {
+        System.out.println("═".repeat(width));
+    }
+
+    /** Clamps {@code value} between {@code min} and {@code max} inclusive. */
+    public static int clamp(int value, int min, int max) {
+        return Math.max(min, Math.min(max, value));
     }
 }

@@ -1,10 +1,10 @@
 package olympicleague.gui;
 
-import olympicleague.character.*;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
+import javax.swing.*;
+import olympicleague.character.*;
 
 public class BattlePanel extends JPanel {
 
@@ -620,23 +620,29 @@ public class BattlePanel extends JPanel {
         });
     }
 
-    private void setSkillButtonsEnabled(boolean enabled) {
-        for (Component c : skillButtonPanel.getComponents()) {
-            if (c instanceof JButton btn) {
-                if (btn.getText().contains("Flee")) {
-                    btn.setEnabled(true);
-                    continue;
-                }
-                if (enabled) {
-                    int idx = skillButtonPanel.getComponentZOrder(btn);
-                    GameCharacter actor = player1Turn ? player1 : player2;
-                    if (idx < actor.getSkills().size()) {
-                        btn.setEnabled(actor.getSkills().get(idx).isReady());
-                    }
-                } else {
-                    btn.setEnabled(false);
-                }
+private void setSkillButtonsEnabled(boolean enabled) {
+        Component[] comps = skillButtonPanel.getComponents();
+        int skillIdx = 0;
+        GameCharacter actor = player1Turn ? player1 : player2;
+
+        for (Component c : comps) {
+            if (!(c instanceof JButton btn)) continue;
+
+            if (btn.getText().contains("Flee") || btn.getText().contains("🏃")) {
+                btn.setEnabled(true); // Flee always available
+                continue;
             }
+
+            if (!enabled) {
+                btn.setEnabled(false);
+            } else if (skillIdx < actor.getSkills().size()) {
+                Skill s = actor.getSkills().get(skillIdx);
+                btn.setEnabled(s.isReady());
+                btn.setText(s.getName() + (s.isReady() ? "" : " (" + s.getCurrentCooldown() + ")"));
+                btn.setBackground(s.isReady() ? Theme.BG_CARD2 : Theme.SKILL_CD);
+                btn.setForeground(s.isReady() ? Theme.TEXT_LIGHT : Theme.TEXT_DIM);
+            }
+            skillIdx++;
         }
     }
 
@@ -683,9 +689,9 @@ public class BattlePanel extends JPanel {
             if (currentFrame < maxFrames && frames[currentFrame] != null) {
                 if (flipped) {
                     g.drawImage(SpriteLoader.flipH(frames[currentFrame]), 0, 0, null);
+                } else {
+                    g.drawImage(frames[currentFrame], 0, 0, null);
                 }
-            }else {
-                g.drawImage(frames[currentFrame], 0, 0, null);
             }
         }
     }

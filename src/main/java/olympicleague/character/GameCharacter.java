@@ -118,11 +118,19 @@ public class GameCharacter implements Damageable, MagicUser, Combatant {
 
     @Override
     public String autoTakeTurn(GameCharacter target) {
+        // Collect skills that are off cooldown
         List<Skill> available = new ArrayList<>();
         for (Skill s : skills) if (s.isReady()) available.add(s);
         if (available.isEmpty()) return name + " passes their turn.";
 
-        Skill chosen = available.get(random.nextInt(available.size()));
+        // Prefer the highest-index ready skill (ultimates tend to be defined last).
+        // 30% chance to use a random skill instead, to keep AI unpredictable.
+        Skill chosen;
+        if (available.size() > 1 && random.nextInt(10) < 7) {
+            chosen = available.get(available.size() - 1);
+        } else {
+            chosen = available.get(random.nextInt(available.size()));
+        }
         chosen.putOnCooldown();
         return chosen.execute(this, target);
     }
