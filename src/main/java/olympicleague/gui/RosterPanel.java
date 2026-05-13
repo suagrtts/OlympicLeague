@@ -160,40 +160,21 @@ public class RosterPanel extends JPanel {
     private static final String[] GODS = {
         "Ares","Zeus","Poseidon","Time","Artemis","Hermes","Apollo","Talona","Loki"
     };
-    private static final int[] HP = {1800,1600,1700,1500,1500,1600,1400,1550,1700};
-    private static final int[] MP = {900,1000,950,1100,1000,950,1200,900,1100};
-    private static final String[][] SKILLS = {
-        {"Spear Thrust","Aegis Shield","Wrath of Ares"},
-        {"Lion's Strike","Iron Hide","Thunder Wrath"},
-        {"Tidal Wave","Ocean's Shield","Poseidon's Wrath"},
-        {"Time Slash","Temporal Shift","Chrono Mark"},
-        {"Piercing Arrow","Hunter's Reflex","Moonlit Mark"},
-        {"Swift Strike","Vanish","Hermes' Speed"},
-        {"Power Chord","Healing Hymn","Symphony of Destruction"},
-        {"Kit Kit","Rat Spot","Talona's Might"},
-        {"Rage Bait","Respawn Shield","Loki's Hack"}
-    };
-    private static final String[][] SKILL_DESC = {
-        {"380 Base Dmg","Shield 50% next hit","500 True Dmg"},
-        {"350 Base Dmg","Shield 45% next hit","480 True Dmg"},
-        {"370 Base Dmg","Shield 55% next hit","490 True Dmg"},
-        {"360 Base Dmg","Untargetable 1 turn","420 Dmg + Mark"},
-        {"350 Base Dmg","Evade next attack","450 Dmg + Mark"},
-        {"340 Base Dmg","Untargetable 1 turn","Double attack"},
-        {"330 Base Dmg","Heal 300 HP","400 Dmg + Stun"},
-        {"320 Base Dmg","Dodge 2 turns","440 Dmg"},
-        {"420 Base Dmg","Shield 60% next hit","450 True Dmg"}
-    };
 
     private void updateDetail(int idx) {
-        detailSprite.setCharacter(CharacterSelectPanel.NAMES[idx], SpriteLoader.AnimType.IDLE);
-        detailName.setText(CharacterSelectPanel.NAMES[idx]);
+        GameCharacter c = GameWindow.makeChar(CharacterSelectPanel.NAMES[idx]);
+
+        detailSprite.setCharacter(c.getName(), SpriteLoader.AnimType.IDLE);
+        detailName.setText(c.getName());
         detailGod .setText("God: " + GODS[idx]);
-        detailHp  .setText(String.valueOf(HP[idx]));
-        detailMp  .setText(String.valueOf(MP[idx]));
+        detailHp  .setText(String.valueOf(c.getMaxHealth()));
+        detailMp  .setText(String.valueOf(c.getMaxMana()));
+
+        java.util.List<Skill> skills = c.getSkills();
         for (int i = 0; i < 3; i++) {
-            skillLabels[i]    .setText("  " + (i+1) + ". " + SKILLS[idx][i]);
-            skillDescLabels[i].setText("       " + SKILL_DESC[idx][i]);
+            Skill s = i < skills.size() ? skills.get(i) : null;
+            skillLabels[i]    .setText(s == null ? "" : ("  " + (i + 1) + ". " + s.getName()));
+            skillDescLabels[i].setText(s == null ? "" : ("       " + s.getDescription()));
         }
         repaint();
     }

@@ -339,6 +339,7 @@ public class Menu {
                 typewriter("\n*** GAME OVER ***", 50);
                 typewriter("You were defeated after beating " + defeatedOpponents + " opponent(s).", 30);
                 typewriter("Better luck next time!", 30);
+                olympicleague.gui.BattleSound.playGameOver();
                 return; // Exit arcade mode
             }
 

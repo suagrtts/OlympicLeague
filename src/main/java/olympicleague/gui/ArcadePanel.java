@@ -188,6 +188,7 @@ public class ArcadePanel extends JPanel {
 
     private void showGameOver() {
         MenuMusic.start();
+        BattleSound.playGameOver();
         JPanel go = new JPanel(new GridBagLayout());
         go.setBackground(Theme.BG_DEEP);
         GridBagConstraints gbc = new GridBagConstraints();

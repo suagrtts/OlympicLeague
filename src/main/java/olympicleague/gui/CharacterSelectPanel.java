@@ -18,36 +18,6 @@ public class CharacterSelectPanel extends JPanel {
         "Ares", "Zeus", "Poseidon", "Time",
         "Artemis", "Hermes", "Apollo", "Talona", "Loki"
     };
-    private static final int[] HP_VALUES = {
-        1800, 1600, 1700, 1500,
-        1500, 1600, 1400, 1550, 1700
-    };
-    private static final int[] MP_VALUES = {
-        900, 1000, 950, 1100,
-        1000, 950, 1200, 900, 1100
-    };
-    private static final String[][] SKILLS = {
-        {"Spear Thrust", "Aegis Shield", "Wrath of Ares"},
-        {"Lion's Strike", "Iron Hide", "Thunder Wrath"},
-        {"Tidal Wave", "Ocean's Shield", "Poseidon's Wrath"},
-        {"Time Slash", "Temporal Shift", "Chrono Mark"},
-        {"Piercing Arrow", "Hunter's Reflex", "Moonlit Mark"},
-        {"Swift Strike", "Vanish", "Hermes' Speed"},
-        {"Power Chord", "Healing Hymn", "Symphony of Destruction"},
-        {"Kit Kit", "Rat Spot", "Talona's Might"},
-        {"Rage Bait", "Respawn Shield", "Loki's Hack"}
-    };
-    private static final String[][] SKILL_DESC = {
-        {"380 Base Dmg. Cost: 200MP", "Reduce next hit by 50%. Cost: 250MP", "500 True Dmg. Cost: 500MP"},
-        {"350 Base Dmg. Cost: 180MP", "Reduce next hit by 45%. Cost: 220MP", "480 True Dmg. Cost: 480MP"},
-        {"370 Base Dmg. Cost: 190MP", "Reduce next hit by 55%. Cost: 240MP", "490 True Dmg. Cost: 490MP"},
-        {"360 Base Dmg. Cost: 185MP", "Untargetable 1 turn. Cost: 230MP",   "420 Dmg + Mark. Cost: 450MP"},
-        {"350 Base Dmg. Cost: 175MP", "Evade next attack. Cost: 220MP",     "450 Dmg + Mark. Cost: 460MP"},
-        {"340 Base Dmg. Cost: 170MP", "Untargetable 1 turn. Cost: 210MP",   "Double attack. Cost: 470MP"},
-        {"330 Base Dmg. Cost: 165MP", "Heal 300 HP. Cost: 200MP",           "400 Dmg + Stun. Cost: 480MP"},
-        {"320 Base Dmg. Cost: 160MP", "Dodge 2 turns. Cost: 200MP",         "440 Dmg. Cost: 460MP"},
-        {"420 Base Dmg. Cost: 220MP", "Reduce next hit by 60%. Cost: 280MP","450 True Dmg. Cost: 480MP"}
-    };
 
     private final String label;
     private final Consumer<GameCharacter> onConfirm;
@@ -232,15 +202,19 @@ public class CharacterSelectPanel extends JPanel {
     private void updateDetail(int idx) {
         if (detailName == null) return;
 
-        detailSprite.setCharacter(NAMES[idx], SpriteLoader.AnimType.IDLE);
-        detailName.setText(NAMES[idx]);
-        detailGod .setText("God: " + GODS[idx]);
-        detailHpVal.setText(String.valueOf(HP_VALUES[idx]));
-        detailMpVal.setText(String.valueOf(MP_VALUES[idx]));
+        GameCharacter c = GameWindow.makeChar(NAMES[idx]);
 
+        detailSprite.setCharacter(c.getName(), SpriteLoader.AnimType.IDLE);
+        detailName.setText(c.getName());
+        detailGod .setText("God: " + GODS[idx]);
+        detailHpVal.setText(String.valueOf(c.getMaxHealth()));
+        detailMpVal.setText(String.valueOf(c.getMaxMana()));
+
+        java.util.List<Skill> skills = c.getSkills();
         for (int i = 0; i < 3; i++) {
-            skillLabels[i]    .setText("  " + (i+1) + ". " + SKILLS[idx][i]);
-            skillDescLabels[i].setText("       " + SKILL_DESC[idx][i]);
+            Skill s = i < skills.size() ? skills.get(i) : null;
+            skillLabels[i]    .setText(s == null ? "" : ("  " + (i + 1) + ". " + s.getName()));
+            skillDescLabels[i].setText(s == null ? "" : ("       " + s.getDescription()));
         }
         repaint();
     }

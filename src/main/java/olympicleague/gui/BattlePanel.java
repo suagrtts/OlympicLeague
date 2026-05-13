@@ -331,6 +331,7 @@ public class BattlePanel extends JPanel {
 
         Point startLoc = attackerSprite.getLocation();
         String vfxName = determineVFX(resultLog);
+        boolean isHealVfx = "Heal".equals(vfxName);
 
         // ─── 1. OFFENSIVE SKILL (Dash & Attack + VFX) ────────────────────────
         if (isOffensive) {
@@ -341,6 +342,12 @@ public class BattlePanel extends JPanel {
             animateMovement(attackerSprite, startLoc, attackPoint, DASH_DURATION_MS, () -> {
                 attackerSprite.setAnimType(SpriteLoader.AnimType.ATTACK);
                 defenderSprite.setAnimType(SpriteLoader.AnimType.HURT);
+
+                // Play strike SFX for every offensive hit (player or AI).
+                BattleSound.playSwordCut();
+                if (isHealVfx) {
+                    BattleSound.playHeal();
+                }
 
                 // FIXED: Wrapped in try-catch to prevent softlocks from image load errors
                 try {
@@ -428,6 +435,9 @@ public class BattlePanel extends JPanel {
             Point hoverPoint = new Point(startLoc.x, startLoc.y - 60);
 
             try {
+                if (isHealVfx) {
+                    BattleSound.playHeal();
+                }
                 VFXCanvas vfx = new VFXCanvas(vfxName, 250, null);
                 vfx.setLocation(hoverPoint.x - 25, hoverPoint.y - 25);
                 arenaPanel.add(vfx, 0);
@@ -472,14 +482,20 @@ public class BattlePanel extends JPanel {
 
     private void handleRoundEnd() {
         String winner = "";
+        boolean hasRoundWinner = false;
         if (player1.isAlive() && !player2.isAlive()) {
             p1Wins++;
             winner = player1.getName() + " wins Round " + currentRound + "!";
+            hasRoundWinner = true;
         } else if (!player1.isAlive() && player2.isAlive()) {
             p2Wins++;
             winner = player2.getName() + " wins Round " + currentRound + "!";
+            hasRoundWinner = true;
         } else {
             winner = "Round " + currentRound + " — Draw!";
+        }
+        if (hasRoundWinner) {
+            BattleSound.playGrandWinner();
         }
         log(winner);
         log("Score: " + p1Wins + " - " + p2Wins);
@@ -512,6 +528,7 @@ public class BattlePanel extends JPanel {
         battleOver = true;
         setSkillButtonsEnabled(false);
         skillButtonPanel.removeAll();
+        BattleSound.playGameOver();
         JButton menuBtn = CharacterSelectPanel.makeButton("🏠 Main Menu", Theme.GOLD);
         menuBtn.addActionListener(e -> onBattleEnd.run());
         skillButtonPanel.add(menuBtn);
