@@ -16,7 +16,7 @@ public class BattlePanel extends JPanel {
     // State
     private boolean player1Turn = true;
     private boolean battleOver = false;
-    private boolean turnInProgress = false; // FIXED: Safety lock to prevent double-click bugs
+    private boolean turnInProgress = false;
     private int p1Wins = 0, p2Wins = 0, currentRound = 1;
     private static final int MAX_ROUNDS = 3;
 
@@ -198,7 +198,7 @@ public class BattlePanel extends JPanel {
         player2.resetForNewRound();
         player1Turn = true;
         battleOver = false;
-        turnInProgress = false; // FIXED: Reset safety lock
+        turnInProgress = false;
 
         arenaPanel.roundBanner.setVisible(false);
 
@@ -211,7 +211,7 @@ public class BattlePanel extends JPanel {
 
     private void setPlayerTurn(boolean isPlayer1) {
         player1Turn = isPlayer1;
-        turnInProgress = false; // FIXED: Turn logic is done, unlock UI for the next action
+        turnInProgress = false;
 
         GameCharacter actor = isPlayer1 ? player1 : player2;
         turnLabel.setText(actor.getName() + "'s Turn");
@@ -233,7 +233,6 @@ public class BattlePanel extends JPanel {
     }
 
     private void onSkillUsed(GameCharacter actor, int skillIndex) {
-        // FIXED: Prevent double clicks from running overlapping turns
         if (battleOver || turnInProgress) return;
         turnInProgress = true;
 
@@ -245,7 +244,6 @@ public class BattlePanel extends JPanel {
             log(actor.getName() + " is stunned and cannot act!");
             actor.setStunned(false);
 
-            // Determine whose turn is next safely
             boolean nextTurnP1 = !(actor == player1);
             Timer switchTimer = new Timer(700, e -> setPlayerTurn(nextTurnP1));
             switchTimer.setRepeats(false);
@@ -263,7 +261,7 @@ public class BattlePanel extends JPanel {
 
     private void doAITurn() {
         if (battleOver) return;
-        turnInProgress = true; // FIXED: Lock the turn for AI
+        turnInProgress = true;
         player2.updateTurnEffects();
 
         if (player2.isStunned()) {
@@ -283,29 +281,17 @@ public class BattlePanel extends JPanel {
         }
     }
 
-
-    /**
-     * Resolve the correct attack animation for a character based on the skill result.
-     * Archers  → SHOOT  when attacking
-     * Monks    → HEAL   when casting (all their skills are cast-based)
-     * Warriors / Lancers → ATTACK
-     */
     private SpriteLoader.AnimType resolveAttackAnim(GameCharacter actor, String resultLog) {
         String name = actor.getName();
-        // Archer characters
-        if (name.equals("Atalyn") || name.equals("Orven") || name.equals("Goated Kit")) {
+        if (name.equals("Atalyn") || name.equals("Orven") || name.equals("GoatedKit")) {
             return SpriteLoader.AnimType.SHOOT;
         }
-        // Monk characters — all skills use the cast/heal animation
         if (name.equals("Biji") || name.equals("Selwyn") || name.equals("EvilWizard")) {
             return SpriteLoader.AnimType.HEAL;
         }
-        // Everyone else: standard melee ATTACK
         return SpriteLoader.AnimType.ATTACK;
     }
 
-
-    /** True for characters whose attack animation should be a stationary shoot + travelling arrow. */
     private boolean isArcher(GameCharacter actor) {
         String n = actor.getName();
         return n.equals("Atalyn") || n.equals("Orven") || n.equals("GoatedKit");
@@ -323,16 +309,39 @@ public class BattlePanel extends JPanel {
             return "SwordOfJustice";
         if (l.contains("nova") || l.contains("magic") || l.contains("arcane")) return "HolyNova";
 
-        // Default physical slashes get a random slash effect
         double r = Math.random();
         if (r < 0.33) return "HolySlash_A";
         else if (r < 0.66) return "HolySlash_B";
         else return "HolySlash_C";
     }
 
-    /**
-     * Handles complex movement animations and NEW VFX Overlays.
-     */
+    // ── Floating Text Helpers ────────────────────────────────────────────────
+    private String extractDamageFromLog(String log) {
+        java.util.regex.Matcher m = java.util.regex.Pattern.compile("(\\d+)").matcher(log);
+        String last = "";
+        while (m.find()) last = m.group(1);
+        return last;
+    }
+
+    private boolean isTrueDamage(String log) {
+        return log.toLowerCase().contains("true");
+    }
+
+    private boolean isHeal(String log) {
+        return log.toLowerCase().contains("heal") || log.toLowerCase().contains("recovered");
+    }
+
+    private void showFloatingText(String text, Color color, SpriteCanvas targetSprite) {
+        if (text == null || text.isEmpty()) return;
+        Point loc = targetSprite.getLocation();
+        int cx = loc.x + targetSprite.getWidth() / 2;
+        int cy = loc.y;
+        FloatingText ft = new FloatingText(text, color, new Point(cx, cy));
+        arenaPanel.add(ft, 0);
+        arenaPanel.revalidate();
+        arenaPanel.repaint();
+    }
+
     private void playSkillAnimation(GameCharacter actor, GameCharacter target, String resultLog) {
         String lowerLog = resultLog.toLowerCase();
 
@@ -352,7 +361,7 @@ public class BattlePanel extends JPanel {
                 lowerLog.contains("surges") || lowerLog.contains("power");
 
         boolean actorIsP1 = actor == player1;
-        boolean nextTurnP1 = !actorIsP1; // FIXED: Explicitly assign next turn to the opposite player to prevent overrides
+        boolean nextTurnP1 = !actorIsP1;
 
         SpriteCanvas attackerSprite = actorIsP1 ? p1Sprite : p2Sprite;
         SpriteCanvas defenderSprite = actorIsP1 ? p2Sprite : p1Sprite;
@@ -365,28 +374,28 @@ public class BattlePanel extends JPanel {
             Point targetLoc = defenderSprite.getLocation();
 
             if (isArcher(actor)) {
-                // ── ARCHER: stay put, shoot, arrow travels to target ──────────────────
                 attackerSprite.setAnimType(SpriteLoader.AnimType.SHOOT);
 
-                // Arrow starts at the bow hand — right edge of P1, left edge of P2
-                int arrowStartX = actorIsP1
-                        ? startLoc.x + 180
-                        : startLoc.x - 20;
+                int arrowStartX = actorIsP1 ? startLoc.x + 180 : startLoc.x - 20;
                 int arrowStartY = startLoc.y + 60;
-                int arrowEndX   = actorIsP1
-                        ? targetLoc.x + 20
-                        : targetLoc.x + 180;
+                int arrowEndX   = actorIsP1 ? targetLoc.x + 20 : targetLoc.x + 180;
                 int arrowEndY   = targetLoc.y + 60;
 
-                // Delay arrow launch slightly so the SHOOT frame is visible first
                 Timer launchDelay = new Timer(200, e -> {
                     ArrowCanvas arrow = new ArrowCanvas(actor.getName(), actorIsP1,
                             new Point(arrowStartX, arrowStartY),
                             new Point(arrowEndX,   arrowEndY),
                             500,
                             () -> {
-                                // Arrow landed — hurt + VFX on target
                                 defenderSprite.setAnimType(SpriteLoader.AnimType.HURT);
+
+                                // ── floating damage on arrow landing ──
+                                String dmgText = extractDamageFromLog(resultLog);
+                                Color dmgColor = isTrueDamage(resultLog)
+                                        ? new Color(0xFF, 0x66, 0x00)
+                                        : new Color(0xFF, 0x44, 0x44);
+                                showFloatingText(dmgText, dmgColor, defenderSprite);
+
                                 try {
                                     VFXCanvas vfx = new VFXCanvas(vfxName, 250, null, !actorIsP1);
                                     vfx.setLocation(targetLoc.x - 25, targetLoc.y - 25);
@@ -416,13 +425,19 @@ public class BattlePanel extends JPanel {
                 launchDelay.start();
 
             } else {
-                // ── MELEE: dash to target, strike, dash back ──────────────────────────
                 int offset = actorIsP1 ? -100 : 100;
                 Point attackPoint = new Point(targetLoc.x + offset, targetLoc.y);
 
                 animateMovement(attackerSprite, startLoc, attackPoint, DASH_DURATION_MS, () -> {
                     attackerSprite.setAnimType(resolveAttackAnim(actor, resultLog));
                     defenderSprite.setAnimType(SpriteLoader.AnimType.HURT);
+
+                    // ── floating damage on melee hit ──
+                    String dmgText = extractDamageFromLog(resultLog);
+                    Color dmgColor = isTrueDamage(resultLog)
+                            ? new Color(0xFF, 0x66, 0x00)
+                            : new Color(0xFF, 0x44, 0x44);
+                    showFloatingText(dmgText, dmgColor, defenderSprite);
 
                     try {
                         VFXCanvas vfx = new VFXCanvas(vfxName, 250, null, !actorIsP1);
@@ -451,10 +466,13 @@ public class BattlePanel extends JPanel {
                 });
             }
         }
-        // ─── 2. EVASIVE SKILL (Backstep + VFX) ───────────────────────────────
+        // ─── 2. EVASIVE SKILL ─────────────────────────────────────────────────
         else if (isEvade) {
             int backDir = actorIsP1 ? -60 : 60;
             Point dodgePoint = new Point(startLoc.x + backDir, startLoc.y);
+
+            // ── floating shield indicator ──
+            showFloatingText("EVADE", Theme.GOLD, attackerSprite);
 
             try {
                 VFXCanvas vfx = new VFXCanvas(vfxName, 200, null, !actorIsP1);
@@ -477,8 +495,11 @@ public class BattlePanel extends JPanel {
                 hover.start();
             });
         }
-        // ─── 3. POWER UP SKILL (Shake + VFX) ─────────────────────────────────
+        // ─── 3. POWER UP SKILL ────────────────────────────────────────────────
         else if (isPowerUp) {
+            // ── floating buff indicator ──
+            showFloatingText("ATK UP!", new Color(0xFF, 0xD7, 0x00), attackerSprite);
+
             try {
                 VFXCanvas vfx = new VFXCanvas(vfxName, 300, null, !actorIsP1);
                 vfx.setLocation(startLoc.x - 50, startLoc.y - 50);
@@ -505,9 +526,17 @@ public class BattlePanel extends JPanel {
             });
             shakeTimer.start();
         }
-        // ─── 4. HEAL / SHIELD SKILL (Magic Float + VFX) ──────────────────────
+        // ─── 4. HEAL / SHIELD SKILL ───────────────────────────────────────────
         else {
             Point hoverPoint = new Point(startLoc.x, startLoc.y - 60);
+
+            // ── floating heal number ──
+            if (isHeal(resultLog)) {
+                String healText = "+" + extractDamageFromLog(resultLog);
+                showFloatingText(healText, new Color(0x2E, 0xCC, 0x71), attackerSprite);
+            } else {
+                showFloatingText("SHIELD", new Color(0x52, 0x98, 0xD0), attackerSprite);
+            }
 
             try {
                 VFXCanvas vfx = new VFXCanvas(vfxName, 250, null, !actorIsP1);
@@ -620,7 +649,7 @@ public class BattlePanel extends JPanel {
         });
     }
 
-private void setSkillButtonsEnabled(boolean enabled) {
+    private void setSkillButtonsEnabled(boolean enabled) {
         Component[] comps = skillButtonPanel.getComponents();
         int skillIdx = 0;
         GameCharacter actor = player1Turn ? player1 : player2;
@@ -629,7 +658,7 @@ private void setSkillButtonsEnabled(boolean enabled) {
             if (!(c instanceof JButton btn)) continue;
 
             if (btn.getText().contains("Flee") || btn.getText().contains("🏃")) {
-                btn.setEnabled(true); // Flee always available
+                btn.setEnabled(true);
                 continue;
             }
 
@@ -646,7 +675,59 @@ private void setSkillButtonsEnabled(boolean enabled) {
         }
     }
 
-    // ── NEW: Self-Destructing VFX Canvas ─────────────────────────────────────
+    // ── Floating Damage / Heal Numbers ───────────────────────────────────────
+    private class FloatingText extends JLabel {
+        private float alpha = 1.0f;
+        private int yOffset = 0;
+        private final Timer timer;
+
+        public FloatingText(String text, Color color, Point location) {
+            setText(text);
+            setFont(new Font("SansSerif", Font.BOLD, 22));
+            setForeground(color);
+            setSize(120, 40);
+            setHorizontalAlignment(SwingConstants.CENTER);
+            setLocation(location.x - 60, location.y - 20);
+
+            timer = new Timer(30, null);
+            timer.addActionListener(e -> {
+                yOffset -= 3;
+                alpha -= 0.04f;
+                setLocation(getX(), location.y - 20 + yOffset);
+                repaint();
+
+                if (alpha <= 0) {
+                    timer.stop();
+                    Container parent = getParent();
+                    if (parent != null) {
+                        parent.remove(this);
+                        parent.repaint();
+                    }
+                }
+            });
+            timer.start();
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Math.max(0f, alpha)));
+
+            g2.setColor(new Color(0, 0, 0, 180));
+            g2.setFont(getFont());
+            FontMetrics fm = g2.getFontMetrics();
+            int x = (getWidth() - fm.stringWidth(getText())) / 2;
+            int y = fm.getAscent();
+            g2.drawString(getText(), x + 1, y + 1);
+
+            g2.setColor(getForeground());
+            g2.drawString(getText(), x, y);
+            g2.dispose();
+        }
+    }
+
+    // ── VFX Canvas ───────────────────────────────────────────────────────────
     private class VFXCanvas extends JPanel {
         private final int maxFrames;
         private int currentFrame = 0;
@@ -665,7 +746,6 @@ private void setSkillButtonsEnabled(boolean enabled) {
                 frames[i] = SpriteLoader.getVFXFrame(effectName, i, size);
             }
 
-            // Run at a fast 60ms interval (~16 FPS) for snappy magic effects
             timer = new Timer(60, e -> {
                 currentFrame++;
                 if (currentFrame >= maxFrames) {
@@ -745,7 +825,8 @@ private void setSkillButtonsEnabled(boolean enabled) {
             roundBanner.setBounds(0, h / 2 - 80, w, 120);
         }
     }
-    // ── ArrowCanvas: travelling arrow projectile ──────────────────────────────
+
+    // ── Arrow Canvas ─────────────────────────────────────────────────────────
     private class ArrowCanvas extends JPanel {
         private final BufferedImage arrowImg;
         private Point current;
@@ -758,8 +839,6 @@ private void setSkillButtonsEnabled(boolean enabled) {
             this.current   = new Point(start);
             this.onArrival = onArrival;
 
-            // Load the arrow sprite for this character's colour
-            // Arrow.png is a single 64x64 image — no sheet slicing needed
             String arrowPath = resolveArrowPath(charName);
             BufferedImage raw = null;
             try (java.io.InputStream is = SpriteLoader.class.getResourceAsStream(arrowPath)) {
@@ -768,9 +847,7 @@ private void setSkillButtonsEnabled(boolean enabled) {
                 System.err.println("ArrowCanvas: failed to load " + arrowPath);
             }
 
-            // Scale and flip based on direction
             if (raw != null) {
-                // Scale to a visible size
                 int sz = 48;
                 java.awt.image.BufferedImage scaled =
                         new java.awt.image.BufferedImage(sz, sz, java.awt.image.BufferedImage.TYPE_INT_ARGB);
@@ -779,7 +856,6 @@ private void setSkillButtonsEnabled(boolean enabled) {
                         RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
                 sg.drawImage(raw, 0, 0, sz, sz, null);
                 sg.dispose();
-                // P2 arrows fly left — flip horizontally
                 arrowImg = facingRight ? scaled : SpriteLoader.flipH(scaled);
             } else {
                 arrowImg = null;
@@ -811,7 +887,7 @@ private void setSkillButtonsEnabled(boolean enabled) {
             return switch (charName) {
                 case "Atalyn"    -> "/sprite/TinyUnits/Red Units/Archer/Arrow.png";
                 case "Orven"     -> "/sprite/TinyUnits/Blue Units/Archer/Arrow.png";
-                case "GoatedKit"-> "/sprite/TinyUnits/Yellow Units/Archer/Arrow.png";
+                case "GoatedKit" -> "/sprite/TinyUnits/Yellow Units/Archer/Arrow.png";
                 default          -> "/sprite/TinyUnits/Red Units/Archer/Arrow.png";
             };
         }
@@ -822,6 +898,4 @@ private void setSkillButtonsEnabled(boolean enabled) {
             if (arrowImg != null) g.drawImage(arrowImg, 0, 0, null);
         }
     }
-
-
 }
