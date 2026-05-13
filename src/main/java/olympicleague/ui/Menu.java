@@ -1,6 +1,7 @@
 package olympicleague.ui;
     
 import java.util.*;
+import olympicleague.audio.BattleSound;
 import olympicleague.battle.Battle;
 import olympicleague.character.Achiron;
 import olympicleague.character.Atalyn;
@@ -339,7 +340,7 @@ public class Menu {
                 typewriter("\n*** GAME OVER ***", 50);
                 typewriter("You were defeated after beating " + defeatedOpponents + " opponent(s).", 30);
                 typewriter("Better luck next time!", 30);
-                olympicleague.gui.BattleSound.playGameOver();
+                olympicleague.audio.BattleSound.playGameOver();
                 return; // Exit arcade mode
             }
 

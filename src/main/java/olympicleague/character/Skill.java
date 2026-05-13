@@ -1,5 +1,6 @@
 package olympicleague.character;
 
+
 public abstract class Skill {
     private final String name;
     private final int maxCooldown;
