@@ -7,7 +7,7 @@ public class GameIntro {
 
     public static void showIntro() {
         System.out.println("\n\n");
-        GameUtils.centerPrint("WELCOME TO LIGA OLYMPICA", 25);
+        GameUtils.centeredPrint("WELCOME TO LIGA OLYMPICA", 25);
         printOlympicRings();
 
         System.out.println("\n");
@@ -16,7 +16,7 @@ public class GameIntro {
         System.out.println("\n");
 
         printAnimatedBorder("═");
-        GameUtils.centerPrint("IN THE MYSTICAL REALM OF OLYMPICA", 25);
+        GameUtils.centeredPrint("IN THE MYSTICAL REALM OF OLYMPICA", 25);
         printAnimatedBorder("═");
 
         System.out.println();
@@ -32,7 +32,7 @@ public class GameIntro {
         printCreatorsSection();
 
         System.out.println("\n");
-        GameUtils.centerPrint("Press ENTER to start....", 10);
+        GameUtils.centeredPrint("Press ENTER to start....", 10);
 
         try {
             System.in.read();
@@ -105,7 +105,7 @@ public class GameIntro {
         };
 
         for (String line : warrior) {
-            GameUtils.centerPrint(line, 5);
+            GameUtils.centeredPrint(line, 5);
         }
     }
 
