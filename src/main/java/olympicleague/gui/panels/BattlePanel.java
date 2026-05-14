@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import javax.swing.*;
+import java.util.function.Consumer;
 
 import olympicleague.assets.SpriteLoader;
 import olympicleague.assets.Theme;
@@ -12,6 +13,7 @@ import olympicleague.character.*;
 import olympicleague.gui.components.AnimatedBar;
 import olympicleague.gui.components.SpriteCanvas;
 
+
 public class BattlePanel extends JPanel {
 
     private final GameCharacter player1;
@@ -19,7 +21,7 @@ public class BattlePanel extends JPanel {
     private final boolean isAI;
     /** When true, match victory/defeat stingers are handled by {@link ArcadePanel} (no duplicate grand/gameover). */
     private final boolean arcadeRun;
-    private final Runnable onBattleEnd;
+    private final Consumer<BattleResult> onBattleEnd;
 
     // State
     private boolean player1Turn = true;
@@ -40,11 +42,11 @@ public class BattlePanel extends JPanel {
     private static final int DASH_DURATION_MS = 250;
     private static final int ATTACK_PAUSE_MS = 300;
 
-    public BattlePanel(GameCharacter player1, GameCharacter player2, boolean isAI, Runnable onBattleEnd) {
+    public BattlePanel(GameCharacter player1, GameCharacter player2, boolean isAI, Consumer<BattleResult> onBattleEnd) {
         this(player1, player2, isAI, onBattleEnd, false);
     }
 
-    public BattlePanel(GameCharacter player1, GameCharacter player2, boolean isAI, Runnable onBattleEnd,
+    public BattlePanel(GameCharacter player1, GameCharacter player2, boolean isAI, Consumer<BattleResult> onBattleEnd,
                        boolean arcadeRun) {
         this.player1 = player1;
         this.player2 = player2;
@@ -198,7 +200,7 @@ public class BattlePanel extends JPanel {
         fleeBtn.setFocusPainted(false);
         fleeBtn.addActionListener(e -> {
             log(actor.getName() + " fled the battle!");
-            endBattle();
+            endBattle(BattleResult.PLAYER_FLED);
         });
         skillButtonPanel.add(fleeBtn);
 
@@ -298,6 +300,18 @@ public class BattlePanel extends JPanel {
         }
     }
 
+    /** Characters that use a Monk sprite — they use fantasy_spells VFX for skill 1. */
+    private static boolean isMonkCharacter(GameCharacter c) {
+        String n = c.getName();
+        return "Biji".equals(n) || "Selwyn".equals(n) || "TinySwords".equals(n);
+    }
+
+    /** Returns a random fantasy_spells VFX name for monk skill 1. */
+    private static String randomFantasySpell() {
+        String[] spells = {"FS_Death", "FS_AttackUp", "FS_DefenseUp", "FS_Absorb", "FS_Poison", "FS_Haste", "FS_Heal"};
+        return spells[(int)(Math.random() * spells.length)];
+    }
+
     private String determineVFX(String log) {
         String l = log.toLowerCase();
         if (l.contains("heal") || l.contains("soul drain")) return "Heal";
@@ -374,6 +388,11 @@ public class BattlePanel extends JPanel {
         Point startLoc = attackerSprite.getLocation();
         String vfxName = determineVFX(resultLog);
 
+        // ── Fantasy Spells override: monk characters always use FS VFX for skill 1 ──
+        if (skillIndex == 0 && isMonkCharacter(actor)) {
+            vfxName = randomFantasySpell();
+        }
+
         // ─── 1. OFFENSIVE SKILL ────────────────────────────────────────────────
         if (isOffensive) {
             Point targetLoc = defenderSprite.getLocation();
@@ -386,6 +405,7 @@ public class BattlePanel extends JPanel {
                 int arrowEndX   = actorIsP1 ? targetLoc.x + 20 : targetLoc.x + 180;
                 int arrowEndY   = targetLoc.y + 60;
 
+                String finalVfxName = vfxName;
                 Timer launchDelay = new Timer(200, e -> {
                     ArrowCanvas arrow = new ArrowCanvas(actor.getName(), actorIsP1,
                             new Point(arrowStartX, arrowStartY),
@@ -402,12 +422,12 @@ public class BattlePanel extends JPanel {
                                 showFloatingText(dmgText, dmgColor, defenderSprite);
 
                                 try {
-                                    VFXCanvas vfx = new VFXCanvas(vfxName, 250, null, !actorIsP1);
+                                    VFXCanvas vfx = new VFXCanvas(finalVfxName, 250, null, !actorIsP1);
                                     vfx.setLocation(targetLoc.x - 25, targetLoc.y - 25);
                                     arenaPanel.add(vfx, 0);
                                     arenaPanel.repaint();
                                 } catch (Exception ex) {
-                                    System.err.println("VFX Error: " + vfxName);
+                                    System.err.println("VFX Error: " + finalVfxName);
                                 }
                                 Timer afterHit = new Timer(ATTACK_PAUSE_MS, e2 -> {
                                     attackerSprite.setAnimType(SpriteLoader.AnimType.IDLE);
@@ -433,6 +453,7 @@ public class BattlePanel extends JPanel {
                 int offset = actorIsP1 ? -100 : 100;
                 Point attackPoint = new Point(targetLoc.x + offset, targetLoc.y);
 
+                String finalVfxName1 = vfxName;
                 animateMovement(attackerSprite, startLoc, attackPoint, DASH_DURATION_MS, () -> {
                     attackerSprite.setAnimType(BattleFxUtil.resolveAttackAnim(actor, resultLog));
                     defenderSprite.setAnimType(SpriteLoader.AnimType.HURT);
@@ -445,12 +466,12 @@ public class BattlePanel extends JPanel {
                     showFloatingText(dmgText, dmgColor, defenderSprite);
 
                     try {
-                        VFXCanvas vfx = new VFXCanvas(vfxName, 250, null, !actorIsP1);
+                        VFXCanvas vfx = new VFXCanvas(finalVfxName1, 250, null, !actorIsP1);
                         vfx.setLocation(targetLoc.x - 25, targetLoc.y - 25);
                         arenaPanel.add(vfx, 0);
                         arenaPanel.repaint();
                     } catch (Exception ex) {
-                        System.err.println("VFX Error: " + vfxName);
+                        System.err.println("VFX Error: " + finalVfxName1);
                     }
 
                     Timer attackPause = new Timer(ATTACK_PAUSE_MS, e -> {
@@ -618,10 +639,20 @@ public class BattlePanel extends JPanel {
         if (p1Wins >= 2 || p2Wins >= 2 || currentRound > MAX_ROUNDS) {
             Timer endTimer = new Timer(2000, e -> {
                 String matchWinner = "Match ends in a Draw!";
-                if (p1Wins > p2Wins) matchWinner = "🏆 " + player1.getName() + " WINS MATCH! 🏆";
-                else if (p2Wins > p1Wins) matchWinner = "🏆 " + player2.getName() + " WINS MATCH! 🏆";
+
+                BattleResult result;
+
+                if (p1Wins > p2Wins) {
+                    matchWinner = "🏆 " + player1.getName() + " WINS MATCH! 🏆";
+                    result = BattleResult.PLAYER_WIN;
+                } else {
+                    matchWinner = "🏆 " + player2.getName() + " WINS MATCH! 🏆";
+                    result = BattleResult.PLAYER_LOSE;
+                }
+
                 log(matchWinner);
                 arenaPanel.roundBanner.setText(matchWinner);
+
                 if (isAI) {
                     if (p1Wins > p2Wins && !arcadeRun) {
                         BattleSound.playGrandWinner();
@@ -629,7 +660,8 @@ public class BattlePanel extends JPanel {
                         BattleSound.playGameOver();
                     }
                 }
-                endBattle();
+
+                endBattle(result);
             });
             endTimer.setRepeats(false);
             endTimer.start();
@@ -640,13 +672,20 @@ public class BattlePanel extends JPanel {
         }
     }
 
-    private void endBattle() {
+    private void endBattle(BattleResult result) {
         battleOver = true;
+
         setSkillButtonsEnabled(false);
+
         skillButtonPanel.removeAll();
-        JButton menuBtn = CharacterSelectPanel.makeButton("🏠 Main Menu", Theme.GOLD);
-        menuBtn.addActionListener(e -> onBattleEnd.run());
+
+        JButton menuBtn =
+                CharacterSelectPanel.makeButton("🏠 Main Menu", Theme.GOLD);
+
+        menuBtn.addActionListener(e -> onBattleEnd.accept(result));
+
         skillButtonPanel.add(menuBtn);
+
         skillButtonPanel.revalidate();
         skillButtonPanel.repaint();
     }

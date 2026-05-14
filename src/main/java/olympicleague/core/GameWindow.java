@@ -8,6 +8,8 @@ import olympicleague.gui.panels.*;
 import javax.swing.*;
 import java.awt.*;
 
+
+
 public class GameWindow extends JFrame {
 
     private static final String CARD_MENU      = "MENU";
@@ -117,16 +119,18 @@ public class GameWindow extends JFrame {
         cards.show(root, CARD_ROSTER);
     }
 
-    private void showPostBattle() {
+    private void showPostBattle(BattleResult result) {
         SwingUtilities.invokeLater(() -> {
             MenuMusic.start();
-            JPanel panel = buildPostBattlePanel();
+
+            JPanel panel = buildPostBattlePanel(result);
+
             replaceCard("POSTBATTLE", panel);
             cards.show(root, "POSTBATTLE");
         });
     }
 
-    private JPanel buildPostBattlePanel() {
+    private JPanel buildPostBattlePanel(BattleResult result) {
         JPanel p = new JPanel(new GridBagLayout());
         p.setBackground(Theme.BG_DEEP);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -134,7 +138,14 @@ public class GameWindow extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0; gbc.gridy = 0;
 
-        JLabel lbl = new JLabel("Battle Over!", JLabel.CENTER);
+
+        String titleText = switch (result) {
+            case PLAYER_WIN  -> "🏆 Victory!";
+            case PLAYER_LOSE -> "💀 Defeat!";
+            case PLAYER_FLED -> "🏃 You Fled!";
+        };
+
+        JLabel lbl = new JLabel(titleText, JLabel.CENTER);
         lbl.setFont(Theme.FONT_TITLE);
         lbl.setForeground(Theme.GOLD);
         p.add(lbl, gbc);

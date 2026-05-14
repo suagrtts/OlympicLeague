@@ -100,18 +100,24 @@ public class ArcadePanel extends JPanel {
         contentCards.show(contentWrapper, key);
     }
 
-    private void onBattleEnd() {
+    private void onBattleEnd(BattleResult result) {
         MenuMusic.start();
-        if (!player.isAlive() || player.getHealth() <= 0) {
+
+        if (result == BattleResult.PLAYER_FLED) {
             showGameOver();
             return;
         }
-        // Player survived
+
+        if (result == BattleResult.PLAYER_LOSE) {
+            showGameOver();
+            return;
+        }
+
         currentOpponentIndex++;
+
         if (currentOpponentIndex >= opponents.length) {
             showVictory();
         } else {
-            // Heal 50% between battles
             int healAmt = player.getMaxHealth() / 2;
             player.heal(healAmt);
             showIntermission(healAmt);
@@ -175,7 +181,7 @@ public class ArcadePanel extends JPanel {
         finalHp.setFont(Theme.FONT_SUBHEAD);
         finalHp.setForeground(Theme.HP_GREEN);
 
-        JButton menu = CharacterSelectPanel.makeButton("🏠 Main Menu", Theme.GOLD);
+        JButton menu = CharacterSelectPanel.makeButton("← Main Menu", Theme.GOLD);
         menu.addActionListener(e -> onWin.run());
 
         vic.add(trophy,  gbc);
