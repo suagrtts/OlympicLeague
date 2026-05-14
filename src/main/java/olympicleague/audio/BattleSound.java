@@ -140,6 +140,10 @@ public final class BattleSound {
         playResource("/sound/won.wav", "OlympicLeague-roundwin");
     }
 
+    public static void playUltimate() {
+        playResource("/sound/ultimate.wav", "OlympicLeague-ultimate");
+    }
+
     private static String bundle(Skill skill, String resultLog) {
         StringBuilder sb = new StringBuilder();
         if (skill != null) {

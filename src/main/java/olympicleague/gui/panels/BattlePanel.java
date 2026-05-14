@@ -271,7 +271,7 @@ public class BattlePanel extends JPanel {
             updateBars();
 
             BattleSound.playSkillSfx(usedSkill, result, actor);
-            playSkillAnimation(actor, target, result);
+            playSkillAnimation(actor, target, result, skillIndex);
         }
     }
 
@@ -294,7 +294,7 @@ public class BattlePanel extends JPanel {
             updateBars();
 
             BattleSound.playSkillSfx(player2.getLastUsedSkill(), result, player2);
-            playSkillAnimation(player2, player1, result);
+            playSkillAnimation(player2, player1, result, -1);
         }
     }
 
@@ -343,8 +343,16 @@ public class BattlePanel extends JPanel {
         arenaPanel.repaint();
     }
 
-    private void playSkillAnimation(GameCharacter actor, GameCharacter target, String resultLog) {
+    private void playSkillAnimation(GameCharacter actor, GameCharacter target, String resultLog, int skillIndex) {
         String lowerLog = resultLog.toLowerCase();
+
+        if (skillIndex == 2) {                  // index 2 = skill 3 (0-based)
+            BattleSound.playUltimate();
+        } else if (BattleSound.isSwordSkillLog(resultLog)) {
+            BattleSound.playSwordCut();
+        } else if (isHeal(resultLog)) {
+            BattleSound.playHeal();
+        }
 
         boolean isOffensive = BattleFxUtil.isOffensiveDamageLog(resultLog);
 
@@ -352,8 +360,10 @@ public class BattlePanel extends JPanel {
                 lowerLog.contains("elusive") || lowerLog.contains("cannot be targeted") ||
                 lowerLog.contains("vanish");
 
-        boolean isPowerUp = lowerLog.contains("gained") || lowerLog.contains("increased") ||
-                lowerLog.contains("surges") || lowerLog.contains("power");
+        boolean isPowerUp = lowerLog.contains("gained")    || lowerLog.contains("increased") ||
+                lowerLog.contains("surges")   || lowerLog.contains("power")    ||
+                lowerLog.contains("wrath")    || lowerLog.contains("mark")     ||
+                lowerLog.contains("activated")|| lowerLog.contains("damage for");
 
         boolean actorIsP1 = actor == player1;
         boolean nextTurnP1 = !actorIsP1;
