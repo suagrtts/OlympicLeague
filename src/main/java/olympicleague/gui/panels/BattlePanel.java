@@ -840,6 +840,7 @@ public class BattlePanel extends JPanel {
         private final SpriteCanvas p1Sprite, p2Sprite;
         private BufferedImage bg;
         public final JLabel roundBanner;
+        private boolean locationsInitialized = false;
 
         ArenaPanel(SpriteCanvas p1Sprite, SpriteCanvas p2Sprite) {
             this.p1Sprite = p1Sprite;
@@ -878,10 +879,18 @@ public class BattlePanel extends JPanel {
             int w = getWidth(), h = getHeight();
             int spriteSize = 200;
 
-            p1Sprite.setBounds(80, h - spriteSize - 20, spriteSize, spriteSize);
-            p2Sprite.setBounds(w - 80 - spriteSize, h - spriteSize - 20, spriteSize, spriteSize);
-
+            // Always update round banner and sprite sizes
             roundBanner.setBounds(0, h / 2 - 80, w, 120);
+            p1Sprite.setSize(spriteSize, spriteSize);
+            p2Sprite.setSize(spriteSize, spriteSize);
+
+            // Only set the sprite locations on the first valid layout pass!
+            // This prevents revalidate() from snapping them back during animations.
+            if (!locationsInitialized && w > 0 && h > 0) {
+                p1Sprite.setLocation(80, h - spriteSize - 20);
+                p2Sprite.setLocation(w - 80 - spriteSize, h - spriteSize - 20);
+                locationsInitialized = true;
+            }
         }
     }
 
