@@ -680,7 +680,7 @@ public class BattlePanel extends JPanel {
         skillButtonPanel.removeAll();
 
         JButton menuBtn =
-                CharacterSelectPanel.makeButton("🏠 Main Menu", Theme.GOLD);
+                CharacterSelectPanel.makeButton("Next Opponent", Theme.GOLD);
 
         menuBtn.addActionListener(e -> onBattleEnd.accept(result));
 
