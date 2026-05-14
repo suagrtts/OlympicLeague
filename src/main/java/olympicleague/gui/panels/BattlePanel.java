@@ -138,8 +138,8 @@ public class BattlePanel extends JPanel {
     }
 
     private ArenaPanel buildArena() {
-        p1Sprite = new SpriteCanvas(player1.getName(), SpriteLoader.AnimType.IDLE, 200, false, 8);
-        p2Sprite = new SpriteCanvas(player2.getName(), SpriteLoader.AnimType.IDLE, 200, true, 8);
+        p1Sprite = new SpriteCanvas(player1.getName(), SpriteLoader.AnimType.IDLE, 300, false, 8);
+        p2Sprite = new SpriteCanvas(player2.getName(), SpriteLoader.AnimType.IDLE, 300, true, 8);
 
         arenaPanel = new ArenaPanel(p1Sprite, p2Sprite);
         return arenaPanel;
@@ -310,7 +310,7 @@ public class BattlePanel extends JPanel {
 
     /** Returns a random fantasy_spells VFX name for monk skill 1. */
     private static String randomFantasySpell() {
-        String[] spells = {"FS_Death", "FS_AttackUp", "FS_DefenseUp", "FS_Absorb", "FS_Poison", "FS_Haste", "FS_Heal"};
+        String[] spells = {"FS_Absorb", "FS_Poison", "FS_Haste", "FS_Heal"};
         return spells[(int)(Math.random() * spells.length)];
     }
 
@@ -451,12 +451,60 @@ public class BattlePanel extends JPanel {
                 launchDelay.setRepeats(false);
                 launchDelay.start();
 
+            } else if (isMonkCharacter(actor)) {
+                // ── MONK / SPELLCASTER LOGIC (Stay in place) ──
+                attackerSprite.setAnimType(SpriteLoader.AnimType.HEAL); // HEAL is used as the casting animation
+
+                String finalVfxName = vfxName;
+                // Wait briefly for the cast animation to play, then spawn the spell on the enemy
+                Timer castDelay = new Timer(250, e -> {
+                    defenderSprite.setAnimType(SpriteLoader.AnimType.HURT);
+
+                    BattleSound.playRandomMonkSpell();
+
+                    defenderSprite.setAnimType(SpriteLoader.AnimType.HURT);
+
+                    // ── floating damage ──
+                    String dmgText = extractDamageFromLog(resultLog);
+                    Color dmgColor = isTrueDamage(resultLog)
+                            ? new Color(0xFF, 0x66, 0x00)
+                            : new Color(0xFF, 0x44, 0x44);
+                    showFloatingText(dmgText, dmgColor, defenderSprite);
+
+                    try {
+                        VFXCanvas vfx = new VFXCanvas(finalVfxName, 250, null, !actorIsP1);
+                        vfx.setLocation(targetLoc.x - 25, targetLoc.y - 25);
+                        arenaPanel.add(vfx, 0);
+                        arenaPanel.repaint();
+                    } catch (Exception ex) {
+                        System.err.println("VFX Error: " + finalVfxName);
+                    }
+
+                    Timer afterHit = new Timer(ATTACK_PAUSE_MS, e2 -> {
+                        attackerSprite.setAnimType(SpriteLoader.AnimType.IDLE);
+                        if (!target.isAlive()) {
+                            handleRoundEnd();
+                        } else {
+                            defenderSprite.setAnimType(SpriteLoader.AnimType.IDLE);
+                            Timer switchTimer = new Timer(200, e3 -> setPlayerTurn(nextTurnP1));
+                            switchTimer.setRepeats(false);
+                            switchTimer.start();
+                        }
+                    });
+                    afterHit.setRepeats(false);
+                    afterHit.start();
+                });
+                castDelay.setRepeats(false);
+                castDelay.start();
+
             } else {
+                // ── MELEE LOGIC (Dash forward) ──
                 int offset = actorIsP1 ? -100 : 100;
                 Point attackPoint = new Point(targetLoc.x + offset, targetLoc.y);
 
                 String finalVfxName1 = vfxName;
                 animateMovement(attackerSprite, startLoc, attackPoint, DASH_DURATION_MS, () -> {
+                    // Fallback to resolveAttackAnim just in case it isn't an explicit Monk
                     attackerSprite.setAnimType(BattleFxUtil.resolveAttackAnim(actor, resultLog));
                     defenderSprite.setAnimType(SpriteLoader.AnimType.HURT);
 
@@ -682,7 +730,7 @@ public class BattlePanel extends JPanel {
         skillButtonPanel.removeAll();
 
         JButton menuBtn =
-                CharacterSelectPanel.makeButton("Next Opponent", Theme.GOLD);
+                CharacterSelectPanel.makeButton("<- Back", Theme.GOLD);
 
         menuBtn.addActionListener(e -> onBattleEnd.accept(result));
 
@@ -831,6 +879,22 @@ public class BattlePanel extends JPanel {
             super.addNotify();
             if (timer != null && !timer.isRunning()) {
                 timer.start();
+            }
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if (frames == null || currentFrame >= maxFrames) return;
+
+            BufferedImage img = frames[currentFrame];
+            if (img != null) {
+                // If the effect should face left (flipped), draw it backwards
+                if (flipped) {
+                    g.drawImage(img, getWidth(), 0, -getWidth(), getHeight(), null);
+                } else {
+                    g.drawImage(img, 0, 0, getWidth(), getHeight(), null);
+                }
             }
         }
     }

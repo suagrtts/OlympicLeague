@@ -30,6 +30,11 @@ public final class BattleSound {
                 || l.contains("justice");
     }
 
+    private static final String[] MONK_SPELL_SOUNDS = {
+            "/sound/poison.wav",
+            "/sound/fire.wav",
+    };
+
     /**
      * Heal, shield, damage reduction, untargetable / evade — uses skill metadata with log fallback.
      */
@@ -112,6 +117,12 @@ public final class BattleSound {
         if (isSwordSpearAttackSkill(skill, resultLog) || isSwordSkillLog(resultLog)) {
             playSwordCut();
         }
+    }
+
+    public static void playRandomMonkSpell() {
+        int randomIndex = (int) (Math.random() * MONK_SPELL_SOUNDS.length);
+        String selectedSound = MONK_SPELL_SOUNDS[randomIndex];
+        playResource(selectedSound, "OlympicLeague-monkspell");
     }
 
     public static void playArrowShoot() {
