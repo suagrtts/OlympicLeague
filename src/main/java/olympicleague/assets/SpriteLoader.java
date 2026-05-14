@@ -142,6 +142,14 @@ public class SpriteLoader {
             {"HolySlash_C",    "/effects/HolySlash_C/Spritesheet/HolySlash_C_spritesheet.png",       "7"},
             {"Smite",          "/effects/Smite/Spritesheet/Smite_spritesheet.png",                   "11"},
             {"SwordOfJustice", "/effects/SwordOfJustice/Spritesheet/SwordOfJustice_spritesheet.png", "13"},
+            // ── Fantasy Spells (monk skill 1) ────────────────────────────────
+            {"FS_Death",     "/effects/fantasy_spells/spell_death_001/spell_death_001_large_red/spritesheet.png",         "50"},
+            {"FS_AttackUp",  "/effects/fantasy_spells/spell_attack_up_001/spell_attack_up_001_large_red/spritesheet.png", "18"},
+            {"FS_DefenseUp", "/effects/fantasy_spells/spell_defense_up_001/spell_defense_up_001_large_blue/spritesheet.png","18"},
+            {"FS_Absorb",    "/effects/fantasy_spells/spell_absorb_001/spell_absorb_001_large_violet/spritesheet.png",    "31"},
+            {"FS_Poison",    "/effects/fantasy_spells/spell_poison_001/spell_poison_001_large_green/spritesheet.png",     "17"},
+            {"FS_Haste",     "/effects/fantasy_spells/spell_haste_001/spell_haste_001_large_green/spritesheet.png",       "29"},
+            {"FS_Heal",      "/effects/fantasy_spells/spell_heal_001/spell_heal_001_large_red/spritesheet.png",           "16"},
     };
 
     // ── Caches ────────────────────────────────────────────────────────────────
