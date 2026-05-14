@@ -131,8 +131,35 @@ public final class BattleSound {
     }
 
     /** Full campaign / VS-AI match victory (not a single round). */
+    /** Full campaign / VS-AI match victory (not a single round). */
     public static void playGrandWinner() {
-        playResource("/sound/grandwinner.wav", "OlympicLeague-grandwinner");
+        URL url = BattleSound.class.getResource("/sound/grandwinner.wav");
+        if (url == null) {
+            System.err.println("BattleSound: missing /sound/grandwinner.wav");
+            return;
+        }
+        Thread t = new Thread(() -> {
+            stopBattleBgm();
+            try {
+                AudioInputStream fileIn = AudioSystem.getAudioInputStream(url);
+                AudioFormat raw = fileIn.getFormat();
+                AudioInputStream decoded = needsPcmConversion(raw)
+                        ? AudioSystem.getAudioInputStream(new AudioFormat(
+                        AudioFormat.Encoding.PCM_SIGNED,
+                        raw.getSampleRate(), 16,
+                        raw.getChannels(), raw.getChannels() * 2,
+                        raw.getSampleRate(), false), fileIn)
+                        : fileIn;
+                Clip clip = AudioSystem.getClip();
+                clip.open(decoded);
+                grandWinnerClip = clip;
+                clip.start();
+            } catch (Exception e) {
+                System.err.println("BattleSound(grandwinner): " + e.getMessage());
+            }
+        }, "OlympicLeague-grandwinner");
+        t.setDaemon(true);
+        t.start();
     }
 
     /** A single round win (best-of-3 round, or any non–grand-finale round win). */
@@ -238,4 +265,64 @@ public final class BattleSound {
                 || f.getSampleSizeInBits() != 16
                 || f.isBigEndian();
     }
+
+    private static volatile Clip grandWinnerClip;
+
+    public static void stopGrandWinner() {
+        if (grandWinnerClip != null) {
+            try {
+                grandWinnerClip.stop();
+                grandWinnerClip.close();
+            } catch (Exception ignored) {
+            } finally {
+                grandWinnerClip = null;
+            }
+        }
+    }
+
+    private static volatile Clip battleBgmClip;
+
+    public static void playBattleBgm() {
+        URL url = BattleSound.class.getResource("/sound/ingame.wav");
+        if (url == null) {
+            System.err.println("BattleSound: missing /sound/ingame.wav");
+            return;
+        }
+        Thread t = new Thread(() -> {
+            try {
+                AudioInputStream fileIn = AudioSystem.getAudioInputStream(url);
+                AudioFormat raw = fileIn.getFormat();
+                AudioInputStream decoded = needsPcmConversion(raw)
+                        ? AudioSystem.getAudioInputStream(new AudioFormat(
+                        AudioFormat.Encoding.PCM_SIGNED,
+                        raw.getSampleRate(), 16,
+                        raw.getChannels(), raw.getChannels() * 2,
+                        raw.getSampleRate(), false), fileIn)
+                        : fileIn;
+                Clip clip = AudioSystem.getClip();
+                clip.open(decoded);
+                clip.loop(Clip.LOOP_CONTINUOUSLY); // loops forever
+                battleBgmClip = clip;
+                clip.start();
+            } catch (Exception e) {
+                System.err.println("BattleSound(battle_bgm): " + e.getMessage());
+            }
+        }, "OlympicLeague-battlebgm");
+        t.setDaemon(true);
+        t.start();
+    }
+
+    public static void stopBattleBgm() {
+        if (battleBgmClip != null) {
+            try {
+                battleBgmClip.stop();
+                battleBgmClip.close();
+            } catch (Exception ignored) {
+            } finally {
+                battleBgmClip = null;
+            }
+        }
+    }
+
+
 }

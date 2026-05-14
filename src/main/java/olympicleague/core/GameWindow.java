@@ -4,6 +4,7 @@ import olympicleague.assets.Theme;
 import olympicleague.audio.MenuMusic;
 import olympicleague.character.*;
 import olympicleague.gui.panels.*;
+import olympicleague.audio.BattleSound;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,6 +41,8 @@ public class GameWindow extends JFrame {
     }
 
     public void showMenu() {
+        BattleSound.stopGrandWinner();
+        BattleSound.stopBattleBgm();
         MenuMusic.start();
         replaceCard(CARD_MENU, new MainMenuPanel(
                 this::startPvP,

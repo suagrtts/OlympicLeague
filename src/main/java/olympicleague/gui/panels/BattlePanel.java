@@ -40,7 +40,7 @@ public class BattlePanel extends JPanel {
 
     // Animation constants
     private static final int DASH_DURATION_MS = 250;
-    private static final int ATTACK_PAUSE_MS = 300;
+    private static final int ATTACK_PAUSE_MS = 350;
 
     public BattlePanel(GameCharacter player1, GameCharacter player2, boolean isAI, Consumer<BattleResult> onBattleEnd) {
         this(player1, player2, isAI, onBattleEnd, false);
@@ -222,6 +222,8 @@ public class BattlePanel extends JPanel {
         updateRoundLabel();
         log("=== Round " + currentRound + " ===");
         log(player1.getName() + " vs " + player2.getName());
+        BattleSound.stopBattleBgm(); // stop previous instance before starting new
+        BattleSound.playBattleBgm();
         setPlayerTurn(true);
     }
 
@@ -688,6 +690,8 @@ public class BattlePanel extends JPanel {
 
         skillButtonPanel.revalidate();
         skillButtonPanel.repaint();
+
+        BattleSound.stopBattleBgm();
     }
 
     private void updateBars() {
