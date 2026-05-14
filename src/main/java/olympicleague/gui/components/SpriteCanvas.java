@@ -46,6 +46,7 @@ public class SpriteCanvas extends JPanel {
         this.animType  = animType;
         currentFrame   = 0;
         loadFrames();
+        startTimer();
         repaint();
     }
 
@@ -54,6 +55,7 @@ public class SpriteCanvas extends JPanel {
         this.animType = animType;
         currentFrame  = 0;
         loadFrames();
+        startTimer();
     }
 
     private void loadFrames() {

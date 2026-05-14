@@ -445,11 +445,12 @@ public class BattlePanel extends JPanel {
 
                     Timer attackPause = new Timer(ATTACK_PAUSE_MS, e -> {
                         attackerSprite.setAnimType(SpriteLoader.AnimType.IDLE);
+                        Point currentAttackPoint = attackerSprite.getLocation();
                         if (!target.isAlive()) {
-                            animateMovement(attackerSprite, attackPoint, startLoc, DASH_DURATION_MS, () -> handleRoundEnd());
+                            animateMovement(attackerSprite, currentAttackPoint, startLoc, DASH_DURATION_MS, () -> handleRoundEnd());
                         } else {
                             defenderSprite.setAnimType(SpriteLoader.AnimType.IDLE);
-                            animateMovement(attackerSprite, attackPoint, startLoc, DASH_DURATION_MS, () -> {
+                            animateMovement(attackerSprite, currentAttackPoint, startLoc, DASH_DURATION_MS, () -> {
                                 Timer switchTimer = new Timer(200, e2 -> setPlayerTurn(nextTurnP1));
                                 switchTimer.setRepeats(false);
                                 switchTimer.start();
@@ -770,18 +771,13 @@ public class BattlePanel extends JPanel {
                     repaint();
                 }
             });
-            timer.start();
         }
 
         @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            if (currentFrame < maxFrames && frames[currentFrame] != null) {
-                if (flipped) {
-                    g.drawImage(SpriteLoader.flipH(frames[currentFrame]), 0, 0, null);
-                } else {
-                    g.drawImage(frames[currentFrame], 0, 0, null);
-                }
+        public void addNotify() {
+            super.addNotify();
+            if (timer != null && !timer.isRunning()) {
+                timer.start();
             }
         }
     }
